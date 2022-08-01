@@ -1,14 +1,18 @@
 
+// import getCSRFToken from "../utils"
+import axios from 'axios'
 import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form';
-import { Link} from 'react-router-dom'
-import {submitLogOut, submitLogIn} from '../AxiosCalls/AxiosCalls'
+import Form from 'react-bootstrap/Form'
+import { Link } from 'react-router-dom'
+import {submitSignUp} from '../AxiosCalls/AxiosCalls'
 
-function LoginPage ({setUser, user}){
+function SignUpPage (){
+  
     
-    return (
+
+    return(
         <div>
-            <Form onSubmit={()=>{submitLogIn()}}>
+            <Form onSubmit={submitSignUp}>
                 <Form.Group className="mb-3" controlId="formEmail" >
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" placeholder="Enter email" />
@@ -25,16 +29,9 @@ function LoginPage ({setUser, user}){
                     Submit
                 </Button>
             </Form>
-            <p><Link to='/signup'>No account? Sign up here</Link></p>
-            <Button onClick={()=>{submitLogOut(user,setUser)}}>Log Out!</Button>
-            
+            <p><Link to='/login'>Log in Here!</Link></p>
         </div>
     )
 }
-// { user && <p>Welcome, {user.email}</p>}
-// <button onClick = {submitSignupForm}> Sign up</button>
-{/* <button onClick = {submitLogin}> Login</button>
-            <button onClick = {submitLogOut}> Log out</button> */}
 
-export default LoginPage
-
+export default SignUpPage

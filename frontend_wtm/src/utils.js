@@ -17,7 +17,7 @@ const getCSRFToken = () => {
 	}
 	return csrfToken;
 };
-console.log("token? ", getCSRFToken());
+// console.log("token? ", getCSRFToken());
 axios.defaults.headers.common["X-CSRFToken"] = getCSRFToken();
 
 export default getCSRFToken;

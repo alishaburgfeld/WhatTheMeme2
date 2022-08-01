@@ -3,6 +3,7 @@ from django.core import serializers
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from .models import AppUser as User
+from .models import FriendList, FriendRequest
 from rest_framework.decorators import api_view
 
 # We have a bunch of HttpResponse b/c being lazy and won't do anything with the responses today. otherwise should send as dictionaries through json
@@ -60,7 +61,7 @@ def log_in(request):
 def log_out(request):
     logout(request)
     print('USER IS LOGGED OUT!')
-    return HttpResponseRedirect('/') 
+    return JsonResponse({'success': True}) 
 
 @api_view(['GET'])
 def who_am_i(request):
@@ -75,8 +76,80 @@ def who_am_i(request):
     else:
         return JsonResponse({'user':None})
 
+#once friends request is approved I will add them to each other's lists
+#need to decide what I want to do if declined... also probably need a pending "friend request" area
+@api_view(['POST'])
+def add_friend(request):
+    user_email = request.data['user_email']
+    friend_email = request.data['friend_email']
+    user = User.objects.get(email = user_email)
+    friend = User.objects.get(email = friend_email)
+    if friend not in user.friends.all():
+        if friend != None:
+            try:
+                user.friends.add(friend)
+                friend.friends.add(user) 
+                return JsonResponse({'success':True})
+            except:
+                return JsonResponse({'success': False, 'reason': 'something went wrong'})
+        else:
+            return JsonResponse({'success': False, 'reason': 'friends account doesnt exist'})
+    else:
+        pass
 
+    # Need to add else
 
+@api_view(['POST'])
+def remove_friend(request):
+    user_email = request.data['user_email']
+    friend_email = request.data['friend_email']
+    user = User.objects.get(email = user_email)
+    friend = User.objects.get(email = friend_email)
+    if friend in user.friends.all():
+        try:
+            user.friends.delete(friend)
+            friend.friends.delete(user)
+            return JsonResponse({'success':True})
+        except:
+            return JsonResponse({'success': False, 'reason': 'something went wrong'})
+    else:
+        pass
+    # Need to add else
 
+@api_view(['POST'])
+def create_friend_request(request):
+    user_email = request.data['user_email']
+    friend_email = request.data['friend_email']
+    user = User.objects.get(email = user_email)
+    friend = User.objects.get(email = friend_email)
+    if friend != None:
+        try:
+            friend_request = FriendRequest(sender = user, receiver = friend, is_active = True)
+            friend_request.full_clean
+            friend_request.save()
+            return JsonResponse({'success':True})
+        except:
+            return JsonResponse({'success': False, 'reason': 'something went wrong'})
+    else:
+        return JsonResponse({'success': False, 'reason': 'friends acocunt doesnt exist'})
 
+@api_view(['POST'])
+def cancel_friend_request(request):
+    user_email = request.data['user_email']
+    friend_email = request.data['friend_email']
+    user = User.objects.get(email = user_email)
+    friend = User.objects.get(email = friend_email)
+    #this might be wrong syntax::
+    friend_request = FriendRequest.get(sender = user, receiver= friend)
+    if friend_request != None:
+        try:
+            friend_request.delete()
+            return JsonResponse({'success':True})
+        except:
+            return JsonResponse({'success': False, 'reason': 'something went wrong'})
+    else:
+        return JsonResponse({'success': False, 'reason': 'friend request doesnt exist'})
+
+#probably need to add a get request for view friend requests (to show receiver that they have a friend request)
+        
 # source ~/VEnvirons/WhatTheMeme/bin/activate

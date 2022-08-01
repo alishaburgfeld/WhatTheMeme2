@@ -3,28 +3,34 @@ import { useEffect, useState } from 'react'
 // use {thing to be imported} when there are a lot of things to be imported from that file.
 //when using the "export default" this allows you n ot to use the {} on the thing you're importing
 import './App.css'
-import axios from 'axios'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 import GamePage from './pages/GamePage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
-
+import SignUpPage from './pages/SignUpPage'
+import {whoAmI} from './AxiosCalls/AxiosCalls'
+import getCSRFToken from './utils'
 
 
 
 function App() {
-  
-    
- 
-  
-  
+  const [user, setUser] = useState(null)  
+
+  useEffect(()=> {
+      whoAmI(user, setUser)
+  }, [])
 
   return (
     <div className="App">
-      <HomePage />
-      <LoginPage />
-      <br></br>
-      <GamePage />
+      <Router> 
+        <Routes>
+          <Route path='/' element={<HomePage/>} />
+          <Route path='/login' element={<LoginPage setUser = {setUser} user = {user} />} />
+          <Route path='/signup' element = {<SignUpPage />} />
+          <Route path='/game' element = {<GamePage setUser = {setUser} user = {user}/>} />
+        </Routes>
+      </Router> 
     </div>
   )
 }

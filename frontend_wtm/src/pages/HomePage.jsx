@@ -1,13 +1,24 @@
-
+import { Link } from 'react-router-dom'
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function HomePage (){
 
-    // on page load we run whoAmI to set the user
-
     return (
-        <div>
-            <h1>Welcome!</h1>
-        </div>
+        <Container>
+            <Row>
+                <Col>
+                    <div>
+                        <h1>What the Me^^e?!</h1>
+                        <h2>
+                            <Link to={"/login"} >Log in!</Link>
+                        </h2>
+                    </div>
+                </Col>
+            </Row>
+        </Container>
+
     )
 }
 
