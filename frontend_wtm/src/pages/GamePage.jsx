@@ -2,13 +2,12 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
 import { useReducer } from 'react'
-import {whoAmI} from '../AxiosCalls/AxiosCalls'
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
-function GamePage ({user, setUser}){
+function GamePage ({whoAmI}){
 
     useEffect(()=> {
-        whoAmI(user, setUser)
+        whoAmI()
     }, [])
 
     const [memes, setMemes] = useState(null)

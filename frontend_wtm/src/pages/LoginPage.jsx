@@ -1,14 +1,48 @@
 
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
-import { Link} from 'react-router-dom'
-import {submitLogOut, submitLogIn} from '../AxiosCalls/AxiosCalls'
+import { Link, useNavigate} from 'react-router-dom'
+import axios from 'axios'
 
-function LoginPage ({setUser, user}){
-    
+
+function LoginPage ({setUser, whoAmI}){
+    const nav= useNavigate()
+
+    const submitLogIn = (event) => {
+    event.preventDefault();
+    console.log('submitted LOGIN: ' + event.target[0].value , event.target[1].value);
+    // console.dir(event.target)
+    axios.post('/login', {
+    'email': event.target[0].value,
+    'password': event.target[1].value
+    }).then((response) => {
+        console.log('YOU ARE IN THE REACT .THEN RESPONSE FROM LOGIN')
+        console.log(response.data)
+        // window.location.href= '/#/game'
+        nav("/game");
+
+        // reload so that we can get the CSRF token
+        //need to add a catch or an "if not successful"
+        })
+    }
+
+    const submitLogOut = function(event) {
+        console.log('REACT LOGOUT REQUEST')
+        event.preventDefault()
+        axios.post('/logout').then((response)=> {
+          console.log('REACT .THEN response from LOGOUT:', response)
+          whoAmI(setUser)
+          // whoAmI will set the user to undefined after logout
+          //need to set up some sort of "you are logged out message, eventually will redirect to login"
+          //also need to handle error
+        })
+    }
+
+
     return (
         <div>
-            <Form onSubmit={()=>{submitLogIn()}}>
+            {/* <Form onSubmit={()=>{submitLogIn()}}> */}
+            <Form onSubmit={submitLogIn}>
                 <Form.Group className="mb-3" controlId="formEmail" >
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" placeholder="Enter email" />
@@ -26,7 +60,7 @@ function LoginPage ({setUser, user}){
                 </Button>
             </Form>
             <p><Link to='/signup'>No account? Sign up here</Link></p>
-            <Button onClick={()=>{submitLogOut(user,setUser)}}>Log Out!</Button>
+            <Button onClick={submitLogOut}>Log Out!</Button>
             
         </div>
     )
