@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from .models import AppUser as User
 from .models import FriendList, FriendRequest
 from rest_framework.decorators import api_view
+from django.forms.models import model_to_dict
+from django.contrib.auth.decorators import login_required
 
 # We have a bunch of HttpResponse b/c being lazy and won't do anything with the responses today. otherwise should send as dictionaries through json
 
@@ -13,15 +15,25 @@ def index(request):
     theIndex = open('static/index.html').read()
     return HttpResponse(theIndex)
 
+def getUser(user_email):
+    user = User.objects.get(email = user_email)
+    return user
+
 @api_view(['POST'])
 def sign_up(request):
     print('YOU ARE IN THE SIGN_UP VIEW ON DJANGO')
     try:
-        User.objects.create_user(username=request.data['email'], password=request.data['password'], email=request.data['email'])
+        newUser = User.objects.create_user(username=request.data['email'], password=request.data['password'], email=request.data['email'])
+        newUser.full_clean
+        newUser.save()
+        list= FriendList(user = newUser)
+        list.full_clean
+        list.save()
         return JsonResponse({'success': True})
     except Exception as e:
-        print('you got an error signing up!', str(e))
-    return JsonResponse({'Success': False, 'reason':'sign-up failed'})
+        print(str(e))
+        return JsonResponse({'success': False, 'reason': str(e)})
+    # return JsonResponse({'Success': False, 'reason':'sign-up failed'})
 
 @api_view(['POST'])
 def log_in(request):
@@ -70,36 +82,40 @@ def who_am_i(request):
     # raise Exception('oops')
     if request.user.is_authenticated:
         #can take off fields if you want all of the fields. for serializers you need to put it in a list
-        data = serializers.serialize("json", [request.user], fields=['email', 'username'])
+        # data = serializers.serialize("json", [request.user], fields=['email', 'username'])
+        print(request.user.email)
         #in theory could also use model to dict instead of serializers
-        return JsonResponse({'data':data})
+        return JsonResponse({'email': request.user.email})
     else:
         return JsonResponse({'user':None})
 
 #once friends request is approved I will add them to each other's lists
 #need to decide what I want to do if declined... also probably need a pending "friend request" area
-@api_view(['POST'])
-def add_friend(request):
+@api_view(['PUT'])
+@login_required
+def add_friend(request): #accepts a friend request
     user_email = request.data['user_email']
     friend_email = request.data['friend_email']
     user = User.objects.get(email = user_email)
     friend = User.objects.get(email = friend_email)
+    
     if friend not in user.friends.all():
         if friend != None:
             try:
                 user.friends.add(friend)
                 friend.friends.add(user) 
+                friend_request = FriendRequest.objects.filter(sender = friend, receiver = user)
+                friend_request.is_active = False
                 return JsonResponse({'success':True})
             except:
                 return JsonResponse({'success': False, 'reason': 'something went wrong'})
         else:
             return JsonResponse({'success': False, 'reason': 'friends account doesnt exist'})
     else:
-        pass
+        return JsonResponse({'success': False, 'reason': 'friend is already in friend list'})
 
-    # Need to add else
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 def remove_friend(request):
     user_email = request.data['user_email']
     friend_email = request.data['friend_email']
@@ -116,13 +132,13 @@ def remove_friend(request):
         pass
     # Need to add else
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def create_friend_request(request):
-    user_email = request.data['user_email']
+    user_email = request.user.email
     friend_email = request.data['friend_email']
     user = User.objects.get(email = user_email)
     friend = User.objects.get(email = friend_email)
-    if friend != None:
+    if friend:
         try:
             friend_request = FriendRequest(sender = user, receiver = friend, is_active = True)
             friend_request.full_clean
@@ -131,25 +147,73 @@ def create_friend_request(request):
         except:
             return JsonResponse({'success': False, 'reason': 'something went wrong'})
     else:
-        return JsonResponse({'success': False, 'reason': 'friends acocunt doesnt exist'})
+        return JsonResponse({'success': False, 'reason': 'friends account doesnt exist'})
 
-@api_view(['POST'])
-def cancel_friend_request(request):
-    user_email = request.data['user_email']
-    friend_email = request.data['friend_email']
-    user = User.objects.get(email = user_email)
-    friend = User.objects.get(email = friend_email)
+# this will be stretch goal
+# @api_view(['POST'])
+# def cancel_friend_request(request):
+#     user_email = request.data['user_email']
+#     friend_email = request.data['friend_email']
+#     user = getUser(user_email)
+#     friend = getUser(friend_email)
+#     #this might be wrong syntax::
+#     friend_request = FriendRequest.get(sender = user, receiver= friend)
+#     if friend_request != None:
+#         try:
+#             friend_request.delete()
+#             return JsonResponse({'success':True})
+#         except:
+#             return JsonResponse({'success': False, 'reason': 'something went wrong'})
+#     else:
+#         return JsonResponse({'success': False, 'reason': 'friend request doesnt exist'})
+
+# this shows the user any friend requests that started from somebody else requesting they become their friend
+@api_view(['GET'])
+def view_friend_requests(request):
+    print('YOU ARE IN THE GET REQUEST ON DJANGO FOR VIEW FRIEND REQUESTS')
+    print('request', request)
+    user_email = request.user.email
+    user = getUser(user_email)
     #this might be wrong syntax::
-    friend_request = FriendRequest.get(sender = user, receiver= friend)
-    if friend_request != None:
+    # view any requests sent to the user
+    friend_requests = FriendRequest.objects.filter(receiver= user)
+    print('friend requests:', friend_requests)
+    if friend_requests:
+        list_of_friend_requests=[]
+        for item in friend_requests:
+            list_of_friend_requests.append(model_to_dict(item))
         try:
-            friend_request.delete()
-            return JsonResponse({'success':True})
+            return JsonResponse({'friend_requests': list_of_friend_requests})
         except:
             return JsonResponse({'success': False, 'reason': 'something went wrong'})
     else:
-        return JsonResponse({'success': False, 'reason': 'friend request doesnt exist'})
+        return JsonResponse({'success': False, 'reason': "you don't have any friend requests"})
 
-#probably need to add a get request for view friend requests (to show receiver that they have a friend request)
+@api_view(['GET'])
+def view_friend_list(request):
+    print('YOU ARE IN THE GET REQUEST ON DJANGO FOR VIEW FRIEND LIST')
+    user_email = request.user.email
+    print('FLIST user email:', user_email)
+    user = getUser(user_email)
+    #this might be wrong syntax::
+    # view all friends
+    friends = user.friends.all()
+    print('friend_list:', friends)
+    if len(friends)>0:
+        list_of_friends=[]
+        for friend in friends:
+            list_of_friends.append(model_to_dict(friend))
+        try:
+            print('IN FLIST TRY')
+            return JsonResponse({'friends': list_of_friends})
+        except:
+            print('in flist except')
+            return JsonResponse({'success': False, 'reason': 'something went wrong'})
+    else:
+        print('in flist else')
+        return JsonResponse({'success': False, 'reason': "you don't have any friends"})
+
+
+
         
 # source ~/VEnvirons/WhatTheMeme/bin/activate

@@ -9,5 +9,10 @@ urlpatterns = [
     path('whoami', views.who_am_i),
     path('addfriend/', views.add_friend),
     path('removefriend/', views.remove_friend),
+    path('friendlist/', views.view_friend_list),
+    path('friendrequests/view', views.view_friend_requests),
+    # cancel will be a stretch goal:
+    # path('friendrequests/cancel', views.cancel_friend_request),
+    path('friendrequests/create', views.create_friend_request),
 
 ]
