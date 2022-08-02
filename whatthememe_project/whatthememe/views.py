@@ -94,18 +94,22 @@ def who_am_i(request):
 @api_view(['PUT'])
 @login_required
 def add_friend(request): #accepts a friend request
-    user_email = request.data['user_email']
+    user_email = request.user.email
     friend_email = request.data['friend_email']
+    print('YOU ARE IN ADD FRIEND ON DJANGO.', user_email, 'friend:', friend_email)
     user = User.objects.get(email = user_email)
     friend = User.objects.get(email = friend_email)
-    
+    print('user', user, 'friend', friend)
     if friend not in user.friends.all():
         if friend != None:
             try:
+                print('now in add friend try')
                 user.friends.add(friend)
                 friend.friends.add(user) 
+                print('user.friends:', user.friends)
                 friend_request = FriendRequest.objects.filter(sender = friend, receiver = user)
                 friend_request.is_active = False
+                print('is active?', friend_request.is_active)
                 return JsonResponse({'success':True})
             except:
                 return JsonResponse({'success': False, 'reason': 'something went wrong'})
@@ -145,6 +149,7 @@ def create_friend_request(request):
             friend_request.save()
             return JsonResponse({'success':True})
         except:
+            # if friend request already exists it will send this one
             return JsonResponse({'success': False, 'reason': 'something went wrong'})
     else:
         return JsonResponse({'success': False, 'reason': 'friends account doesnt exist'})
@@ -176,12 +181,18 @@ def view_friend_requests(request):
     user = getUser(user_email)
     #this might be wrong syntax::
     # view any requests sent to the user
-    friend_requests = FriendRequest.objects.filter(receiver= user)
-    print('friend requests:', friend_requests)
+    friend_requests = FriendRequest.objects.filter(receiver= user, is_active = True)
+    # print('friend requests:', friend_requests)
     if friend_requests:
         list_of_friend_requests=[]
         for item in friend_requests:
-            list_of_friend_requests.append(model_to_dict(item))
+            #sends back the emails of all pending friend requests
+            sender = item.sender
+            # print('sender:', sender)
+            # print('sender.email', sender.email)
+            # sender = User.objects.filter(email = item.sender)
+            list_of_friend_requests.append(sender.email)
+        print('list of friends:', list_of_friend_requests)
         try:
             return JsonResponse({'friend_requests': list_of_friend_requests})
         except:
