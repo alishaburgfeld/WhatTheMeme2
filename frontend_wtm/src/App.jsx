@@ -21,27 +21,21 @@ function App() {
   const whoAmI = async () => {
     console.log('I AM IN WHO AM I')
     const response = await axios.get('/whoami')
-    console.log('whoamI response.data:', response.data)
-    let newUser = response.data && response.data[0] && response.data[0].fields
-    console.log('user from whoami:', newUser)
+    const newUser = response.data && response.data.email
+    console.log('USER EMAIL in WHO AM I:', newUser)
     // console.log('response from whoami:', response)
     setUser(newUser)
   }
-  
-  useEffect(()=> {
-    console.log('IN USE EFFECT')
-      whoAmI()
-  }, [])
+
 
   return (
     <div className="App">
-      <div> Hello </div>
       <Router> 
         <Routes>
-          <Route path='/' element={<HomePage/>} />
-          <Route path='/login' element={<LoginPage setUser = {setUser} user = {user} whoAmI= {whoAmI}/>} />
+          <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user}/>} />
+          <Route path='/login' element={<LoginPage/>} />
           <Route path='/signup' element = {<SignUpPage />} />
-          <Route path='/game' element = {<GamePage whoAmI = {whoAmI}/>} />
+          <Route path='/game' element = {<GamePage user={user}/>} />
         </Routes>
       </Router> 
     </div>

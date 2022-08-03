@@ -1,4 +1,3 @@
-
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
 import { Link, useNavigate} from 'react-router-dom'
@@ -19,7 +18,7 @@ function LoginPage ({setUser, whoAmI}){
         console.log('YOU ARE IN THE REACT .THEN RESPONSE FROM LOGIN')
         console.log(response.data)
         // window.location.href= '/#/game'
-        nav("/game");
+        nav("/");
 
         // reload so that we can get the CSRF token
         //need to add a catch or an "if not successful"
@@ -31,7 +30,7 @@ function LoginPage ({setUser, whoAmI}){
         event.preventDefault()
         axios.post('/logout').then((response)=> {
           console.log('REACT .THEN response from LOGOUT:', response)
-          whoAmI(setUser)
+          whoAmI()
           // whoAmI will set the user to undefined after logout
           //need to set up some sort of "you are logged out message, eventually will redirect to login"
           //also need to handle error

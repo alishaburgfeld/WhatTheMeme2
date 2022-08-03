@@ -98,21 +98,26 @@ def add_friend(request): #accepts a friend request
     friend_email = request.data['friend_email']
     print('YOU ARE IN ADD FRIEND ON DJANGO.', user_email, 'friend:', friend_email)
     user = User.objects.get(email = user_email)
+    userFList = FriendList.objects.get(user = user)
     friend = User.objects.get(email = friend_email)
+    friendFList = FriendList.objects.get(user = friend)
     print('user', user, 'friend', friend)
     if friend not in user.friends.all():
         if friend != None:
             try:
                 print('now in add friend try')
-                user.friends.add(friend)
-                friend.friends.add(user) 
+                # user.friends.add(friend)
+                userFList.friends.add(friend)
+                # friend.friends.add(user) 
+                friendFList.friends.add(user)
                 print('user.friends:', user.friends)
                 friend_request = FriendRequest.objects.filter(sender = friend, receiver = user)
                 friend_request.is_active = False
+                friend_request.save()
                 print('is active?', friend_request.is_active)
                 return JsonResponse({'success':True})
-            except:
-                return JsonResponse({'success': False, 'reason': 'something went wrong'})
+            except Exception as e:
+                return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
         else:
             return JsonResponse({'success': False, 'reason': 'friends account doesnt exist'})
     else:
@@ -192,7 +197,7 @@ def view_friend_requests(request):
             # print('sender.email', sender.email)
             # sender = User.objects.filter(email = item.sender)
             list_of_friend_requests.append(sender.email)
-        print('list of friends:', list_of_friend_requests)
+        print('list of friends_requests:', list_of_friend_requests)
         try:
             return JsonResponse({'friend_requests': list_of_friend_requests})
         except:
@@ -213,7 +218,15 @@ def view_friend_list(request):
     if len(friends)>0:
         list_of_friends=[]
         for friend in friends:
-            list_of_friends.append(model_to_dict(friend))
+            # print(friend.id) # THIS IS THE FRIENDS LIST ID!!!!
+            friend_list = FriendList.objects.get(id= friend.id)
+            friend_object=friend_list.user
+            # print(friend_object)
+            # print('friend email', friend_object.email)
+            friend_email = friend_object.email
+            list_of_friends.append(friend_email)
+            # print('dir friend', dir(friend))
+        print('list of friends line 225:', list_of_friends)
         try:
             print('IN FLIST TRY')
             return JsonResponse({'friends': list_of_friends})

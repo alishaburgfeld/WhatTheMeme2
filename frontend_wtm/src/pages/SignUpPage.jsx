@@ -4,7 +4,6 @@ import axios from 'axios'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { Link, useNavigate } from 'react-router-dom'
-import {submitSignUp} from '../AxiosCalls/AxiosCalls'
 
 function SignUpPage (){
     const nav= useNavigate()
