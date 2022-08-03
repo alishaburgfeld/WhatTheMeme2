@@ -29,8 +29,9 @@ function LoginPage ({setUser, whoAmI}){
         console.log('REACT LOGOUT REQUEST')
         event.preventDefault()
         axios.post('/logout').then((response)=> {
-          console.log('REACT .THEN response from LOGOUT:', response)
+            console.log(response)
           whoAmI()
+          nav("/");
           // whoAmI will set the user to undefined after logout
           //need to set up some sort of "you are logged out message, eventually will redirect to login"
           //also need to handle error

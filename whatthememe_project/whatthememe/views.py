@@ -74,6 +74,7 @@ def log_out(request):
     logout(request)
     print('USER IS LOGGED OUT!')
     return JsonResponse({'success': True}) 
+# need to add something for if they click it and aren't logged in
 
 @api_view(['GET'])
 def who_am_i(request):
@@ -106,13 +107,13 @@ def add_friend(request): #accepts a friend request
         if friend != None:
             try:
                 print('now in add friend try')
-                # user.friends.add(friend)
+                # wrong syntax: user.friends.add(friend)
                 userFList.friends.add(friend)
-                # friend.friends.add(user) 
                 friendFList.friends.add(user)
                 print('user.friends:', user.friends)
-                friend_request = FriendRequest.objects.filter(sender = friend, receiver = user)
+                friend_request = FriendRequest.objects.get(sender = friend, receiver = user)
                 friend_request.is_active = False
+                # had to use update instead of save because it is a queryset
                 friend_request.save()
                 print('is active?', friend_request.is_active)
                 return JsonResponse({'success':True})
@@ -124,22 +125,27 @@ def add_friend(request): #accepts a friend request
         return JsonResponse({'success': False, 'reason': 'friend is already in friend list'})
 
 
-@api_view(['DELETE'])
+@api_view(['PUT'])
 def remove_friend(request):
-    user_email = request.data['user_email']
+    print(request)
+    user_email = request.user.email
     friend_email = request.data['friend_email']
+    print('IN DELETE ON DJANGO.', user_email, 'friend', friend_email)
     user = User.objects.get(email = user_email)
+    userFList = FriendList.objects.get(user = user)
     friend = User.objects.get(email = friend_email)
-    if friend in user.friends.all():
+    friendFList = FriendList.objects.get(user = friend)
+    if friend in userFList.friends.all():
         try:
-            user.friends.delete(friend)
-            friend.friends.delete(user)
+            print('IN DELETE FRIEND TRY')
+            userFList.friends.remove(friend)
+            print('userflist', userFList)
+            friendFList.friends.remove(user)
             return JsonResponse({'success':True})
-        except:
-            return JsonResponse({'success': False, 'reason': 'something went wrong'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
     else:
-        pass
-    # Need to add else
+        return JsonResponse({'success': False, 'reason': 'user is not your friend'})
 
 @api_view(['PUT'])
 def create_friend_request(request):
@@ -184,7 +190,6 @@ def view_friend_requests(request):
     print('request', request)
     user_email = request.user.email
     user = getUser(user_email)
-    #this might be wrong syntax::
     # view any requests sent to the user
     friend_requests = FriendRequest.objects.filter(receiver= user, is_active = True)
     # print('friend requests:', friend_requests)
@@ -197,6 +202,7 @@ def view_friend_requests(request):
             # print('sender.email', sender.email)
             # sender = User.objects.filter(email = item.sender)
             list_of_friend_requests.append(sender.email)
+            print('CHECK TYPE HERE!!!!!' , type(sender.email))
         print('list of friends_requests:', list_of_friend_requests)
         try:
             return JsonResponse({'friend_requests': list_of_friend_requests})
@@ -237,7 +243,29 @@ def view_friend_list(request):
         print('in flist else')
         return JsonResponse({'success': False, 'reason': "you don't have any friends"})
 
-
+@api_view(['PUT'])
+def decline_friend_request(request):
+    print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR DECLINE FRIEND REQUESTS')
+    # print('request', request)
+    user_email = request.user.email
+    user = getUser(user_email)
+    print('user', user, 'email:', user_email)
+    friend_email = request.data['friend_email']
+    print('friend_email', friend_email)
+    friend = getUser(friend_email)
+    
+    print('friend', friend, 'email:', friend_email)
+    friend_request = FriendRequest.objects.get(sender = friend, receiver = user, is_active = True)
+    print('decline friend request:', friend_request)
+    if friend_request:
+        friend_request.is_active = False
+        friend_request.save()
+        try:
+            return JsonResponse({'success':True, 'reason': 'friend request is now inactive'})
+        except:
+            return JsonResponse({'success': False, 'reason': 'something went wrong'})
+    else:
+        return JsonResponse({'success': False, 'reason': "you don't have a request from this friend"})
 
         
 # source ~/VEnvirons/WhatTheMeme/bin/activate

@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import FriendAndLogout from '../components/FriendAndLogout'
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
-function GamePage ({user}){
+function GamePage ({user, whoAmI}){
 
     const [memes, setMemes] = useState(null)
     const [drawnCard, setDrawnCard] = useState(null)
@@ -67,9 +67,7 @@ function GamePage ({user}){
             {memes != null ? <img src={memes[10].url}></img> : ""}
             {/* <Button onClick={drawCard}>Draw a Card</Button> */}
             {availableCards != null? <h3>{availableCards[10].text}</h3> : ""}
-            <div>
-                <FriendAndLogout user={user}/>
-            </div>
+            
         </div>
     )
 }

@@ -14,5 +14,6 @@ urlpatterns = [
     # cancel will be a stretch goal:
     # path('friendrequests/cancel', views.cancel_friend_request),
     path('friendrequests/create', views.create_friend_request),
+    path('friendrequests/decline', views.decline_friend_request),
 
 ]

@@ -35,7 +35,7 @@ function App() {
           <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user}/>} />
           <Route path='/login' element={<LoginPage/>} />
           <Route path='/signup' element = {<SignUpPage />} />
-          <Route path='/game' element = {<GamePage user={user}/>} />
+          <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI}/>} />
         </Routes>
       </Router> 
     </div>

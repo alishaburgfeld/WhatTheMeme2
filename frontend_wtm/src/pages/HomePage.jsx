@@ -17,7 +17,12 @@ function HomePage ({whoAmI, user}){
                     <div>
                         <h1>What the Me^^e?!</h1>
                         <h2>
-                            {user != null  || user != undefined ? <Link to={"/game"} >Lets Play!</Link> : <Link to={"/login"} >Log in!</Link>}
+                            {user != null  || user != undefined 
+                            ? <div>
+                                <FriendAndLogout user={user} whoAmI = {whoAmI}/>
+                                <Link to={"/game"} >Lets Play!</Link>
+                            </div>
+                            : <Link to={"/login"} >Log in!</Link>}
                         </h2>
                     </div>
                 </Col>
