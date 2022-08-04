@@ -16,8 +16,16 @@ const joinGame = async () => {
     return response
 }
 
+const leaveGame = async () => {
+    console.log('I AM IN LEAVE game react')
+    const response = await axios.put('/leavegame' )
+    console.log('LEAVEgame response', response)
+    return response
+}
+
 
 export {
     startGame,
-    joinGame
+    joinGame,
+    leaveGame
 }

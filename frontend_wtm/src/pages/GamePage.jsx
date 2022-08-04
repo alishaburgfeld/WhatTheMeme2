@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
-import { joinGame, startGame } from '../AxiosCalls/GameAxiosCalls'
+import { joinGame, startGame, leaveGame } from '../AxiosCalls/GameAxiosCalls'
 
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
@@ -67,7 +67,8 @@ function GamePage ({user, whoAmI}){
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
             {memes != null ? <img src={memes[10].url}></img> : ""}
             {/* <Button onClick={drawCard}>Draw a Card</Button> */}
-            {availableCards != null? <h3>{availableCards[10].text}</h3> : ""}
+            {/* {availableCards != null? <h3>{availableCards[10].text}</h3> : ""} */}
+            <Button onClick={leaveGame}>Leave Game</Button>
             
         </div>
     )

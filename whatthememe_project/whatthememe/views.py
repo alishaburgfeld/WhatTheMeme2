@@ -1,3 +1,4 @@
+from glob import glob
 from django.shortcuts import render
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -12,7 +13,7 @@ import random
 import json
 
 cards = []
-
+cardCount = 0
 
 def index(request):
     print('home!')
@@ -36,7 +37,7 @@ def getCards():
     # JSON_response is an array of objects, the value for key "text" is what I want.
     for card in JSON_response:
         cards.append(card['text'])
-    print('CARDS ARRAY', cards)
+    # print('CARDS ARRAY', cards)
 
 
 @api_view(['POST'])
@@ -283,6 +284,27 @@ def decline_friend_request(request):
     else:
         return JsonResponse({'success': False, 'reason': "you don't have a request from this friend"})
 
+def create_card(game, owner):
+    print('IN CREATE CARD')
+    try:
+        global cardCount
+        global cards
+        game_card = Game_Card(phrase=cards[cardCount], game = game, face_up = False, votes = 0, owner = owner, round_selected=0, is_active = True)
+        game_card.full_clean()
+        game_card.save()
+        print('GAME CARD = :', game_card)
+        cardCount+=1
+        print('CARD COUNT', cardCount)
+        return game_card 
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({'success': False, 'reason': str(e)})
+
+
+
+
+
+
 @api_view(['POST'])
 @login_required
 def start_game(request):
@@ -292,27 +314,54 @@ def start_game(request):
     user = getUser(user_email)
     code = str(random.randint(10001,999999))
     try:
-        game = Game(code = code) #need to know if I need to pass in a code or not
+        game = Game(code = code)
         game.full_clean
         game.save()
         print('NEW GAME: ', game)
         game_code = game.code
         print('NEW GAME CODE: ', game_code)
+        print('GAME.ID', game.id)
+        print('USER.ID', user.id)
         game_user = Game_User(game = game, player = user)
         game_user.full_clean
         game_user.save()
         print('GAME USER IS!!!! ', game_user)
+        # this works, but just going to comment it out while debugging the rest
         getCards()
-        return JsonResponse({'success':True, 'game_code': game_code})
-        # GAME WORKED, GAME CODE WORKED (I THINK), GAME USER DID NOT WORK)
+        user_cards = []
+        while len(user_cards) < 7:
+            card=create_card(game, game_user)
+            user_cards.append(model_to_dict(card))
+        print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
+        return JsonResponse({'success':True, 'game_code': game_code, 'user_cards': user_cards})
     except Exception as e:
         print(str(e))
         return JsonResponse({'success': False, 'reason': str(e)})
     
     # need to account for if they're showing up as in a different game
-
+    # when client goes back to lobby need to set them as inactive game user. Or delete game user??
+@api_view(['POST'])
+@login_required
 def join_game(request):
     pass
+    #need to create 7 card objects and pass them to this user. 
 
+@api_view(['PUT'])
+@login_required
+def leave_game(request):
+    print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR LEAVE GAME')
+    # print('request', request)
+    user_email = request.user.email
+    user = getUser(user_email)
+    print('USER =', user)
+    game_user= Game_User.objects.get(player = user)
+    print('GAME USER = ', game_user)
+    try:
+        game_user.delete()
+        # this will also delete all game_cards that belonged to that user
+        print('GAME USER SHOULD BE DELETED', game_user)
+        return JsonResponse({'success':True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
 # source ~/VEnvirons/WhatTheMeme/bin/activate

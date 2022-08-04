@@ -46,9 +46,11 @@ class Game_Card(models.Model):
     game = models.ForeignKey(Game, on_delete = models.CASCADE)
     face_up = models.BooleanField(blank=True, default=False) #displaying face up on board for all to see
     votes = models.IntegerField(blank=True, default=0, validators = [MinValueValidator(0), MaxValueValidator(6)]) #going to set max players as 6
-    owner = models.ForeignKey(AppUser, on_delete = models.CASCADE)
+    owner = models.ForeignKey(Game_User, on_delete = models.CASCADE)
     round_selected = models.IntegerField(blank=True, default=0, null=True) #will edit the value if its selected by the player
     is_active = models.BooleanField(blank= True, default=True)
 
     class Meta:
-        unique_together = (('game', 'owner'))
+        unique_together = (('game', 'phrase'))
+    
+    # don't think this is true anymore --- this may be causing this issue when trying to use "model to dict": 'JsonResponse' object has no attribute '_meta'

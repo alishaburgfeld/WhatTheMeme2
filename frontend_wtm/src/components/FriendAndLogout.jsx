@@ -6,6 +6,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import ListGroupItem from 'react-bootstrap/esm/ListGroupItem'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { leaveGame } from '../AxiosCalls/GameAxiosCalls'
 import Form from 'react-bootstrap/Form';
 
 
@@ -96,7 +97,7 @@ function FriendAndLogout({user, whoAmI}) {
                 </Accordion.Item>
                 <Accordion.Item eventKey="3">
                     <Accordion.Header>Lobby</Accordion.Header>
-                    <Accordion.Body><Link to={"/"} >Lobby</Link></Accordion.Body>
+                    <Accordion.Body><Button onClick={leaveGame}>Leave Game</Button></Accordion.Body>
                 </Accordion.Item>
             </Accordion> 
         </div>

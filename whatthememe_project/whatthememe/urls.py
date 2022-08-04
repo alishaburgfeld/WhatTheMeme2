@@ -17,5 +17,6 @@ urlpatterns = [
     path('friendrequests/decline', views.decline_friend_request),
     path('startgame', views.start_game),
     path('joingame', views.join_game),
+    path('leavegame', views.leave_game),
 
 ]
