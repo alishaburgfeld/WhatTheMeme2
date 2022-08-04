@@ -3,12 +3,16 @@ from django.core import serializers
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from .models import AppUser as User
-from .models import FriendList, FriendRequest
+from .models import FriendList, FriendRequest, Game, Game_User, Game_Card
 from rest_framework.decorators import api_view
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
+import requests
+import random
+import json
 
-# We have a bunch of HttpResponse b/c being lazy and won't do anything with the responses today. otherwise should send as dictionaries through json
+cards = []
+
 
 def index(request):
     print('home!')
@@ -18,6 +22,22 @@ def index(request):
 def getUser(user_email):
     user = User.objects.get(email = user_email)
     return user
+
+#api call
+def getCards():
+    url = "https://cards-against-humanity.p.rapidapi.com/white/200"
+    headers = {
+        "X-RapidAPI-Key": "89b2f4fcc3mshb1c4db4c3ef15afp151f39jsn4718f6fb42de",
+        "X-RapidAPI-Host": "cards-against-humanity.p.rapidapi.com"
+    }
+    response = requests.request("GET", url, headers=headers)
+    JSON_response = json.loads(response.text)
+    # print('A TEXT:!!!!!!!!!!!!',JSON_response)
+    # JSON_response is an array of objects, the value for key "text" is what I want.
+    for card in JSON_response:
+        cards.append(card['text'])
+    print('CARDS ARRAY', cards)
+
 
 @api_view(['POST'])
 def sign_up(request):
@@ -50,7 +70,6 @@ def log_in(request):
     # user = authenticate(username=email, password=password, email=email)
     user = authenticate(username=email, password=password)
     print('login on django side!', user.email, user.password)
-
     if user is not None:
         if user.is_active:
             try:
@@ -102,7 +121,7 @@ def add_friend(request): #accepts a friend request
     userFList = FriendList.objects.get(user = user)
     friend = User.objects.get(email = friend_email)
     friendFList = FriendList.objects.get(user = friend)
-    print('user', user, 'friend', friend)
+    # print('user', user, 'friend', friend)
     if friend not in user.friends.all():
         if friend != None:
             try:
@@ -127,7 +146,7 @@ def add_friend(request): #accepts a friend request
 
 @api_view(['PUT'])
 def remove_friend(request):
-    print(request)
+    # print(request)
     user_email = request.user.email
     friend_email = request.data['friend_email']
     print('IN DELETE ON DJANGO.', user_email, 'friend', friend_email)
@@ -217,7 +236,6 @@ def view_friend_list(request):
     user_email = request.user.email
     print('FLIST user email:', user_email)
     user = getUser(user_email)
-    #this might be wrong syntax::
     # view all friends
     friends = user.friends.all()
     print('friend_list:', friends)
@@ -227,12 +245,10 @@ def view_friend_list(request):
             # print(friend.id) # THIS IS THE FRIENDS LIST ID!!!!
             friend_list = FriendList.objects.get(id= friend.id)
             friend_object=friend_list.user
-            # print(friend_object)
-            # print('friend email', friend_object.email)
             friend_email = friend_object.email
             list_of_friends.append(friend_email)
             # print('dir friend', dir(friend))
-        print('list of friends line 225:', list_of_friends)
+        # print('list of friends line 225:', list_of_friends)
         try:
             print('IN FLIST TRY')
             return JsonResponse({'friends': list_of_friends})
@@ -249,9 +265,9 @@ def decline_friend_request(request):
     # print('request', request)
     user_email = request.user.email
     user = getUser(user_email)
-    print('user', user, 'email:', user_email)
+    # print('user', user, 'email:', user_email)
     friend_email = request.data['friend_email']
-    print('friend_email', friend_email)
+    # print('friend_email', friend_email)
     friend = getUser(friend_email)
     
     print('friend', friend, 'email:', friend_email)
@@ -267,5 +283,36 @@ def decline_friend_request(request):
     else:
         return JsonResponse({'success': False, 'reason': "you don't have a request from this friend"})
 
-        
+@api_view(['POST'])
+@login_required
+def start_game(request):
+    print('YOU ARE IN THE POST REQUEST ON DJANGO FOR START GAME')
+    # print('request', request)
+    user_email = request.user.email
+    user = getUser(user_email)
+    code = str(random.randint(10001,999999))
+    try:
+        game = Game(code = code) #need to know if I need to pass in a code or not
+        game.full_clean
+        game.save()
+        print('NEW GAME: ', game)
+        game_code = game.code
+        print('NEW GAME CODE: ', game_code)
+        game_user = Game_User(game = game, player = user)
+        game_user.full_clean
+        game_user.save()
+        print('GAME USER IS!!!! ', game_user)
+        getCards()
+        return JsonResponse({'success':True, 'game_code': game_code})
+        # GAME WORKED, GAME CODE WORKED (I THINK), GAME USER DID NOT WORK)
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({'success': False, 'reason': str(e)})
+    
+    # need to account for if they're showing up as in a different game
+
+def join_game(request):
+    pass
+
+
 # source ~/VEnvirons/WhatTheMeme/bin/activate

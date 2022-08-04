@@ -28,7 +28,7 @@ class FriendRequest(models.Model):
 
 class Game(models.Model):
     is_active = models.BooleanField(blank= True, default=True)  
-    code = str(random.randint(10001,999999))  #how can I do a unique = true here?
+    code = models.CharField(max_length=100, null=False, unique=True) 
 
 class Game_User(models.Model):
     game = models.ForeignKey(Game, on_delete = models.CASCADE)

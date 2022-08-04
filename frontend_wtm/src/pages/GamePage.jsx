@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
-import FriendAndLogout from '../components/FriendAndLogout'
+import { joinGame, startGame } from '../AxiosCalls/GameAxiosCalls'
+
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
 function GamePage ({user, whoAmI}){

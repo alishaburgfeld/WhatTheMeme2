@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
-import {getFriendList, getFriendRequests, createFriendRequest, acceptFriendRequest, removeFriend, declineFriendRequest} from '../AxiosCalls/AxiosCalls'
+import {getFriendList, getFriendRequests, createFriendRequest, acceptFriendRequest, removeFriend, declineFriendRequest} from '../AxiosCalls/FriendAxiosCalls'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
 import ListGroupItem from 'react-bootstrap/esm/ListGroupItem'

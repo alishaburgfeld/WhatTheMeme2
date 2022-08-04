@@ -3,6 +3,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {useState, useEffect} from 'react'
+import FriendAndLogout from '../components/FriendAndLogout'
+import { startGame, joinGame } from '../AxiosCalls/GameAxiosCalls';
 
 function HomePage ({whoAmI, user}){
 
@@ -19,8 +21,11 @@ function HomePage ({whoAmI, user}){
                         <h2>
                             {user != null  || user != undefined 
                             ? <div>
+                                <Link to={"/game"} onClick={joinGame}>Join Game!</Link>
+                                <br></br>
+                                <Link to={"/game"} onClick={startGame} >Start Game!</Link>
                                 <FriendAndLogout user={user} whoAmI = {whoAmI}/>
-                                <Link to={"/game"} >Lets Play!</Link>
+                                
                             </div>
                             : <Link to={"/login"} >Log in!</Link>}
                         </h2>
