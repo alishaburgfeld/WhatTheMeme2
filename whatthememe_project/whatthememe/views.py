@@ -13,7 +13,7 @@ import random
 import json
 
 cards = []
-cardCount = 0
+# cardCount = 0
 
 def index(request):
     print('home!')
@@ -99,14 +99,13 @@ def log_out(request):
 @api_view(['GET'])
 def who_am_i(request):
     print('YOU ARE IN THE WHO_AM_I VIEW ON DJANGO')
-    # Make sure that you don't send sensitive information to the client, such as password hashes
-    # raise Exception('oops')
     if request.user.is_authenticated:
-        #can take off fields if you want all of the fields. for serializers you need to put it in a list
-        # data = serializers.serialize("json", [request.user], fields=['email', 'username'])
-        print(request.user.email)
-        #in theory could also use model to dict instead of serializers
-        return JsonResponse({'email': request.user.email})
+        user = getUser(request.user.email)
+        # game_user = Game_User.objects.get(player = user)
+        # if game_user:
+        #     return JsonResponse({'email': request.user.email, 'game_user': True})
+        # else:
+        return JsonResponse({'email': request.user.email, 'game_user': False})
     else:
         return JsonResponse({'user':None})
 
@@ -287,14 +286,19 @@ def decline_friend_request(request):
 def create_card(game, owner):
     print('IN CREATE CARD')
     try:
-        global cardCount
+        # global cardCount
+        # its ok for cards to be global because its random each time a game is started, and the cardCount will be tied to each game
         global cards
-        game_card = Game_Card(phrase=cards[cardCount], game = game, face_up = False, votes = 0, owner = owner, round_selected=0, is_active = True)
+        card_count = game.card_count
+        game_card = Game_Card(phrase=cards[card_count], game = game, face_up = False, votes = 0, owner = owner, round_selected=0, is_active = True)
         game_card.full_clean()
         game_card.save()
         print('GAME CARD = :', game_card)
-        cardCount+=1
-        print('CARD COUNT', cardCount)
+        game.card_count+=1
+        game.save()
+        print('GAME CARD COUNT IS NOW', game.card_count)
+        # cardCount+=1
+        # print('CARD COUNT', cardCount)
         return game_card 
     except Exception as e:
         print(str(e))
@@ -319,20 +323,20 @@ def start_game(request):
         game.save()
         print('NEW GAME: ', game)
         game_code = game.code
-        print('NEW GAME CODE: ', game_code)
-        print('GAME.ID', game.id)
-        print('USER.ID', user.id)
+        # print('NEW GAME CODE: ', game_code)
+        # print('GAME.ID', game.id)
+        # print('USER.ID', user.id)
         game_user = Game_User(game = game, player = user)
         game_user.full_clean
         game_user.save()
-        print('GAME USER IS!!!! ', game_user)
+        # print('GAME USER IS!!!! ', game_user)
         # this works, but just going to comment it out while debugging the rest
         getCards()
         user_cards = []
         while len(user_cards) < 7:
             card=create_card(game, game_user)
             user_cards.append(model_to_dict(card))
-        print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
+        # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
         return JsonResponse({'success':True, 'game_code': game_code, 'user_cards': user_cards})
     except Exception as e:
         print(str(e))

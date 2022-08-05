@@ -23,6 +23,7 @@ function SignUpPage (){
 
     return(
         <div>
+            <h2>Sign up!</h2>
             <Form onSubmit={submitSignUp}>
                 <Form.Group className="mb-3" controlId="formEmail" >
                     <Form.Label>Email address</Form.Label>

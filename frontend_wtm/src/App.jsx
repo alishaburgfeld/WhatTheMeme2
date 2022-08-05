@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios'
-
+import NavBar from './components/Navbar'
 import GamePage from './pages/GamePage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
@@ -16,6 +16,8 @@ import getCSRFToken from './utils'
 
 function App() {
   const [user, setUser] = useState(null)  
+  const [gameUser, setGameUser] = useState(null)  
+  const [hand, setHand] = useState(null)
   axios.defaults.headers.common["X-CSRFToken"] = getCSRFToken();
 
   const whoAmI = async () => {
@@ -24,18 +26,23 @@ function App() {
     const newUser = response.data && response.data.email
     console.log('USER EMAIL in WHO AM I:', newUser)
     // console.log('response from whoami:', response)
+    if (response.data.game_user==='True') {
+      setGameUser(newUser)
+    }
     setUser(newUser)
   }
 
 
   return (
     <div className="App">
+      
       <Router> 
+        {/* <NavBar whoAmI={whoAmI} user = {user} gameUser = {gameUser}/> */}
         <Routes>
-          <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user}/>} />
+          <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user} hand={hand} setHand={setHand}/>} />
           <Route path='/login' element={<LoginPage/>} />
           <Route path='/signup' element = {<SignUpPage />} />
-          <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI}/>} />
+          <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI} hand={hand}/>} />
         </Routes>
       </Router> 
     </div>

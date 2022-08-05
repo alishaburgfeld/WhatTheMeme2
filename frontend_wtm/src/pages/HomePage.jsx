@@ -5,8 +5,9 @@ import Col from 'react-bootstrap/Col';
 import {useState, useEffect} from 'react'
 import FriendAndLogout from '../components/FriendAndLogout'
 import { startGame, joinGame } from '../AxiosCalls/GameAxiosCalls';
+import {startGame} from '../components/Hand'
 
-function HomePage ({whoAmI, user}){
+function HomePage ({whoAmI, user, setHand}){
 
     useEffect(()=> {
         whoAmI()
@@ -23,7 +24,7 @@ function HomePage ({whoAmI, user}){
                             ? <div>
                                 <Link to={"/game"} onClick={joinGame}>Join Game!</Link>
                                 <br></br>
-                                <Link to={"/game"} onClick={startGame} >Start Game!</Link>
+                                <Link to={"/game"} onClick={()=>{startGame(setHand)}} >Start Game!</Link>
                                 <FriendAndLogout user={user} whoAmI = {whoAmI}/>
                                 
                             </div>

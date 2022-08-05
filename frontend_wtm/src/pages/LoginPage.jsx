@@ -41,7 +41,7 @@ function LoginPage ({setUser, whoAmI}){
 
     return (
         <div>
-            {/* <Form onSubmit={()=>{submitLogIn()}}> */}
+            <h2>Login Here!</h2>
             <Form onSubmit={submitLogIn}>
                 <Form.Group className="mb-3" controlId="formEmail" >
                     <Form.Label>Email address</Form.Label>
