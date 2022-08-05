@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {useState, useEffect} from 'react'
 import FriendAndLogout from '../components/FriendAndLogout'
-import { startGame, joinGame } from '../AxiosCalls/GameAxiosCalls';
+import {joinGame } from '../AxiosCalls/GameAxiosCalls';
 import {startGame} from '../components/Hand'
 
 function HomePage ({whoAmI, user, setHand}){
@@ -24,8 +24,8 @@ function HomePage ({whoAmI, user, setHand}){
                             ? <div>
                                 <Link to={"/game"} onClick={joinGame}>Join Game!</Link>
                                 <br></br>
-                                <Link to={"/game"} onClick={()=>{startGame(setHand)}} >Start Game!</Link>
-                                <FriendAndLogout user={user} whoAmI = {whoAmI}/>
+                                <Link to={"/game"} onClick={()=>{startGame(setHand, whoAmI)}} >Start Game!</Link>
+                                {/* <FriendAndLogout user={user} whoAmI = {whoAmI}/> */}
                                 
                             </div>
                             : <Link to={"/login"} >Log in!</Link>}

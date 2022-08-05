@@ -1,4 +1,4 @@
-function Card({id, phrase, votes, }) {
+function Card({id, phrase, votes, face_up}) {
     return (
         <div class="maincontainer">
             <div class="thecard">

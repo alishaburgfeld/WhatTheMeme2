@@ -1,8 +1,8 @@
 import axios from 'axios'
-import {useNavigate } from 'react-router-dom'
+
 // rememeber all asynch await returns promise so on actual page need to do a .then!
 
-// const nav= useNavigate()
+
 
 const joinGame = async () => {
     console.log('I AM IN JOIN game react')
@@ -11,7 +11,7 @@ const joinGame = async () => {
     return response
 }
 
-const leaveGame = async () => {
+const leaveGame = async (nav) => {
     console.log('I AM IN LEAVE game react')
     const response = await axios.put('/leavegame' )
     console.log('LEAVEgame response', response)
@@ -22,7 +22,6 @@ const leaveGame = async () => {
 
 
 export {
-    startGame,
     joinGame,
     leaveGame
 }

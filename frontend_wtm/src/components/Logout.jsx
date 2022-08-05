@@ -1,8 +1,9 @@
-import 'axios'
+import axios from 'axios'
 import {useNavigate } from 'react-router-dom'
+import Button from 'react-bootstrap/Button'
 
 
-function Logout() {
+function Logout({whoAmI}) {
 
     const nav= useNavigate()
 

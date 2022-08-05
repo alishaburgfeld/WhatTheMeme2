@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-// import {useNavigate } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { leaveGame } from '../AxiosCalls/GameAxiosCalls'
 import {getFriendList, getFriendRequests, createFriendRequest, acceptFriendRequest, removeFriend, declineFriendRequest} from '../AxiosCalls/FriendAxiosCalls'
@@ -15,7 +15,7 @@ import Logout from './Logout'
 
 
 function NavBar({user,whoAmI, gameUser}) {
-
+  const nav= useNavigate()
   // const nav= useNavigate()
 
 
@@ -41,15 +41,6 @@ function NavBar({user,whoAmI, gameUser}) {
             setFriendRequests(newList)
         })
     }, [])
-
-  // const submitLogOut = function(event) {
-  //     // console.log('REACT LOGOUT REQUEST')
-  //     event.preventDefault()
-  //     axios.post('/logout').then((response)=> {
-  //       whoAmI()
-  //       nav("/");
-  //     })
-  // }
 
 
   return (
@@ -114,12 +105,11 @@ function NavBar({user,whoAmI, gameUser}) {
                     : <NavDropdown.Item>No pending requests</NavDropdown.Item>
                     }
                   </NavDropdown>
-                  {gameUser != null
-                  ? <Nav.Link><Button onClick={leaveGame}>Leave Game</Button></Nav.Link>
+                  {gameUser
+                  ? <Nav.Link><Button onClick={()=>{leaveGame(nav)}}>Leave Game</Button></Nav.Link>
                   : ""
                 }
-                <Nav.Link><Logout /></Nav.Link>
-                {/* <Nav.Link><Button onClick={submitLogOut}>Log Out</Button></Nav.Link> */}
+                <Nav.Link><Logout whoAmI={whoAmI}/></Nav.Link>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>
