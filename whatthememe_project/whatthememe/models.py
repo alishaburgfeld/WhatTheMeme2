@@ -34,7 +34,7 @@ class Game(models.Model):
 
 class Game_User(models.Model):
     game = models.ForeignKey(Game, on_delete = models.CASCADE)
-    player = models.ForeignKey(AppUser, on_delete = models.CASCADE, unique = True)
+    player = models.OneToOneField(AppUser, on_delete = models.CASCADE)
     player_points = models.IntegerField(blank=True, default=0, validators = [MinValueValidator(0), MaxValueValidator(7)])
     
     class Meta:

@@ -4,7 +4,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function FriendList ({user}) {
+function FriendList ({user, stopClick}) {
 
     const [friends, setFriends] = useState(undefined)
 
@@ -45,28 +45,28 @@ function FriendList ({user}) {
     }
 
     return (
-        <div>
+        <>
         {friends != undefined
             ?
-            <div>
+            <>
             {friends.map((friend) => (
-                <NavDropdown.Item>{friend}<Button onClick={()=>{removeFriend(user,friend)}}>Delete</Button></NavDropdown.Item>
+                <NavDropdown.Item  onClick = {stopClick}>{friend}<Button onClick={()=>{removeFriend(user,friend)}}>Delete</Button></NavDropdown.Item>
                 ))
             }
-            </div>
-            : <NavDropdown.Item>"Please add a friend"</NavDropdown.Item>
+            </>
+            : <NavDropdown.Item  onClick = {stopClick}>"Please add a friend"</NavDropdown.Item>
             }
             <NavDropdown.Divider />
-            <NavDropdown.Item>
-                <Form onSubmit={createFriendRequest}>
+            <NavDropdown.Item  onClick = {stopClick}>
+                <Form onSubmit={createFriendRequest} >
                     <Form.Group className="mb-3" controlId="formEmail" >
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" placeholder="Enter email" />
-                    <Button  variant="primary" type="submit">Add Friend </Button>
+                    <Button  variant="primary" type="submit"  onClick = {stopClick}>Add Friend </Button>
                     </Form.Group>
                 </Form>
             </NavDropdown.Item>
-        </div>
+        </>
     )
 }
 

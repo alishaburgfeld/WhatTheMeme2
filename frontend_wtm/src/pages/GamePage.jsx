@@ -13,9 +13,9 @@ function GamePage ({user, whoAmI}){
     
     // const [usedCards, setUsedCards] = useState(null)
 
-    // useEffect(()=> {
-    //     whoAmI()
-    // }, [])
+    useEffect(()=> {
+        whoAmI()
+    }, [])
 
     async function fetchMemes(){
         // the CSRF token was blocking my API call, this is the fix

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Button from 'react-bootstrap/Button';
 
-function FriendRequests({user}) {
+function FriendRequests({user, stopClick}) {
 
     const [friendRequests, setFriendRequests] = useState(undefined)
 
@@ -47,11 +47,11 @@ function FriendRequests({user}) {
         ? 
             <div>
             {friendRequests.map((friendRequest) => (
-                <NavDropdown.Item>{friendRequest}<Button onClick={()=>{acceptFriendRequest(user,friendRequest)}}>Accept</Button><Button onClick={()=>{declineFriendRequest(user,friendRequest)}}>Decline </Button></NavDropdown.Item>
+                <NavDropdown.Item>{friendRequest}<Button onClick={()=>{acceptFriendRequest(user,friendRequest)}} >Accept</Button><Button onClick={()=>{declineFriendRequest(user,friendRequest)}} >Decline </Button></NavDropdown.Item>
                 ))
             }
             </div>
-        : <NavDropdown.Item>No pending requests</NavDropdown.Item>
+        : <NavDropdown.Item  onClick = {stopClick}>No pending requests</NavDropdown.Item>
         }
         </div>
     )
