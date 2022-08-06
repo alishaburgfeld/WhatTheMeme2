@@ -26,7 +26,7 @@ def getUser(user_email):
 
 #api call
 def getCards():
-    url = "https://cards-against-humanity.p.rapidapi.com/white/100"
+    url = "https://cards-against-humanity.p.rapidapi.com/white/50"
     headers = {
         "X-RapidAPI-Key": "89b2f4fcc3mshb1c4db4c3ef15afp151f39jsn4718f6fb42de",
         "X-RapidAPI-Host": "cards-against-humanity.p.rapidapi.com"
@@ -101,11 +101,12 @@ def who_am_i(request):
     print('YOU ARE IN THE WHO_AM_I VIEW ON DJANGO')
     if request.user.is_authenticated:
         user = getUser(request.user.email)
-        game_user = Game_User.objects.get(player = user)
-        print('GAME USER', game_user, 'TYPE', type(game_user))
-        if game_user:
-            return JsonResponse({'email': request.user.email, 'game_user': True})
-        else:
+        try:
+            game_user = Game_User.objects.get(player = user)
+            print('GAME USER', game_user, 'TYPE', type(game_user))
+            if game_user:
+                return JsonResponse({'email': request.user.email, 'game_user': True})
+        except:
             return JsonResponse({'email': request.user.email, 'game_user': False})
     else:
         return JsonResponse({'user':None})
@@ -348,6 +349,7 @@ def start_game(request):
 @api_view(['POST'])
 @login_required
 def join_game(request):
+    getCards()
     pass
     #need to create 7 card objects and pass them to this user. 
 

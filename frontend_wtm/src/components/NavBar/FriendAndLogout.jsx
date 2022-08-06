@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
-import {getFriendList, getFriendRequests, createFriendRequest, acceptFriendRequest, removeFriend, declineFriendRequest} from '../AxiosCalls/FriendAxiosCalls'
+import {getFriendList, getFriendRequests, createFriendRequest, acceptFriendRequest, removeFriend, declineFriendRequest} from '../../AxiosCalls/FriendAxiosCalls'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
 import ListGroupItem from 'react-bootstrap/esm/ListGroupItem'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { leaveGame } from '../AxiosCalls/GameAxiosCalls'
+import { leaveGame } from '../../AxiosCalls/GameAxiosCalls'
 import Form from 'react-bootstrap/Form';
 
 

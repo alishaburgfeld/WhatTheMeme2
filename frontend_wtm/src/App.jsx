@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios'
-import NavBar from './components/Navbar'
+import NavBar from './components/NavBar/Navbar'
 import GamePage from './pages/GamePage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
