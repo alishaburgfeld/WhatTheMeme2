@@ -5,31 +5,19 @@ import Col from 'react-bootstrap/Col';
 import {useState, useEffect} from 'react'
 import {joinGame } from '../AxiosCalls/GameAxiosCalls';
 import {startGame} from '../components/Hand'
+import BackgroundMapper from '../components/BackgroundMapper';
 
 function HomePage ({whoAmI, user, setHand}){
 
     useEffect(()=> {
         whoAmI()
     }, [])
-
-    // useEffect(()=> {
-    //     let friendList = getFriendList(user)
-    //     friendList.then((response)=>{
-    //         console.log('.data.friends line 26' , response.data.friends)
-    //         let newList = response.data.friends
-    //         setFriends(newList)
-    //     })
-    //     // console.log('friend list newList', newList)
-        
-    // }, [])
-
-    console.log('line 12 homepage user', user)
     return (
         <Container>
             <Row>
                 <Col>
                     <div>
-                        <h1>What the Me^^e?!</h1>
+                        <BackgroundMapper />
                         <h2>
                             {user != null  || user != undefined 
                             ? <div>

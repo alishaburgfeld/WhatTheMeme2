@@ -11,6 +11,7 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import getCSRFToken from './utils'
+import BackgroundMapper from './components/BackgroundMapper'
 
 
 
@@ -42,6 +43,7 @@ function App() {
           <Route path='/login' element={<LoginPage/>} />
           <Route path='/signup' element = {<SignUpPage />} />
           <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI}/>} />
+          <Route path='/draft' element = {<BackgroundMapper/>} />
         </Routes>
       </Router> 
     </div>

@@ -335,7 +335,7 @@ def start_game(request):
         # this works, but just going to comment it out while debugging the rest
         getCards()
         user_cards = []
-        while len(user_cards) < 7:
+        while len(user_cards) < 6:
             card=create_card(game, game_user)
             user_cards.append(model_to_dict(card))
         # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
@@ -351,7 +351,7 @@ def start_game(request):
 def join_game(request):
     getCards()
     pass
-    #need to create 7 card objects and pass them to this user. 
+    #need to create 6 card objects and pass them to this user. 
 
 @api_view(['PUT'])
 @login_required
@@ -372,3 +372,4 @@ def leave_game(request):
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
 # source ~/VEnvirons/WhatTheMeme/bin/activate
+# http://127.0.0.1:8000/
