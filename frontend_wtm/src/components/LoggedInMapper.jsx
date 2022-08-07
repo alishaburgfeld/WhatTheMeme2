@@ -1,11 +1,16 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState} from "react";
 import ImageMapper from "react-image-mapper";
 import homeImage from '../assets/Images/all_300.png'
+import {joinGame } from '../AxiosCalls/GameAxiosCalls';
+import {startGame} from './Hand'
+import { useNavigate } from "react-router-dom";
 
 
-function BackgroundMapper() {
+function LoggedInMapper() {
     // https://stackoverflow.com/questions/66239691/what-does-npm-install-legacy-peer-deps-do-exactly-when-is-it-recommended-wh
     // https://www.npmjs.com/package/react-image-mapper
+
+    const nav = useNavigate()
     const [mapAreas, setMapAreas] = useState({
         name: "my-map",
         areas: [
@@ -17,14 +22,21 @@ function BackgroundMapper() {
         ]
       });
     
-    const myFunction = ()=> {
-        console.log("YAY ON CLICK WORKED")
+    function myFunction(area) {
+      if (area === 1) {
+        joinGame()
+      }
+      else {
+        startGame()
+      }
+      nav("/game")
     }
 
     return (
         <ImageMapper
         src={homeImage}
-        onClick={myFunction}
+        // onClick={myFunction}
+        onClick={(area) => myFunction(area.id)}
         map={mapAreas}
         width={500}
       />
@@ -32,4 +44,4 @@ function BackgroundMapper() {
     
 }
 
-export default BackgroundMapper
+export default LoggedInMapper

@@ -67,7 +67,6 @@
 }
 
 
-/*This block (starts here) is merely styling for the flip card, and is NOT an essential part of the flip code */
 .thefront h1, .theback h1{
   font-family: 'zilla slab', sans-serif;
   padding: 20px;
@@ -75,3 +74,4 @@
   font-size: 18px;
   text-align: center;
 }
+
