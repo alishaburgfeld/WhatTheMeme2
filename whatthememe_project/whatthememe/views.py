@@ -384,6 +384,26 @@ def join_game(request):
 
 @api_view(['PUT'])
 @login_required
+def selected_card(request, id, round):
+    print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR SELECTED CARD')
+    user_email = request.user.email
+    user = getUser(user_email)
+    print('USER =', user)
+    game_user= Game_User.objects.get(player = user)
+    print('GAME USER = ', game_user)
+    # try:
+    card = Game_Card.objects.get(id=id)
+    try:
+        card.round_selected = round
+        card.save()
+        print('round selected', card.round_selected)
+        return JsonResponse({'success':True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+    
+
+@api_view(['PUT'])
+@login_required
 def leave_game(request):
     print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR LEAVE GAME')
     # print('request', request)

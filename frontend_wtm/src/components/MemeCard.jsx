@@ -1,17 +1,56 @@
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button'
+import axios from 'axios'
+import {useState, useEffect } from 'react'
 
 
-function MemeCard() {
+function MemeCard({setRound, round}) {
+
+    const [memes, setMemes] = useState([])
+    
+    const [isActive, setIsActive] = useState(true)
+    
+
+    const getMeme = async () => {
+        console.log('I AM IN GET MEME react')
+        const axiosResponse = await axios.get('/getmeme' )
+        .then((response)=> {
+            console.log('GETMEME .then response', response)
+            let memesArray= response.data.memes
+            let responseRound= response.data.round
+            console.log('responseRound',responseRound, 'type', typeof(responseRound))
+            setMemes(memesArray)
+            // for some reason the first response isn't valid
+            setRound(responseRound +1)
+            return response
+        })
+        .catch((error)=> {
+            console.log(error)
+        })
+        
+    }
+
+  function flipMemeCard() {
+    setIsActive(false)
+    const card = document.getElementById(`meme${round}`)
+    console.log('flip card activated')
+  }
+
+  useEffect(()=> {
+    getMeme()
+    }, [])
+
     return (
-      <Col>
-        <div class="maincontainer">
-            <div class="thecard">
-                <div class="thefront"></div>
-                <div class="theback"></div>
+        <>
+        <div>
+            <div className = 'memecard'>
+                <div className={isActive ?'thecard is-flipped' : 'thecard'} id={`meme${round}`} onClick={flipMemeCard}>
+                    <div className ='face-up-meme' >{ memes && round && <img src={memes[round]} id="memeImage"/>}</div>
+                    <div className ='face-down-meme'></div>
+                </div>
             </div>
+            {/* <Button onClick={getMeme}>Button </Button> */}
         </div>
-      </Col>
+            {/* { memes && round && <img src={memes[round]} />} */}
+        </>
     )
 }
 

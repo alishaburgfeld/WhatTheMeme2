@@ -11,7 +11,7 @@ const startGame = async () => {
     return response
 }
 
-function Hand({whoAmI}) {
+function Hand({whoAmI, round}) {
     const [hand, setHand] = useState(null)
     console.log('I AM AT THE HAND COMPONENT')
     
@@ -35,7 +35,7 @@ function Hand({whoAmI}) {
         <Container>
             <Row>
                 {hand && hand.map((card) => (
-                    <Card key = {card.id} {...card}/>
+                    <Card key = {card.id} {...card} setHand={setHand} hand={hand} round={round}/>
                 ))
                 }
             </Row>
