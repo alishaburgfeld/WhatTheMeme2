@@ -13,6 +13,7 @@ import random
 import json
 
 cards = []
+memes = []
 # cardCount = 0
 
 def index(request):
@@ -38,6 +39,34 @@ def getCards():
     for card in JSON_response:
         cards.append(card['text'])
     # print('CARDS ARRAY', cards)
+
+def getMemes():
+    global memes
+    url = 'https://api.imgflip.com/get_memes'
+    response = requests.request('GET', url)
+    JSON_response = json.loads(response.text)
+    memeArray = JSON_response['data']['memes']
+    for meme in memeArray:
+        memes.append(meme['url'])
+
+@api_view(['GET'])
+def get_meme_card(request):
+    print('IN GET MEME GET REQUEST ON DJANGO')
+    user = getUser(request.user.email)
+    # game_user = game_user = Game_User.objects.get(player = user)
+    # running into issue of returning more than one.
+    game_user = game_user = Game_User.objects.filter(player = user)
+    game_1 = game_user[0].game
+    round = game_1.round
+    print(round)
+    getMemes()
+    if memes:
+        try:
+            return JsonResponse({'success': True, 'memes':memes, 'round': round})
+        except Exception as e:
+            return JsonResponse({'success': False, 'reason': str(e)})
+    else:
+        return JsonResponse({'success': False, 'reason': 'no memes available'})
 
 
 @api_view(['POST'])

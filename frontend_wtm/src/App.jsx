@@ -11,7 +11,8 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import getCSRFToken from './utils'
-import NoUserMapper from './components/NoUserMapper'
+import Draft from './components/Draft'
+
 
 
 
@@ -43,7 +44,7 @@ function App() {
           <Route path='/login' element={<LoginPage/>} />
           <Route path='/signup' element = {<SignUpPage />} />
           <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI}/>} />
-          <Route path='/draft' element = {<NoUserMapper/>} />
+          <Route path='/draft' element = {<Draft/>} />
         </Routes>
       </Router> 
     </div>
