@@ -14,29 +14,31 @@ function GamePage ({user, whoAmI}){
     const [drawnCard, setDrawnCard] = useState(null)
     const [round, setRound] = useState(null)
     const [selectedCards, setSelectedCards] = useState([])
+    const [players, setPlayers] = useState([])
     
     // const [usedCards, setUsedCards] = useState(null)
-
+    // console.log('SELECTED CARDS AT START OF GAME', selectedCards)
     useEffect(()=> {
         whoAmI()
     }, [])
 
-    async function fetchMemes(){
-        // the CSRF token was blocking my API call, this is the fix
-        let instance = axios.create()
-        delete instance.defaults.headers.common["X-CSRFToken"];
-        let response = await instance({
-            method: 'get',
-            url: 'https://api.imgflip.com/get_memes',
-        });
-        return response
+    function getPlayers() {
+        console.log('IN GET PLAYERs')
+        axios.get('/players')
+        .then((response)=> {
+          console.log('GET PLAYERS RESPONSE IN .THEN', response)
+          let returned_players = response && response.data && response.data.players
+          if (returned_players) {
+            setPlayers(returned_players)
+          } 
+        })
+        .catch((error)=> {
+          console.log(error)
+        })
     }
-    //runs on mount
     useEffect(()=>{
-        fetchMemes()
-            .then((response)=>{
-                setMemes(response.data.data.memes)
-            })
+        getPlayers()
+        // setInterval(getSelectedCards, 100000)
     },[])
 
     function getSelectedCards() {
@@ -44,6 +46,12 @@ function GamePage ({user, whoAmI}){
         axios.get('/selectedcards/view')
         .then((response)=> {
           console.log('GET CARDS RESPONSE IN .THEN', response)
+          let selected_cards = response && response.data && response.data.selected_cards
+          console.log('line 48', selected_cards)
+          if (selected_cards) {
+            setSelectedCards(selected_cards)
+          }
+          
         })
         .catch((error)=> {
           console.log(error)
@@ -51,6 +59,7 @@ function GamePage ({user, whoAmI}){
     }
     useEffect(()=>{
         getSelectedCards()
+        setInterval(getSelectedCards, 10000)
         // need to set interval to do this every 5 seconds
     },[])
 
@@ -62,6 +71,7 @@ function GamePage ({user, whoAmI}){
     return (
         <div>
             <h2> Welcome {user}</h2>
+            {players && <h2>All users playing: {players}</h2>}
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
             
             {/* {memes != null ? <img src={memes[10].url}></img> : ""} */}
@@ -70,10 +80,21 @@ function GamePage ({user, whoAmI}){
                 <MemeCard setRound={setRound} round = {round}/>
             </div>
             <div>
-                <Hand whoAmI={whoAmI} round={round}/>
-            </div>    
-            <Button onClick={leaveGame}>Leave Game</Button>
-            {selectedCards && <SelectedCards selectedCards={selectedCards} />}
+                {selectedCards.length > 0
+                ? 
+                    <div>
+                    <h2>Selected Cards</h2>
+                    <SelectedCards selectedCards={selectedCards} players={players}/>
+                    <Hand whoAmI={whoAmI} round={round}/>
+                    <Button onClick={leaveGame}>Leave Game</Button>
+                    </div>
+                :
+                    <div>    
+                        <Hand whoAmI={whoAmI} round={round}/>
+                        <Button onClick={leaveGame}>Leave Game</Button>
+                    </div>
+                }
+            </div>   
         </div>
     )
 }

@@ -5,18 +5,18 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
 const startGame = async () => {
-    console.log('I AM IN start game react')
+    // console.log('I AM IN start game react')
     const response = await axios.post('/startgame' )
-    console.log('startgame response', response)  
+    // console.log('startgame response', response)  
     return response
 }
 
 function Hand({whoAmI, round}) {
     const [hand, setHand] = useState(null)
-    console.log('I AM AT THE HAND COMPONENT')
+    // console.log('I AM AT THE HAND COMPONENT')
     
     useEffect(()=> {
-        console.log('I AM IN HAND USE EFFECT')
+        // console.log('I AM IN HAND USE EFFECT')
         let cardResponse = startGame()
         cardResponse.then((response)=> {
             console.log('USE EFFECT RESPONSE IN .THEN', response)

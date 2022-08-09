@@ -7,7 +7,7 @@ import axios from 'axios';
 function Card({id, phrase, votes, face_up, hand, setHand, round}) {
   // console.log('CARD COMPONENT ID:', id, 'TYPE', typeof(id) )
 
-  const [selectedCard, setSelectedCard] = useState(null)
+  // const [selectedCard, setSelectedCard] = useState(null)
 
   function sendSelectedCard() {
     console.log('IN SEND SELECTED CARD...ID:', id, 'ID TYPE', typeof(id), 'ROUND', round, 'TYPE ROUND', typeof(round))
@@ -32,8 +32,9 @@ function Card({id, phrase, votes, face_up, hand, setHand, round}) {
       if (card.id=== id) {
         let index = hand.indexOf(card)
         console.log('INDEX IS ===', index)
-        let newHand=hand.splice(index,1)
-        setHand(newHand)
+        let handslice= hand.slice()
+        handslice.splice(index,1)
+        setHand(handslice)
         // console.log('HAND AFTER SPLICE', hand)
         // need to sethand
       }

@@ -29,7 +29,7 @@ class FriendRequest(models.Model):
 class Game(models.Model):
     is_active = models.BooleanField(blank= True, default=True)  
     code = models.CharField(max_length=100, null=False, unique=True) 
-    round= models.IntegerField(blank=True, default=0, validators = [MinValueValidator(0)])
+    round= models.IntegerField(blank=True, default=1, validators = [MinValueValidator(1)])
     card_count = models.IntegerField(blank=True, default=0, validators = [MinValueValidator(0)])
 
 class Game_User(models.Model):

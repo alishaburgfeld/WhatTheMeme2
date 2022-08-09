@@ -19,7 +19,8 @@ urlpatterns = [
     path('joingame', views.join_game),
     path('leavegame', views.leave_game),
     path('getmeme', views.get_meme_card),
+    path('players', views.players),
     path('selectedcard', views.selected_card),
-    # path('selectedcards/view', views.view_selected_cards),
+    path('selectedcards/view', views.view_selected_cards),
 
 ]

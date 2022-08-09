@@ -1,32 +1,34 @@
+// import axios from 'axios'
+import {useState, useEffect} from 'react'
+import VotingCards from './VotingCards';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container'
 
-function SelectedCards() {
+function SelectedCards({selectedCards, players}) {
 
-    function flipCard(id) {
-        setIsActive(true)
-        console.log(id)
-        const card = document.getElementById(`${id}`)
-        //for the card in the middle of the board being flipped up
-        // card.classList.toggle('is-flipped')
-        console.log('flip card activated')
+    const [isActive, setIsActive] = useState(true)
 
+    function flipCards() {
+        //flip cards once every player has selected one
+        if (selectedCards.length === players.length) {
+            setIsActive(false)
+        }
+        // const card = document.getElementByClassName('votingcards')
     }
 
+
     return (
-        // <Container>
-        //     <Row>
-        //         {hand && hand.map((card) => (
-        //             <Card key = {card.id} {...card} setHand={setHand} hand={hand} round={round}/>
-        //         ))
-        //         }
-        //     </Row>
-        // </Container>
-        // need them to be opposite as well
-        <div>
-            
-        </div>
+        <Container>
+            <Row>
+                {selectedCards && selectedCards.map((card) => (
+                    <VotingCards key = {card.id} {...card} isActive={isActive}/>
+                ))
+                }
+            </Row>
+        </Container>
     )
 }
-const [isActive, setIsActive] = useState(false)
+
 
 
 export default SelectedCards

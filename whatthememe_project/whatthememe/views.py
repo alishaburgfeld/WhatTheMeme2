@@ -56,7 +56,7 @@ def get_meme_card(request):
     # game_user = game_user = Game_User.objects.get(player = user)
     # running into issue of returning more than one.
     game_user = Game_User.objects.filter(player = user)
-    game_1 = game_user[0].game
+    game_1 = game_user[len(game_user)-1].game
     round = game_1.round
     print(round)
     getMemes()
@@ -354,9 +354,6 @@ def start_game(request):
         game.save()
         print('NEW GAME: ', game)
         game_code = game.code
-        # print('NEW GAME CODE: ', game_code)
-        # print('GAME.ID', game.id)
-        # print('USER.ID', user.id)
         game_user = Game_User(game = game, player = user)
         game_user.full_clean
         game_user.save()
@@ -389,15 +386,16 @@ def selected_card(request):
     round = request.data['round']
     card_id= request.data['id']
     # print('CARD_ID', card_id, 'TYPE', type(card_id))
-    user_email = request.user.email
-    user = getUser(user_email)
+    # user_email = request.user.email
+    # user = getUser(user_email)
     # print('USER =', user)
     # game_user= Game_User.objects.get(player = user)
     # still running into issue of multiple game users
-    game_user = Game_User.objects.filter(player = user)
-    game_user_1 = game_user[0]
-    print('GAME USER = ', game_user_1)
+    # game_user = Game_User.objects.filter(player = user)
+    # game_user_1 = game_user[len(game_user)-1]
+    # print('GAME USER = ', game_user_1)
     card = Game_Card.objects.get(id=card_id)
+    print('CARD SELECTED', card)
     try:
         card.round_selected = round
         card.save()
@@ -414,21 +412,49 @@ def view_selected_cards(request):
     user = getUser(user_email)
     # game_user= Game_User.objects.get(player = user)
     game_user = Game_User.objects.filter(player = user)
-    print('GAME USER = ', game_user)
-    game_1 = game_user[0].game
+    game_1 = game_user[len(game_user)-1].game
+    # print('VIEW SELECTED CARDS GAME', game_1)
     round = game_1.round
+    # print('ROUND HERE', round)
     selected_cards_objects= Game_Card.objects.filter(round_selected=round)
+    # print('ALL SELECTED CARDS', selected_cards_objects)
     if selected_cards_objects:
         try:
             selected_cards=[]
             for card in selected_cards_objects:
-                selected_cards.append(model_to_dict(card))
-            return JsonResponse({'success':True})
+                if model_to_dict(card) not in selected_cards:
+                    selected_cards.append(model_to_dict(card))
+            return JsonResponse({'success':True, 'selected_cards': selected_cards})
         except Exception as e:
             return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
-    else: return JsonResponse({'success':False, 'reason': 'no selected cards'})
+    else: 
+        return JsonResponse({'success':False, 'reason': 'no selected cards'})
 
-    
+@api_view(['GET'])
+@login_required    
+def players(request):
+    print('YOU ARE IN THE PLAYERS')
+    user_email = request.user.email
+    user = getUser(user_email)
+    # game_user= Game_User.objects.get(player = user)
+    game_user = Game_User.objects.filter(player = user)
+    game = game_user[len(game_user)-1].game    
+    all_game_users= Game_User.objects.filter(game = game)
+    print('ALL GAME USERS', all_game_users)
+    if all_game_users:
+        try:
+            players=[]
+            for game_user in all_game_users:
+                user = game_user.player
+                if user.email not in players:
+                    players.append(user.email)
+                # if model_to_dict(user) not in players:
+                #     players.append(model_to_dict(user))
+            return JsonResponse({'success':True, 'players': players})
+        except Exception as e:
+            return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+    else: 
+        return JsonResponse({'success':False, 'reason': 'no players in this game'})
 
 @api_view(['PUT'])
 @login_required
@@ -438,7 +464,8 @@ def leave_game(request):
     user_email = request.user.email
     user = getUser(user_email)
     print('USER =', user)
-    game_user= Game_User.objects.get(player = user)
+    game_users= Game_User.objects.filter(player = user)
+    game_user= game_users[len(game_user)-1]
     print('GAME USER = ', game_user)
     try:
         game_user.delete()
