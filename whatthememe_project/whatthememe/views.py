@@ -55,7 +55,7 @@ def get_meme_card(request):
     user = getUser(request.user.email)
     # game_user = game_user = Game_User.objects.get(player = user)
     # running into issue of returning more than one.
-    game_user = game_user = Game_User.objects.filter(player = user)
+    game_user = Game_User.objects.filter(player = user)
     game_1 = game_user[0].game
     round = game_1.round
     print(round)
@@ -384,15 +384,20 @@ def join_game(request):
 
 @api_view(['PUT'])
 @login_required
-def selected_card(request, id, round):
+def selected_card(request):
     print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR SELECTED CARD')
+    round = request.data['round']
+    card_id= request.data['id']
+    # print('CARD_ID', card_id, 'TYPE', type(card_id))
     user_email = request.user.email
     user = getUser(user_email)
-    print('USER =', user)
-    game_user= Game_User.objects.get(player = user)
-    print('GAME USER = ', game_user)
-    # try:
-    card = Game_Card.objects.get(id=id)
+    # print('USER =', user)
+    # game_user= Game_User.objects.get(player = user)
+    # still running into issue of multiple game users
+    game_user = Game_User.objects.filter(player = user)
+    game_user_1 = game_user[0]
+    print('GAME USER = ', game_user_1)
+    card = Game_Card.objects.get(id=card_id)
     try:
         card.round_selected = round
         card.save()
@@ -400,6 +405,29 @@ def selected_card(request, id, round):
         return JsonResponse({'success':True})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+
+@api_view(['GET'])
+@login_required    
+def view_selected_cards(request):
+    print('YOU ARE IN THE VIEW SELECTED CARDS')
+    user_email = request.user.email
+    user = getUser(user_email)
+    # game_user= Game_User.objects.get(player = user)
+    game_user = Game_User.objects.filter(player = user)
+    print('GAME USER = ', game_user)
+    game_1 = game_user[0].game
+    round = game_1.round
+    selected_cards_objects= Game_Card.objects.filter(round_selected=round)
+    if selected_cards_objects:
+        try:
+            selected_cards=[]
+            for card in selected_cards_objects:
+                selected_cards.append(model_to_dict(card))
+            return JsonResponse({'success':True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+    else: return JsonResponse({'success':False, 'reason': 'no selected cards'})
+
     
 
 @api_view(['PUT'])

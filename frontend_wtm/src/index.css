@@ -30,8 +30,10 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* index css was above bootstrap css */
   /* BOOTSTRAP variable is not letting me change background... I'd rather do !important than change that variable --->node_modules-bootstrap-dist-css-bootstrap.css you can see all the variables and values there */
-  background-color: #FDFDB491 !important;
+  /* background-color: #FDFDB491 !important; */
+  background-color: #FDFDB491;
 }
 
 

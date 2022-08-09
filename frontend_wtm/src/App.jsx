@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 // use {thing to be imported} when there are a lot of things to be imported from that file.
 //when using the "export default" this allows you n ot to use the {} on the thing you're importing
-import './App.css'
+// import './App.css'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios'
 import NavBar from './components/NavBar/Navbar'

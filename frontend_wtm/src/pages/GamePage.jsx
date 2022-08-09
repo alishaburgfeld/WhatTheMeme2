@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button'
 import {leaveGame } from '../AxiosCalls/GameAxiosCalls'
 import {Hand} from '../components/Hand'
 import MemeCard from '../components/MemeCard'
+import SelectedCards from '../components/SelectedCards'
 
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
@@ -12,6 +13,7 @@ function GamePage ({user, whoAmI}){
     const [memes, setMemes] = useState(null)
     const [drawnCard, setDrawnCard] = useState(null)
     const [round, setRound] = useState(null)
+    const [selectedCards, setSelectedCards] = useState([])
     
     // const [usedCards, setUsedCards] = useState(null)
 
@@ -36,6 +38,22 @@ function GamePage ({user, whoAmI}){
                 setMemes(response.data.data.memes)
             })
     },[])
+
+    function getSelectedCards() {
+        console.log('IN GET CARDs')
+        axios.get('/selectedcards/view')
+        .then((response)=> {
+          console.log('GET CARDS RESPONSE IN .THEN', response)
+        })
+        .catch((error)=> {
+          console.log(error)
+        })
+    }
+    useEffect(()=>{
+        getSelectedCards()
+        // need to set interval to do this every 5 seconds
+    },[])
+
         // function consoletest() {
         //     console.log(memes[10])
         //     console.log(typeof(memes[10]))
@@ -48,17 +66,14 @@ function GamePage ({user, whoAmI}){
             
             {/* {memes != null ? <img src={memes[10].url}></img> : ""} */}
             
-            {/* <Button onClick={drawCard}>Draw a Card</Button> */}
             <div>
                 <MemeCard setRound={setRound} round = {round}/>
             </div>
             <div>
                 <Hand whoAmI={whoAmI} round={round}/>
             </div>    
-            <div>
-                <Button onClick={leaveGame}>Leave Game</Button>
-            </div>
-            
+            <Button onClick={leaveGame}>Leave Game</Button>
+            {selectedCards && <SelectedCards selectedCards={selectedCards} />}
         </div>
     )
 }

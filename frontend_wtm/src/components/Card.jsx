@@ -9,7 +9,7 @@ function Card({id, phrase, votes, face_up, hand, setHand, round}) {
 
   const [selectedCard, setSelectedCard] = useState(null)
 
-  function sendSelectedCard(id, round) {
+  function sendSelectedCard() {
     console.log('IN SEND SELECTED CARD...ID:', id, 'ID TYPE', typeof(id), 'ROUND', round, 'TYPE ROUND', typeof(round))
     axios.put('/selectedcard', {id:id, round: round})
     .then((response)=> {
@@ -20,18 +20,25 @@ function Card({id, phrase, votes, face_up, hand, setHand, round}) {
     })
   }
 
-  function selectCard(id) {
+  function selectCard() {
     console.log('ID IN SELECT CARD IS', id)
     //remove card from the hand
-    for (let card in hand) {
-      if (card['id']=== id) {
+    // console.log(Object.keys(hand[0]))
+    
+    for (let card of hand) {
+      // if (card['id']=== id) {
+        // console.log('ID IS!', id)
+        //these are not working
+      if (card.id=== id) {
         let index = hand.indexOf(card)
-        hand.splice(index,1)
-        console.log('HAND AFTER SPLICE', hand)
+        console.log('INDEX IS ===', index)
+        let newHand=hand.splice(index,1)
+        setHand(newHand)
+        // console.log('HAND AFTER SPLICE', hand)
         // need to sethand
       }
     }
-    // let database know which card was Selected
+    // let database know which card was Selected - complete
     // database queries for selected cards and places them face down on the board
     //after flip and votes and winner then another card is drawn
   }
@@ -46,7 +53,8 @@ function Card({id, phrase, votes, face_up, hand, setHand, round}) {
               <div className="thefront" ><h1>{phrase}</h1></div>
               <div className="theback"></div>
             </div>
-          <Button className="card-btn" onClick={(id, round)=>{selectCard(id); sendSelectedCard(id, round);}}>Select</Button>
+          {/* <Button className="card-btn" onClick={(id, round)=>{selectCard(id); sendSelectedCard(id, round);}}>Select</Button> */}
+          <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button>
       </div>
     </Col>
   )
