@@ -27,7 +27,8 @@ def getUser(user_email):
 
 #api call
 def getCards():
-    url = "https://cards-against-humanity.p.rapidapi.com/white/50"
+    global cards
+    url = "https://cards-against-humanity.p.rapidapi.com/white/25"
     headers = {
         "X-RapidAPI-Key": "89b2f4fcc3mshb1c4db4c3ef15afp151f39jsn4718f6fb42de",
         "X-RapidAPI-Host": "cards-against-humanity.p.rapidapi.com"
@@ -290,6 +291,10 @@ def create_card(game, owner):
         # its ok for cards to be global because its random each time a game is started, and the cardCount will be tied to each game
         global cards
         card_count = game.card_count
+        # if cards doesnt have enough cards in it to draw another card:
+        if len(cards)<= card_count:
+            print('NOT ENOUGH CARDS, GENERATING MORE')
+            getCards()
         game_card = Game_Card(phrase=cards[card_count], game = game, face_up = False, votes = 0, owner = owner, round_selected=0, is_active = True)
         game_card.full_clean()
         game_card.save()
@@ -305,6 +310,25 @@ def create_card(game, owner):
         return JsonResponse({'success': False, 'reason': str(e)})
 
 
+@api_view(['POST'])
+@login_required
+def draw_card(request):
+    print('IN DRAW CARD ON DJANGO')
+    user_email = request.user.email
+    user = getUser(user_email)
+    # game_user= Game_User.objects.get(player = user)
+    # still running into issue of multiple game users
+    game_user_objects = Game_User.objects.filter(player = user)
+    owner = game_user_objects[len(game_user_objects)-1]
+    print('DRAW CARD OWNER IS', owner)
+    game_code = request.data['game_code']
+    game = Game.objects.filter(code = game_code)
+    print('draw card game is', game)
+    try:
+        new_card = create_card(game, owner)
+        return JsonResponse({'success':True, 'new_card':new_card})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': str(e)})
 
 
 
@@ -316,7 +340,9 @@ def start_game(request):
     # print('request', request)
     user_email = request.user.email
     user = getUser(user_email)
+    print('star game user is', user)
     code = str(random.randint(10001,999999))
+    print('START GAME CODE IS', code)
     try:
         game = Game(code = code)
         game.full_clean
@@ -325,7 +351,7 @@ def start_game(request):
         game_user = Game_User(game = game, player = user)
         game_user.full_clean
         game_user.save()
-        # print('GAME USER IS!!!! ', game_user)
+        print('GAME USER IS!!!! ', game_user)
         # this works, but just going to comment it out while debugging the rest
         print('IN START GAME -- GAME CODE IS', game_code)
         getCards()
@@ -510,6 +536,25 @@ def leave_game(request):
         return JsonResponse({'success':True})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+
+# 
+def points(request):
+    print('IN POINTS ON DJANGO')
+    winningCard = request.data["winningCard"]
+    # user should be just the id for the game_user
+    user_id = winningCard.owner
+    print('user_id of winning card', user_id, 'TYPE', type(user_id))
+    try:
+        game_user = Game_User.objects.get(id = int(user_id))
+        print('game_user is', game_user)
+        game_user.points+=1
+        game_user.save()
+        print('GAME USER SHOULD NOW HAVE ANOTHER POINT', game_user.points)
+        return JsonResponse({'success':True, 'winningCardOwner': model_to_dict(game_user)})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+
+
 
 # source ~/VEnvirons/WhatTheMeme/bin/activate
 # http://127.0.0.1:8000/

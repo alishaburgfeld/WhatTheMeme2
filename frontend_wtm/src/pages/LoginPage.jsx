@@ -14,7 +14,6 @@ function LoginPage ({setUser, whoAmI}){
     'password': event.target[1].value
     }).then((response) => {
         console.log('YOU ARE IN THE REACT .THEN RESPONSE FROM LOGIN')
-        console.log(response.data)
         // window.location.href= '/#/game'
         nav("/");
 
@@ -50,7 +49,7 @@ function LoginPage ({setUser, whoAmI}){
 
                 <Form.Group className="mb-3" controlId="formPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control type="password" placeholder="Password" value="password"/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit

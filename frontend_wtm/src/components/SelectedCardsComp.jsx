@@ -4,7 +4,7 @@ import VotingCards from './VotingCards';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
-function SelectedCardsComp({selectedCards, players, round}) {
+function SelectedCardsComp({selectedCards, players, round, user}) {
 
     const [notAllSelected, setNotAllSelected] = useState(true)
 
@@ -20,7 +20,7 @@ function SelectedCardsComp({selectedCards, players, round}) {
     }
     console.log('HERE I AM LINE 21')
     useEffect(()=>{
-        if (notAllSelected) {
+        if (user && notAllSelected) {
             console.log('IN SELECTED CARDS USE EFFECT')
             flipCards()
             setInterval(flipCards, 10000)
@@ -44,6 +44,8 @@ function SelectedCardsComp({selectedCards, players, round}) {
     )
 }
 
+// pass voting complete to this element... or may need to start here. 
+// if there is a tie notify the user a tie on the vote so randomly selected a winner between the (2, 3)
 
 
 export default SelectedCardsComp

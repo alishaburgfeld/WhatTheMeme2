@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 
-function VotingCards({id, phrase, notAllSelected, round, players_that_voted, user, votes}) {
+function VotingCards({id, phrase, notAllSelected, round, players_that_voted, votes}) {
 
   const [userHasVoted, setUserHasVoted] = useState(false)
 

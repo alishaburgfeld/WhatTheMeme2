@@ -25,11 +25,8 @@ function App() {
   axios.defaults.headers.common["X-CSRFToken"] = getCSRFToken();
 
   const whoAmI = async () => {
-    console.log('I AM IN WHO AM I')
     const response = await axios.get('/whoami')
     const newUser = response.data && response.data.email
-    console.log('USER EMAIL in WHO AM I:', newUser)
-    // console.log('response from whoami:', response)
     if (response.data.game_user==='True') {
       setGameUser(newUser)
     }

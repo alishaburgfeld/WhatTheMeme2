@@ -9,7 +9,7 @@ import SelectedCardsComp from '../components/SelectedCardsComp'
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
 function GamePage ({user, whoAmI, hand, setHand}){
-
+  
     const [memes, setMemes] = useState(null)
     const [drawnCard, setDrawnCard] = useState(null)
     const [round, setRound] = useState(1)
@@ -92,7 +92,7 @@ function GamePage ({user, whoAmI, hand, setHand}){
                     <div>
                     <h2>Selected Cards</h2>
                     <SelectedCardsComp selectedCards={selectedCards} players={players} round= {round} playersThatVoted= {playersThatVoted} user={user}/>
-                    <Hand whoAmI={whoAmI} round={round} setGameCode={setGameCode} hand={hand} setHand={setHand} gameCode={gameCode}/>
+                    <Hand whoAmI={whoAmI} round={round} setGameCode={setGameCode} hand={hand} setHand={setHand} gameCode={gameCode} user={user}/>
                     <Button onClick={leaveGame}>Leave Game</Button>
                     </div>
                 :

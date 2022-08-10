@@ -32,7 +32,7 @@ function SignUpPage (){
 
                 <Form.Group className="mb-3" controlId="formPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control type="password" placeholder="Password" value="password"/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit
