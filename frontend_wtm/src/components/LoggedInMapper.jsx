@@ -5,7 +5,7 @@ import homeImage from '../assets/Images/all_300.png'
 import { useNavigate } from "react-router-dom";
 
 
-function LoggedInMapper({setShow}) {
+function LoggedInMapper({setShow, startGame, game}) {
     // https://stackoverflow.com/questions/66239691/what-does-npm-install-legacy-peer-deps-do-exactly-when-is-it-recommended-wh
     // https://www.npmjs.com/package/react-image-mapper
 
@@ -23,14 +23,18 @@ function LoggedInMapper({setShow}) {
         ]
       });
     
-    function myFunction(area) {
+    async function myFunction(area) {
       if (area.coords == [0, 185, 91, 241]) {
         // set the coords 1 point off from the "not logged in mapper" so that it wouldn't open the offcanvas when I clicked it when not logged in
         setShow(true)
       }
       else if (area.id ===2){
-        // if 
-        nav("/game")
+        await startGame()
+        console.log('GAME LINE 33', game)
+        // if (game) {
+          // console.log('GAME LINE 36', game)
+          // nav("/game")
+        // }
       }
       
     }
@@ -39,7 +43,7 @@ function LoggedInMapper({setShow}) {
         <ImageMapper
         src={homeImage}
         // onClick={myFunction}
-        onClick={(area) => myFunction(area)}
+        onClick={(area) => myFunction(area).then(nav('/game'))}
         map={mapAreas}
         width={500}
       />

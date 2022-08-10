@@ -117,7 +117,19 @@ def log_in(request):
 
 @api_view(['POST'])
 def log_out(request):
+    user_email= request.user.email
+    user = getUser(user_email)
+    game_user_objects = Game_User.objects.filter(player = user)
     logout(request)
+    try:
+        game_user_objects.all.delete()
+        print('GAME USER SHOULD BE DELETED LINE 126', game_user_objects)
+        return JsonResponse({'success': False})
+    except Exception as e:
+            return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+    
+    
+
     print('USER IS LOGGED OUT!')
     return JsonResponse({'success': True}) 
 # need to add something for if they click it and aren't logged in
@@ -362,7 +374,7 @@ def start_game(request):
             card=create_card(game, game_user)
             user_cards.append(model_to_dict(card))
         # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
-        return JsonResponse({'success':True, 'game_code': game_code, 'user_cards': user_cards})
+        return JsonResponse({'success':True, 'game': model_to_dict(game), 'user_cards': user_cards})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': str(e)})
     
@@ -400,7 +412,6 @@ def selected_card(request):
     print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR SELECTED CARD')
     round = request.data['round']
     card_id= request.data['id']
-
     print('SELECTED CARD_ID', card_id, 'TYPE', type(card_id), 'CARD ROUND', round)
     # user_email = request.user.email
     # user = getUser(user_email)
@@ -432,6 +443,7 @@ def view_selected_cards(request):
     # print('VIEW SELECTED CARDS GAME', game_1)
     round = game_1.round
     selected_cards_objects= Game_Card.objects.filter(round_selected=round, game = game_1)
+    print('SELECTED CARD OBJECTS LINE 448', selected_cards_objects)
     if selected_cards_objects:
         try:
             selected_cards=[]
@@ -476,11 +488,14 @@ def view_votes(request):
     print('YOU ARE IN THE VIEW VOTES')
     round = request.data['round']
     game_code = request.data['game_code']
-    game = Game.objects.filter(code = game_code)
+    print('GAME CODE LINE 479', game_code)
+    game = Game.objects.get(code = game_code)
+    print('VIEW VOTE GAME', game)
     # cards that were selected that round
     # don't think I need to do this b/c can just grab the votes from the front end since I'm sending in the object cards
     # selected_cards_objects= Game_Card.objects.filter(round_selected=round, game = game)
     players_that_voted_objects = Game_User.objects.filter(completed_vote_on_round = round, game= game)
+    print('PLAYERS THAT VOTED', players_that_voted_objects)
     if players_that_voted_objects:
         try:
             players_that_voted=[]
@@ -508,13 +523,14 @@ def players(request):
     if all_game_users:
         try:
             players=[]
+            game_user_array=[]
             for game_user in all_game_users:
                 user = game_user.player
                 if user.email not in players:
                     players.append(user.email)
-                # if model_to_dict(user) not in players:
-                #     players.append(model_to_dict(user))
-            return JsonResponse({'success':True, 'players': players})
+                if model_to_dict(game_user) not in game_user_array:
+                    game_user_array.append(model_to_dict(game_user))
+            return JsonResponse({'success':True, 'players': players, 'game_user_array': game_user_array})
         except Exception as e:
             return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
     else: 
