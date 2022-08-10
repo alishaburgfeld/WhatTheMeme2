@@ -19,6 +19,9 @@ import Draft from './components/Draft'
 function App() {
   const [user, setUser] = useState(null)  
   const [gameUser, setGameUser] = useState(null)  
+  const [hand, setHand] = useState(null)
+  const [show, setShow] = useState(false);
+
   axios.defaults.headers.common["X-CSRFToken"] = getCSRFToken();
 
   const whoAmI = async () => {
@@ -40,10 +43,10 @@ function App() {
       <Router> 
         <NavBar whoAmI={whoAmI} user = {user} gameUser = {gameUser}/>
         <Routes>
-          <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user}/>} />
+          <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user} hand={hand} setHand={setHand} setShow={setShow} show={show}/>} />
           <Route path='/login' element={<LoginPage/>} />
           <Route path='/signup' element = {<SignUpPage />} />
-          <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI}/>} />
+          <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI} hand={hand} setHand={setHand}/>} />
           <Route path='/draft' element = {<Draft/>} />
         </Routes>
       </Router> 

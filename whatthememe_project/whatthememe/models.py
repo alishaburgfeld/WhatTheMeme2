@@ -36,6 +36,7 @@ class Game_User(models.Model):
     game = models.ForeignKey(Game, on_delete = models.CASCADE)
     player = models.ForeignKey(AppUser, on_delete = models.CASCADE)
     player_points = models.IntegerField(blank=True, default=0, validators = [MinValueValidator(0), MaxValueValidator(7)])
+    completed_vote_on_round = models.IntegerField(blank=True, default=0, validators = [MinValueValidator(0)])
     
     class Meta:
         unique_together = (('game', 'player')) #should I add player_points in this too?
@@ -47,7 +48,8 @@ class Game_Card(models.Model):
     phrase = models.TextField(blank = True)
     game = models.ForeignKey(Game, on_delete = models.CASCADE)
     face_up = models.BooleanField(blank=True, default=False) #displaying face up on board for all to see
-    votes = models.IntegerField(blank=True, default=0, validators = [MinValueValidator(0), MaxValueValidator(6)]) #going to set max players as 6
+    # just ended up doing flip face up when all players have selected
+    votes = models.IntegerField(null=True, validators = [MinValueValidator(0), MaxValueValidator(6)]) #going to set max players as 6
     owner = models.ForeignKey(Game_User, on_delete = models.CASCADE)
     round_selected = models.IntegerField(blank=True, default=0, null=True) #will edit the value if its selected by the player
     is_active = models.BooleanField(blank= True, default=True)

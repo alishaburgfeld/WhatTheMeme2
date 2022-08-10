@@ -1,42 +1,45 @@
 import React, { useState} from "react";
 import ImageMapper from "react-image-mapper";
 import homeImage from '../assets/Images/all_300.png'
-import {joinGame } from '../AxiosCalls/GameAxiosCalls';
+// import {joinGame } from '../AxiosCalls/GameAxiosCalls';
 import {startGame} from './Hand'
 import { useNavigate } from "react-router-dom";
 
 
-function LoggedInMapper() {
+function LoggedInMapper({setShow}) {
     // https://stackoverflow.com/questions/66239691/what-does-npm-install-legacy-peer-deps-do-exactly-when-is-it-recommended-wh
     // https://www.npmjs.com/package/react-image-mapper
 
     const nav = useNavigate()
+    
     const [mapAreas, setMapAreas] = useState({
         name: "my-map",
         areas: [
         //   { id: 1, shape: "rect", coords: [1, 186, 188, 280]},
         //join:
-          { id: 1, shape: "rect", coords: [1, 186, 90, 240]},
+          { id: 1, shape: "rect", coords: [0, 185, 91, 241]},
           //start:
           { id: 2, shape: "rect", coords: [345, 186, 435, 240]},
         ]
       });
     
     function myFunction(area) {
-      if (area === 1) {
-        joinGame()
+      if (area.coords === [0, 185, 91, 241]) {
+        // set the coords 1 point off from the "not logged in mapper" so that it wouldn't open the offcanvas when I clicked it when not logged in
+        setShow(true)
       }
-      else {
+      else if (area.id ===2){
         startGame()
+        nav("/game")
       }
-      nav("/game")
+      
     }
 
     return (
         <ImageMapper
         src={homeImage}
         // onClick={myFunction}
-        onClick={(area) => myFunction(area.id)}
+        onClick={(area) => myFunction(area)}
         map={mapAreas}
         width={500}
       />

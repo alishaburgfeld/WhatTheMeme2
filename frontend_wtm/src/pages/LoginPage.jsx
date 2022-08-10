@@ -9,8 +9,6 @@ function LoginPage ({setUser, whoAmI}){
 
     const submitLogIn = (event) => {
     event.preventDefault();
-    console.log('submitted LOGIN: ' + event.target[0].value , event.target[1].value);
-    // console.dir(event.target)
     axios.post('/login', {
     'email': event.target[0].value,
     'password': event.target[1].value
@@ -26,10 +24,9 @@ function LoginPage ({setUser, whoAmI}){
     }
 
     const submitLogOut = function(event) {
-        console.log('REACT LOGOUT REQUEST')
         event.preventDefault()
         axios.post('/logout').then((response)=> {
-            console.log(response)
+            console.log('LOGOUT RESPONSE', response)
           whoAmI()
           nav("/");
           // whoAmI will set the user to undefined after logout

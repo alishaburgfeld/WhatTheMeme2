@@ -3,8 +3,9 @@ import Container from 'react-bootstrap/Container';
 import {useEffect} from 'react'
 import LoggedInMapper from '../components/LoggedInMapper';
 import NoUserMapper from '../components/NoUserMapper';
+import {OffCanvas} from '../components/OffCanvas';
 
-function HomePage ({whoAmI, user}){
+function HomePage ({whoAmI, user, hand, setHand, show, setShow}){
 
     useEffect(()=> {
         whoAmI()
@@ -12,7 +13,10 @@ function HomePage ({whoAmI, user}){
     return (
         <Container class='home-page-container'>
             {user
-            ?   <LoggedInMapper />
+            ?   <div>
+                    <LoggedInMapper setShow={setShow}/>
+                    <OffCanvas whoAmI= {whoAmI} hand = {hand} setHand={setHand} setShow={setShow} show={show}/>
+                </div>
             :   <NoUserMapper />
             }
         </Container>

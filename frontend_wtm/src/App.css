@@ -10,6 +10,18 @@
   width: 150px;
   height: 220px;
   background: none;
+  margin-bottom: 4.5rem;
+}
+
+.navbar::after {
+  margin-bottom: 2rem;
+  clear:both;
+  /* color: #FF8F35; */
+}
+
+.gamepage, .memeContainer, .memecard {
+  text-align: center;
+  justify-content: center;
 }
 
 
@@ -18,6 +30,7 @@
   width: 350px; 
   height: 350px;
   display: flex;
+  margin-bottom: 4rem;
   /* background-color: aquamarine; */
 }
 

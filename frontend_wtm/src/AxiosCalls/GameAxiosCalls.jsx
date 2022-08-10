@@ -4,12 +4,12 @@ import axios from 'axios'
 
 
 
-const joinGame = async () => {
-    console.log('I AM IN JOIN game react')
-    const response = await axios.put('/joingame' )
-    console.log('JOINgame response', response)
-    return response
-}
+// const joinGame = async () => {
+//     console.log('I AM IN JOIN game react')
+//     const response = await axios.put('/joingame' )
+//     console.log('JOINgame response', response)
+//     return response
+// }
 
 const leaveGame = async (nav) => {
     console.log('I AM IN LEAVE game react')
@@ -21,6 +21,6 @@ const leaveGame = async (nav) => {
 
 
 export {
-    joinGame,
+    // joinGame,
     leaveGame
 }

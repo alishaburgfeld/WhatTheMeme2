@@ -5,29 +5,36 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
 const startGame = async () => {
-    // console.log('I AM IN start game react')
     const response = await axios.post('/startgame' )
-    // console.log('startgame response', response)  
     return response
 }
 
-function Hand({whoAmI, round}) {
-    const [hand, setHand] = useState(null)
-    // console.log('I AM AT THE HAND COMPONENT')
-    
+function Hand({whoAmI, round, setGameCode, hand, setHand, gameCode}) {
+
     useEffect(()=> {
-        // console.log('I AM IN HAND USE EFFECT')
-        let cardResponse = startGame()
-        cardResponse.then((response)=> {
-            console.log('USE EFFECT RESPONSE IN .THEN', response)
-            let newhand = response && response.data && response.data.user_cards
-            console.log('HAND', newhand)
-            setHand(newhand)
+        //if user joined game there is already a gamecode and they already have a hand
+        if (hand) {
             whoAmI()
-        })
-        .catch((error)=> {
-            console.log(error)
-        })
+        }
+        else {
+            let cardResponse = startGame()
+            cardResponse.then((response)=> {
+            
+                let new_game_code = response && response.data && response.data.game_code
+            // console.log('START GAME .THEN RESPONSE', response)
+                console.log('GAME CODE IS:', new_game_code)
+                if (new_game_code) {
+                    window.alert(`Your game code is ${new_game_code}, send this to your friends for them to join your game`)
+                    setGameCode(new_game_code)
+                }
+                let newhand = response && response.data && response.data.user_cards
+                setHand(newhand)
+                whoAmI()
+            })
+            .catch((error)=> {
+                console.log(error)
+            })
+        }
     }, [])
     // can I do the "sethand" in my axios call? or do I have to do it in the use effect?
 

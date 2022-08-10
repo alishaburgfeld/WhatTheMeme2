@@ -1,10 +1,27 @@
+import { useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import axios from 'axios'
 
-function vote() {
+
+
+function VotingCards({id, phrase, isActive, round, players_that_voted, user, votes}) {
+
+  const [userHasVoted, setUserHasVoted] = useState(false)
+
+  function vote() {
     console.log('vote function activated')
+    
+    axios.post('/vote', {id:id, round: round})
+    .then((response)=> {
+      setUserHasVoted(true)
+      //probably want to add some sort of css when voting
+      console.log(response)
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
 }
 
-
-function VotingCards({id, phrase, isActive}) {
     return (
         <>
         <div class="maincontainer">
@@ -13,7 +30,9 @@ function VotingCards({id, phrase, isActive}) {
               <div className="theback"></div>
             </div>
           {/* <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button> */}
-          {!isActive? <Button className="card-btn" onClick={vote()}>Vote for this card</Button> : ""}
+          {/* if the user hasn't voted and if the card is flipped over then allow them to vote on it */}
+          {!isActive && !userHasVoted? <Button className="card-btn" onClick={vote()}>Vote</Button> : ""}
+          {votes && <h4>Votes: {votes}</h4>}
           
         </div>
         </>

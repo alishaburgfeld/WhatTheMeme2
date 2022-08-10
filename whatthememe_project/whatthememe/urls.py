@@ -20,6 +20,8 @@ urlpatterns = [
     path('leavegame', views.leave_game),
     path('getmeme', views.get_meme_card),
     path('players', views.players),
+    path('vote', views.vote),
+    path('votes/view', views.view_votes),
     path('selectedcard', views.selected_card),
     path('selectedcards/view', views.view_selected_cards),
 

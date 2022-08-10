@@ -40,16 +40,12 @@ function MemeCard({setRound, round}) {
 
     return (
         <>
-        <div>
             <div className = 'memecard'>
                 <div className={isActive ?'thecard is-flipped' : 'thecard'} id={`${round}`} onClick={flipMemeCard}>
                     <div className ='face-up-meme' >{ memes && round && <img src={memes[round]} id="memeImage"/>}</div>
                     <div className ='face-down-meme'></div>
                 </div>
             </div>
-            {/* <Button onClick={getMeme}>Button </Button> */}
-        </div>
-            {/* { memes && round && <img src={memes[round]} />} */}
         </>
     )
 }

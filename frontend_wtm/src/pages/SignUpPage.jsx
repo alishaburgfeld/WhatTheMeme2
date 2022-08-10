@@ -9,14 +9,11 @@ function SignUpPage (){
     const nav= useNavigate()
     const submitSignUp = (event) => {
         event.preventDefault();
-        console.log('submitted: ' + event.target[0].value , event.target[1].value);
         // console.dir(event.target)
         axios.post('/signup', {
         'email': event.target[0].value,
         'password': event.target[1].value
         }).then((response) => {
-            console.log('YOU ARE IN THE REACT .THEN RESPONSE FROM SIGN UP')
-            console.log(response.data)
             nav("/login")
         })
     }

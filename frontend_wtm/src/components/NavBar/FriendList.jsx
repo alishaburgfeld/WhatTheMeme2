@@ -9,9 +9,7 @@ function FriendList ({user, stopClick}) {
     const [friends, setFriends] = useState(undefined)
 
     const getFriendList = async (user_email) => {
-        // console.log('I AM IN get Friend List', user_email)
         const response = await axios.get('/friendlist' )
-        // console.log('friendlist response.data:', response.data)
         return response
     }
 
@@ -19,28 +17,20 @@ function FriendList ({user, stopClick}) {
     useEffect(()=> {
         let friendList = getFriendList(user)
         friendList.then((response)=>{
-            console.log('.data.friends line 26' , response.data.friends)
             let newList = response.data.friends
             setFriends(newList)
         })
-        // console.log('friend list newList', newList)
         
     }, [])
 
     const removeFriend = async (user_email, friend_email) => {
-        // console.log('I AM IN REMOVE Friend on react', user_email, 'friend:', friend_email)
         const response = await axios.put('/removefriend/', {friend_email: friend_email})
-        // console.log('remove friend response', response)
-        // console.log('request emails', response.data.friend_requests)
         return response
     }
 
     const createFriendRequest = async (event) => {
         let friend_email = event.target[0].value
-        // console.log('I AM IN CREATE  Friend Requests on react', 'friend:', friend_email)
         const response = await axios.put('/friendrequests/create', {friend_email: friend_email})
-        // console.log('friend Requests response', response)
-        // console.log('request emails', response.data.friend_requests)
         return response.data.friend_requests
     }
 

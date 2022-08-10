@@ -34,31 +34,29 @@ def getCards():
     }
     response = requests.request("GET", url, headers=headers)
     JSON_response = json.loads(response.text)
-    # print('A TEXT:!!!!!!!!!!!!',JSON_response)
     # JSON_response is an array of objects, the value for key "text" is what I want.
     for card in JSON_response:
         cards.append(card['text'])
-    # print('CARDS ARRAY', cards)
 
 def getMemes():
     global memes
     url = 'https://api.imgflip.com/get_memes'
     response = requests.request('GET', url)
     JSON_response = json.loads(response.text)
+    # reuturns about 100 memes in an array
     memeArray = JSON_response['data']['memes']
     for meme in memeArray:
         memes.append(meme['url'])
 
 @api_view(['GET'])
 def get_meme_card(request):
-    print('IN GET MEME GET REQUEST ON DJANGO')
+    # print('IN GET MEME GET REQUEST ON DJANGO')
     user = getUser(request.user.email)
     # game_user = game_user = Game_User.objects.get(player = user)
     # running into issue of returning more than one.
     game_user = Game_User.objects.filter(player = user)
     game_1 = game_user[len(game_user)-1].game
     round = game_1.round
-    print(round)
     getMemes()
     if memes:
         try:
@@ -71,7 +69,6 @@ def get_meme_card(request):
 
 @api_view(['POST'])
 def sign_up(request):
-    print('YOU ARE IN THE SIGN_UP VIEW ON DJANGO')
     try:
         newUser = User.objects.create_user(username=request.data['email'], password=request.data['password'], email=request.data['email'])
         newUser.full_clean
@@ -87,7 +84,6 @@ def sign_up(request):
 
 @api_view(['POST'])
 def log_in(request):
-    print('YOU ARE IN THE LOG IN VIEW ON DJANGO')
     # this will use the django framework request which will allow us to not use request.body.___ and we won't have to do json.loads(request.body)
     # print(dir(request))
     # this will give us the original request not the django rest framework request version
@@ -99,7 +95,6 @@ def log_in(request):
     password = request.data['password']
     # user = authenticate(username=email, password=password, email=email)
     user = authenticate(username=email, password=password)
-    print('login on django side!', user.email, user.password)
     if user is not None:
         if user.is_active:
             try:
@@ -109,7 +104,6 @@ def log_in(request):
                 print(f"{email} IS LOGGED IN!!!!!!!!!")
                 return JsonResponse({'success': True}) 
             except Exception as e:
-                print('you got an error logging in!', str(e))
                 return JsonResponse({'success': False, 'reason': 'failed to login'})
         else:
             return JsonResponse({'success': False, 'reason': 'account disabled'})
@@ -127,12 +121,10 @@ def log_out(request):
 
 @api_view(['GET'])
 def who_am_i(request):
-    print('YOU ARE IN THE WHO_AM_I VIEW ON DJANGO')
     if request.user.is_authenticated:
         user = getUser(request.user.email)
         try:
             game_user = Game_User.objects.get(player = user)
-            print('GAME USER', game_user, 'TYPE', type(game_user))
             if game_user:
                 return JsonResponse({'email': request.user.email, 'game_user': True})
         except:
@@ -147,25 +139,20 @@ def who_am_i(request):
 def add_friend(request): #accepts a friend request
     user_email = request.user.email
     friend_email = request.data['friend_email']
-    print('YOU ARE IN ADD FRIEND ON DJANGO.', user_email, 'friend:', friend_email)
     user = User.objects.get(email = user_email)
     userFList = FriendList.objects.get(user = user)
     friend = User.objects.get(email = friend_email)
     friendFList = FriendList.objects.get(user = friend)
-    # print('user', user, 'friend', friend)
     if friend not in user.friends.all():
         if friend != None:
             try:
-                print('now in add friend try')
                 # wrong syntax: user.friends.add(friend)
                 userFList.friends.add(friend)
                 friendFList.friends.add(user)
-                print('user.friends:', user.friends)
                 friend_request = FriendRequest.objects.get(sender = friend, receiver = user)
                 friend_request.is_active = False
                 # had to use update instead of save because it is a queryset
                 friend_request.save()
-                print('is active?', friend_request.is_active)
                 return JsonResponse({'success':True})
             except Exception as e:
                 return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
@@ -177,7 +164,6 @@ def add_friend(request): #accepts a friend request
 
 @api_view(['PUT'])
 def remove_friend(request):
-    # print(request)
     user_email = request.user.email
     friend_email = request.data['friend_email']
     print('IN DELETE ON DJANGO.', user_email, 'friend', friend_email)
@@ -187,9 +173,7 @@ def remove_friend(request):
     friendFList = FriendList.objects.get(user = friend)
     if friend in userFList.friends.all():
         try:
-            print('IN DELETE FRIEND TRY')
             userFList.friends.remove(friend)
-            print('userflist', userFList)
             friendFList.friends.remove(user)
             return JsonResponse({'success':True})
         except Exception as e:
@@ -237,23 +221,17 @@ def create_friend_request(request):
 @api_view(['GET'])
 def view_friend_requests(request):
     print('YOU ARE IN THE GET REQUEST ON DJANGO FOR VIEW FRIEND REQUESTS')
-    print('request', request)
     user_email = request.user.email
     user = getUser(user_email)
     # view any requests sent to the user
     friend_requests = FriendRequest.objects.filter(receiver= user, is_active = True)
-    # print('friend requests:', friend_requests)
     if friend_requests:
         list_of_friend_requests=[]
         for item in friend_requests:
             #sends back the emails of all pending friend requests
             sender = item.sender
-            # print('sender:', sender)
-            # print('sender.email', sender.email)
-            # sender = User.objects.filter(email = item.sender)
             list_of_friend_requests.append(sender.email)
-            print('CHECK TYPE HERE!!!!!' , type(sender.email))
-        print('list of friends_requests:', list_of_friend_requests)
+        # print('list of friends_requests:', list_of_friend_requests)
         try:
             return JsonResponse({'friend_requests': list_of_friend_requests})
         except:
@@ -263,13 +241,10 @@ def view_friend_requests(request):
 
 @api_view(['GET'])
 def view_friend_list(request):
-    print('YOU ARE IN THE GET REQUEST ON DJANGO FOR VIEW FRIEND LIST')
     user_email = request.user.email
-    print('FLIST user email:', user_email)
     user = getUser(user_email)
     # view all friends
     friends = user.friends.all()
-    print('friend_list:', friends)
     if len(friends)>0:
         list_of_friends=[]
         for friend in friends:
@@ -281,19 +256,15 @@ def view_friend_list(request):
             # print('dir friend', dir(friend))
         # print('list of friends line 225:', list_of_friends)
         try:
-            print('IN FLIST TRY')
             return JsonResponse({'friends': list_of_friends})
         except:
-            print('in flist except')
             return JsonResponse({'success': False, 'reason': 'something went wrong'})
     else:
-        print('in flist else')
         return JsonResponse({'success': False, 'reason': "you don't have any friends"})
 
 @api_view(['PUT'])
 def decline_friend_request(request):
     print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR DECLINE FRIEND REQUESTS')
-    # print('request', request)
     user_email = request.user.email
     user = getUser(user_email)
     # print('user', user, 'email:', user_email)
@@ -301,7 +272,6 @@ def decline_friend_request(request):
     # print('friend_email', friend_email)
     friend = getUser(friend_email)
     
-    print('friend', friend, 'email:', friend_email)
     friend_request = FriendRequest.objects.get(sender = friend, receiver = user, is_active = True)
     print('decline friend request:', friend_request)
     if friend_request:
@@ -315,7 +285,6 @@ def decline_friend_request(request):
         return JsonResponse({'success': False, 'reason': "you don't have a request from this friend"})
 
 def create_card(game, owner):
-    print('IN CREATE CARD')
     try:
         # global cardCount
         # its ok for cards to be global because its random each time a game is started, and the cardCount will be tied to each game
@@ -327,7 +296,7 @@ def create_card(game, owner):
         print('GAME CARD = :', game_card)
         game.card_count+=1
         game.save()
-        print('GAME CARD COUNT IS NOW', game.card_count)
+        # print('GAME CARD COUNT IS NOW', game.card_count)
         # cardCount+=1
         # print('CARD COUNT', cardCount)
         return game_card 
@@ -352,13 +321,13 @@ def start_game(request):
         game = Game(code = code)
         game.full_clean
         game.save()
-        print('NEW GAME: ', game)
         game_code = game.code
         game_user = Game_User(game = game, player = user)
         game_user.full_clean
         game_user.save()
         # print('GAME USER IS!!!! ', game_user)
         # this works, but just going to comment it out while debugging the rest
+        print('IN START GAME -- GAME CODE IS', game_code)
         getCards()
         user_cards = []
         while len(user_cards) < 6:
@@ -367,17 +336,35 @@ def start_game(request):
         # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
         return JsonResponse({'success':True, 'game_code': game_code, 'user_cards': user_cards})
     except Exception as e:
-        print(str(e))
         return JsonResponse({'success': False, 'reason': str(e)})
     
     # need to account for if they're showing up as in a different game
     # when client goes back to lobby need to set them as inactive game user. Or delete game user??
+
 @api_view(['POST'])
 @login_required
 def join_game(request):
-    getCards()
-    pass
-    #need to create 6 card objects and pass them to this user. 
+    game_code= request.data['game_code']
+    # game_code = input("What is the code for the game you'd like to join?")
+    game = Game.objects.get(code = game_code)
+    user_email = request.user.email
+    user = getUser(user_email)
+    try:
+        game_user = Game_User(game = game, player = user)
+        game_user.full_clean
+        game_user.save()
+        print('JOIN GAME USER IS!!!! ', game_user)
+        # this works, but just going to comment it out while debugging the rest
+        getCards()
+        user_cards = []
+        while len(user_cards) < 6:
+            card=create_card(game, game_user)
+            user_cards.append(model_to_dict(card))
+        # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
+        return JsonResponse({'success':True,'user_cards': user_cards})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': str(e)})
+    
 
 @api_view(['PUT'])
 @login_required
@@ -385,7 +372,8 @@ def selected_card(request):
     print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR SELECTED CARD')
     round = request.data['round']
     card_id= request.data['id']
-    # print('CARD_ID', card_id, 'TYPE', type(card_id))
+
+    print('SELECTED CARD_ID', card_id, 'TYPE', type(card_id), 'CARD ROUND', round)
     # user_email = request.user.email
     # user = getUser(user_email)
     # print('USER =', user)
@@ -415,9 +403,7 @@ def view_selected_cards(request):
     game_1 = game_user[len(game_user)-1].game
     # print('VIEW SELECTED CARDS GAME', game_1)
     round = game_1.round
-    # print('ROUND HERE', round)
-    selected_cards_objects= Game_Card.objects.filter(round_selected=round)
-    # print('ALL SELECTED CARDS', selected_cards_objects)
+    selected_cards_objects= Game_Card.objects.filter(round_selected=round, game = game_1)
     if selected_cards_objects:
         try:
             selected_cards=[]
@@ -430,17 +416,67 @@ def view_selected_cards(request):
     else: 
         return JsonResponse({'success':False, 'reason': 'no selected cards'})
 
+@api_view(['POST'])
+@login_required
+def vote(request):
+    print('YOU ARE IN THE VOTE')
+    card_id= request.data['id']
+    round= request.data['round']
+    print('VOTED FOR CARD_ID', card_id, 'round', round)
+    user_email = request.user.email
+    user = getUser(user_email)
+    # game_user= Game_User.objects.get(player = user)
+    # still running into issue of multiple game users
+    game_user = Game_User.objects.filter(player = user)
+    game_user_1 = game_user[len(game_user)-1]
+    card = Game_Card.objects.get(id=card_id)
+    print('CARD VOTED FOR', card)
+    try:
+        card.votes+=1
+        card.save()
+        print('CARD VOTES', card.votes)
+        game_user_1.completed_vote_on_round= round
+        print('PLAYER COMPLETED VOTE ON ROUND', game_user_1.completed_vote_on_round)
+        return JsonResponse({'success':True, 'reason': 'card has been voted on and players vote counted'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+
+@api_view(['PUT'])
+# doing a put so I can pass in the round
+@login_required    
+def view_votes(request):
+    print('YOU ARE IN THE VIEW VOTES')
+    round = request.data['round']
+    game_code = request.data['game_code']
+    game = Game.objects.filter(code = game_code)
+    # cards that were selected that round
+    # don't think I need to do this b/c can just grab the votes from the front end since I'm sending in the object cards
+    # selected_cards_objects= Game_Card.objects.filter(round_selected=round, game = game)
+    players_that_voted_objects = Game_User.objects.filter(completed_vote_on_round = round, game= game)
+    if players_that_voted_objects:
+        try:
+            players_that_voted=[]
+            for game_user in players_that_voted_objects:
+                user = game_user.player
+                if user.email not in players_that_voted:
+                    players_that_voted.append(user.email)
+            return JsonResponse({'success':True, 'players_that_voted': players_that_voted})
+        except Exception as e:
+            return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+    else: 
+        return JsonResponse({'success':False, 'reason': 'nobody has voted yet'})
+
 @api_view(['GET'])
 @login_required    
 def players(request):
-    print('YOU ARE IN THE PLAYERS')
+    # print('YOU ARE IN THE PLAYERS')
     user_email = request.user.email
     user = getUser(user_email)
     # game_user= Game_User.objects.get(player = user)
     game_user = Game_User.objects.filter(player = user)
     game = game_user[len(game_user)-1].game    
     all_game_users= Game_User.objects.filter(game = game)
-    print('ALL GAME USERS', all_game_users)
+    # print('ALL GAME USERS', all_game_users)
     if all_game_users:
         try:
             players=[]

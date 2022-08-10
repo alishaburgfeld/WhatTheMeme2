@@ -8,31 +8,22 @@ function FriendRequests({user, stopClick}) {
     const [friendRequests, setFriendRequests] = useState(undefined)
 
     const getFriendRequests = async () => {
-        // console.log('I AM IN get Friend Requests on react', user_email)
         const response = await axios.get('/friendrequests/view')
-        // console.log('friend Requests response:', response)
         return response
     
         //is array
     }
     const acceptFriendRequest = async (user_email, friend_email) => {
-        // console.log('I AM IN ACCEPT Friend Requests on react', user_email, 'friend:', friend_email)
         const response = await axios.put('/addfriend/', {friend_email: friend_email})
-        // console.log('add friend response', response)
-        // console.log('request emails', response.data.friend_requests)
         return response
     }
     
     const declineFriendRequest = async (user_email, friend_email) => {
-        // console.log('I AM IN DECLINE Friend Requests on react', user_email, 'friend:', friend_email)
         const response = await axios.put('/friendrequests/decline', {friend_email: friend_email})
-        // console.log('decline friend response', response)
-        // console.log('request emails', response.data.friend_requests)
         return response
     }
 
     useEffect(()=> {
-        // console.log('friend request page user')
         let friendrequests = getFriendRequests(user)
         friendrequests.then((response)=> {
             let newList=response.data.friend_requests
