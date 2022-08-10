@@ -9,6 +9,7 @@ import SelectedCardsComp from '../components/SelectedCardsComp'
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
 function GamePage ({user, whoAmI, hand, setHand}){
+
   
     const [memes, setMemes] = useState(null)
     const [drawnCard, setDrawnCard] = useState(null)
@@ -73,7 +74,7 @@ function GamePage ({user, whoAmI, hand, setHand}){
     }
     useEffect(()=>{
         getSelectedCards()
-        setInterval(getSelectedCards, 10000)
+        setInterval(getSelectedCards, 100000)
         // need to set interval to do this every 5 seconds
     },[])
 

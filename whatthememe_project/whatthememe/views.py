@@ -56,6 +56,8 @@ def get_meme_card(request):
     # game_user = game_user = Game_User.objects.get(player = user)
     # running into issue of returning more than one.
     game_user = Game_User.objects.filter(player = user)
+    print('LINE 60 GAME USER', game_user)
+    # user_64= Game_User.objects.get(player = user)
     game_1 = game_user[len(game_user)-1].game
     round = game_1.round
     getMemes()

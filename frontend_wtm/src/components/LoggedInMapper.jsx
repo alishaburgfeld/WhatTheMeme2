@@ -2,7 +2,6 @@ import React, { useState} from "react";
 import ImageMapper from "react-image-mapper";
 import homeImage from '../assets/Images/all_300.png'
 // import {joinGame } from '../AxiosCalls/GameAxiosCalls';
-import {startGame} from './Hand'
 import { useNavigate } from "react-router-dom";
 
 
@@ -11,6 +10,7 @@ function LoggedInMapper({setShow}) {
     // https://www.npmjs.com/package/react-image-mapper
 
     const nav = useNavigate()
+    // const [gameUser, setGameUser] = useState(null)
     
     const [mapAreas, setMapAreas] = useState({
         name: "my-map",
@@ -29,7 +29,7 @@ function LoggedInMapper({setShow}) {
         setShow(true)
       }
       else if (area.id ===2){
-        startGame()
+        // if 
         nav("/game")
       }
       

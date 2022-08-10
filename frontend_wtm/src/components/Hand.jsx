@@ -4,13 +4,15 @@ import Card from './Card'
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
-const startGame = async () => {
-    console.log('I AM IN START GAME ON REACT')
-    const response = await axios.post('/startgame' )
-    return response
-}
+
 
 function Hand({whoAmI, round, setGameCode, hand, setHand, gameCode}) {
+
+    const startGame = async () => {
+        console.log('I AM IN START GAME ON REACT')
+        const response = await axios.post('/startgame' )
+        return response
+    }
 
     let firstRender = useRef(true)
 
@@ -25,8 +27,9 @@ function Hand({whoAmI, round, setGameCode, hand, setHand, gameCode}) {
             }
             else {
             
-
+                console.log('HAND LINE 28', hand)
                 console.log('IN THE ELSE ON HAND USE EFFECT')
+                // do I need await here?
                 let cardResponse = startGame()
                 cardResponse.then((response)=> {
                     console.log('HAND .THEN RESPONSE', response)
@@ -64,6 +67,5 @@ function Hand({whoAmI, round, setGameCode, hand, setHand, gameCode}) {
 }
 
 export {
-    startGame,
     Hand
 }
