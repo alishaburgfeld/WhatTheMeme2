@@ -122,6 +122,7 @@ def log_out(request):
     game_user_objects = Game_User.objects.filter(player = user)
     logout(request)
     try:
+        # put this in another on click function since it wont work since user is logged out before it gets here
         game_user_objects.all.delete()
         print('GAME USER SHOULD BE DELETED LINE 126', game_user_objects)
         return JsonResponse({'success': False})

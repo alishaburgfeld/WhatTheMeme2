@@ -13,6 +13,8 @@ function Logout({whoAmI}) {
         axios.post('/logout').then((response)=> {
           whoAmI()
           nav("/");
+        //   set game to null
+        // set all states to null
         })
     }
     return (

@@ -17,18 +17,20 @@ function LoggedInMapper({setShow, startGame, game}) {
         areas: [
         //   { id: 1, shape: "rect", coords: [1, 186, 188, 280]},
         //join:
-          { id: 1, shape: "rect", coords: [0, 185, 91, 241]},
+          { id: 3, shape: "rect", coords: [0, 185, 91, 241]},
           //start:
-          { id: 2, shape: "rect", coords: [345, 186, 435, 240]},
+          { id: 4, shape: "rect", coords: [345, 186, 435, 240]},
         ]
       });
     
-    async function myFunction(area) {
-      if (area.coords == [0, 185, 91, 241]) {
+    async function MapperFunction(area) {
+      console.log('AREA COORDS', area.coords)
+      if (area.id===3) {
+        console.log('IN AREA 1 IF STATEMENT')
         // set the coords 1 point off from the "not logged in mapper" so that it wouldn't open the offcanvas when I clicked it when not logged in
         setShow(true)
       }
-      else if (area.id ===2){
+      else if (area.id ===4){
         await startGame()
         console.log('GAME LINE 33', game)
         // if (game) {
@@ -43,7 +45,12 @@ function LoggedInMapper({setShow, startGame, game}) {
         <ImageMapper
         src={homeImage}
         // onClick={myFunction}
-        onClick={(area) => myFunction(area).then(nav('/game'))}
+        onClick={(area) => MapperFunction(area).then((response)=> {
+          if(area.id===4) {
+            nav('/game')
+          }
+        })
+        }
         map={mapAreas}
         width={500}
       />
