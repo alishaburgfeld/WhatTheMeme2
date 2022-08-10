@@ -24,7 +24,7 @@ function LoggedInMapper({setShow}) {
       });
     
     function myFunction(area) {
-      if (area.coords === [0, 185, 91, 241]) {
+      if (area.coords == [0, 185, 91, 241]) {
         // set the coords 1 point off from the "not logged in mapper" so that it wouldn't open the offcanvas when I clicked it when not logged in
         setShow(true)
       }

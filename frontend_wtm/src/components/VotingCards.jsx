@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 
-function VotingCards({id, phrase, isActive, round, players_that_voted, user, votes}) {
+function VotingCards({id, phrase, notAllSelected, round, players_that_voted, user, votes}) {
 
   const [userHasVoted, setUserHasVoted] = useState(false)
 
@@ -25,13 +25,13 @@ function VotingCards({id, phrase, isActive, round, players_that_voted, user, vot
     return (
         <>
         <div class="maincontainer">
-          <div className={isActive ?'thecard is-flipped votingcards' : 'thecard votingcards'} id = {`voting${id}`}>
+          <div className={notAllSelected ?'thecard is-flipped votingcards' : 'thecard votingcards'} id = {`voting${id}`}>
               <div className="thefront" ><h1>{phrase}</h1></div>
               <div className="theback"></div>
             </div>
           {/* <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button> */}
           {/* if the user hasn't voted and if the card is flipped over then allow them to vote on it */}
-          {!isActive && !userHasVoted? <Button className="card-btn" onClick={vote()}>Vote</Button> : ""}
+          {!notAllSelected && !userHasVoted? <Button className="card-btn" onClick={vote()}>Vote</Button> : ""}
           {votes && <h4>Votes: {votes}</h4>}
           
         </div>
