@@ -123,7 +123,7 @@ def log_out(request):
     logout(request)
     try:
         # put this in another on click function since it wont work since user is logged out before it gets here
-        game_user_objects.all.delete()
+        game_user_objects.delete()
         print('GAME USER SHOULD BE DELETED LINE 126', game_user_objects)
         return JsonResponse({'success': False})
     except Exception as e:
@@ -545,13 +545,13 @@ def leave_game(request):
     user_email = request.user.email
     user = getUser(user_email)
     print('USER =', user)
-    game_users= Game_User.objects.filter(player = user)
-    game_user= game_users[len(game_user)-1]
-    print('GAME USER = ', game_user)
+    game_user_objects= Game_User.objects.filter(player = user)
+    # game_user= game_user_objects[len(game_user_objects)-1]
+    # print('GAME USER = ', game_user)
     try:
-        game_user.delete()
+        game_user_objects.delete()
         # this will also delete all game_cards that belonged to that user
-        print('GAME USER SHOULD BE DELETED', game_user)
+        print('GAME USERS SHOULD BE DELETED', game_user_objects)
         return JsonResponse({'success':True})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
