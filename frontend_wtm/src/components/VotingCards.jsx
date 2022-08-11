@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import axios from 'axios'
+import { useEffect } from 'react'
 
 
 
-function VotingCards({id, phrase, notAllSelected, round, players_that_voted, votes}) {
+function VotingCards({id, phrase, notAllSelected, round, players_that_voted, votes, winningCard}) {
 
   const [userHasVoted, setUserHasVoted] = useState(false)
+  const [isWinningCard, setIsWinningCard] = useState(false)
 
   function vote() {
     console.log('vote function activated')
@@ -20,11 +22,25 @@ function VotingCards({id, phrase, notAllSelected, round, players_that_voted, vot
     .catch((error)=> {
       console.log(error)
     })
-}
+  }
+
+  function checkIfWinningCard() {
+    if (winningCard) {
+      if (winningCard.id === id) {
+        setIsWinningCard(true)
+      }
+    }
+  }
+  
+  useEffect(()=>{
+    if (winningCard) {
+      checkIfWinningCard()
+    }
+  },[winningCard])
 
     return (
         <>
-        <div class="maincontainer">
+        <div className={isWinningCard ? "maincontainer winningCard": "maincontainer"}>
           <div className={notAllSelected ?'thecard is-flipped votingcards' : 'thecard votingcards'} id = {`voting${id}`}>
               <div className="thefront" ><h1>{phrase}</h1></div>
               <div className="theback"></div>
