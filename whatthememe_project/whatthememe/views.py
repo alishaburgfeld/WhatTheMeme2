@@ -129,7 +129,8 @@ def log_out(request):
 
 @api_view(['PUT'])
 def delete_game_user(request):
-    user_email= request.data.user
+    user_email= request.data['user']
+    print('IN DELETE GAME USER LINE 133, USER EMAIL', user_email)
     user = getUser(user_email)
     game_user_objects = Game_User.objects.filter(player = user)
     try:

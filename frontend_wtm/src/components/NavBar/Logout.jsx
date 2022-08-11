@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {useNavigate } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 function Logout({whoAmI, user}) {
@@ -9,22 +9,24 @@ function Logout({whoAmI, user}) {
     const nav= useNavigate()
     const [userEmail, setUserEmail] = useState(null)
 
-    const submitLogOut = function() {
-        // console.log('REACT LOGOUT REQUEST')
-        let nowUser= user
-        console.log('NOW USER LINE 15 ON LOGOUT', nowUser)
+    useEffect(()=> {
+        console.log('IN LOGOUT USE EFFECT')
+        let nowUser= ""
+        nowUser+=user
         setUserEmail(nowUser)
+    }, [])
+    
+
+    const submitLogOut = function() {
         axios.post('/logout').then((response)=> {
             console.group('LOGOUT RESPONSE', response)
           whoAmI()
           nav("/");
-        //   set game to null
-        // set all states to null
         })
     }
     const delete_game_user= function () {
         // setTimeout(code, delay)
-        console.log('IN DELETE GAME USER FUNCTION, USER EMAIL SHOULD BE TRUE', userEmail)
+        console.log('IN DELETE GAME USER FUNCTION, USER EMAIL SHOULD BE A USERS EMAIL', userEmail)
         if (userEmail) {
 
             axios.put('/gameuser/delete', {user:userEmail}).then((response)=>console.log(response))
