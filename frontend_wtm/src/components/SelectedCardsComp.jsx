@@ -1,17 +1,26 @@
 import axios from 'axios'
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import VotingCards from './VotingCards';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
 function SelectedCardsComp({selectedCards, players, round, user}) {
 
+    let firstRender = useRef(true)
+
     const [notAllSelected, setNotAllSelected] = useState(true)
     const [votingComplete, setVotingComplete] = useState(false)
+    //checks if users have been alerted that all players have finished voting
     const [alerted,setAlerted] = useState(false)
+    //checks if the users have been alerted of the round winner
+    const [winnerAlerted,setWinnerAlerted] = useState(false)
+    //checks if there was a tie between the winning cards
     const [cardsTied,setCardsTied] = useState(null)
+    //checks for the winning card
     const [winningCard, setWinningCard] = useState(null)
     const [roundWinner, setRoundWinner] = useState(null)
+    // checks if the winning card has been set up
+    const [notSent, setNotSent] = useState(true)
 
     
     //checks if all users have voted
@@ -49,7 +58,11 @@ function SelectedCardsComp({selectedCards, players, round, user}) {
         if (winningCard) {
             sendWinningCard()
         }
+        if (!notSent) {
+            alertWinner()
+        }
     }, [selectedCards])
+    // its giving the players a point every time it calls send winning card.
 
     function CheckWinningCard() {
         console.log('IN CHECK WINNING CARD')
@@ -82,7 +95,7 @@ function SelectedCardsComp({selectedCards, players, round, user}) {
 
     function sendWinningCard() {
     // this will send the winning card to DB so DB can give the owner a point
-        if (winningCard) {
+        if (winningCard && notSent) {
             console.log('IN SEND WINNING CARD ID:', winningCard.id)
             let card_id = Number(winningCard.id)
             axios.post('/points', {'winningCard': card_id})
@@ -90,22 +103,39 @@ function SelectedCardsComp({selectedCards, players, round, user}) {
                 console.log('sendwinningcard response', response)
                 let winner = response && response.data && response.data.winningCardOwner
                 setRoundWinner(winner)
-                if (cardsTied) {
-
-                    window.alert(`There was a tie! The winning card was randomly selected between them and ${roundWinner} won the round. Flip over the next meme to start the next round.!`)
-                }
-                //grab the owner from the database and alert the users that that player has received a point... later would add CSS to just show the winning card
-                //this is probably wrong:
-                // let winner = response.data.game_user.email
-                // setroundWinner(winner)
+                setNotSent(false)
             })
             .catch((error)=> {
                 console.log(error)
             })
         }
     }
+    
+    function alertWinner() {
+        if (!winnerAlerted) {
+            console.log('IN ALERT WINNER')
+            if (cardsTied && roundWinner) {
+                if (round ===1) {
 
+                    window.alert(`There was a tie! The winning card was randomly selected between them and ${roundWinner} won the round. Flip over the next meme to start the next round.`)
+                }
+                else {
+                    window.alert(`There was a tie! The winning card was randomly selected between them and ${roundWinner} won the round.`)
+                }
+            }
+            else if (roundWinner){
+                if (round ===1) {
 
+                    window.alert(`${roundWinner} won the round with the funniest meme! Flip over the next meme to start the next round.`)
+                }
+                else {
+                    window.alert(`${roundWinner} won the round with the funniest meme!`)
+                }
+            }
+            setWinnerAlerted(true)
+        }    
+    }
+    
     
     function flipCards() {
         //flip cards once every player has selected one
