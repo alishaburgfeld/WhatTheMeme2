@@ -13,14 +13,11 @@ function MemeCard({setRound, round}) {
         console.log('I AM IN GET MEME react')
         const axiosResponse = await axios.get('/getmeme' )
         .then((response)=> {
-            console.log('GETMEME .then response', response)
             let memesArray= response.data.memes
             let responseRound= response.data.round
-            console.log('responseRound',responseRound, 'type', typeof(responseRound))
             setMemes(memesArray)
             // for some reason the first response isn't valid
             setRound(responseRound)
-            return response
         })
         .catch((error)=> {
             console.log(error)

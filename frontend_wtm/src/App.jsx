@@ -39,13 +39,13 @@ function App() {
     setUser(newUser)
   }
 
-  const getGame= function() {
-    axios.get('/game')
-    .then((response)=> {
-      let newGame= response && response.data && response.data.game
-      setGame(newGame)
-    })
-  }
+  // const getGame= function() {
+  //   axios.get('/game')
+  //   .then((response)=> {
+  //     let newGame= response && response.data && response.data.game
+  //     setGame(newGame)
+  //   })
+  // }
 
 //   useEffect(()=>{
 //     if (game) {

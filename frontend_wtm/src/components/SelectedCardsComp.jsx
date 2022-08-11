@@ -4,7 +4,7 @@ import VotingCards from './VotingCards';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
-function SelectedCardsComp({selectedCards, players, round, user}) {
+function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, setWinnerAlerted}) {
 
     let firstRender = useRef(true)
 
@@ -12,8 +12,7 @@ function SelectedCardsComp({selectedCards, players, round, user}) {
     const [votingComplete, setVotingComplete] = useState(false)
     //checks if users have been alerted that all players have finished voting
     const [alerted,setAlerted] = useState(false)
-    //checks if the users have been alerted of the round winner
-    const [winnerAlerted,setWinnerAlerted] = useState(false)
+    
     //checks if there was a tie between the winning cards
     const [cardsTied,setCardsTied] = useState(null)
     //checks for the winning card

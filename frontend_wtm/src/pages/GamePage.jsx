@@ -11,14 +11,16 @@ import PlayerPoints from '../components/PlayersPoints'
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
 function GamePage ({user, whoAmI, hand, setHand, game}){
 
-  
-    const [memes, setMemes] = useState(null)
+
     const [drawnCard, setDrawnCard] = useState(null)
     const [round, setRound] = useState(1)
     const [selectedCards, setSelectedCards] = useState([])
+    // array of arrays. for player of players--->player[0] is their email player [1] is their points
     const [players, setPlayers] = useState([])
     const [playersThatVoted, setPlayersThatVoted] = useState(null)
     const [game_users, setGame_users] = useState(null)
+    //checks if the users have been alerted of the round winner
+    const [winnerAlerted,setWinnerAlerted] = useState(false)
     
     useEffect(()=> {
         whoAmI()
@@ -48,13 +50,11 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     function getPlayersThatVoted() {
         console.log('IN GET PLAYERS THAT VOTED')
-        console.log('GAME HERE LINE 50', game, 'GAME.CODE HERE',game.code)
         axios.put('/votes/view', {round: round, game_code: game.code})
         .then((response)=> {
-            console.log('IN VOTED PLAYERS .THEN')
           let returned_players = response && response.data && response.data.players_that_voted
           if (returned_players) {
-            console.log('VOTED PLAYERS', returned_players)
+            // console.log('VOTED PLAYERS', returned_players)
             setPlayersThatVoted(returned_players)
           } 
         })
@@ -64,25 +64,31 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     }
 
     function getSelectedCards() {
-      console.log('IN GET SELECTED CARDS')
-        axios.get('/selectedcards/view')
-        .then((response)=> {
-          let selected_cards = response && response.data && response.data.selected_cards
-          console.log('SELECTED CARDS LINE 70', selected_cards)
-          if (selected_cards) {
-            setSelectedCards(selected_cards)
-          }
-          
-        })
-        .catch((error)=> {
-          console.log(error)
-        })
-    }
+      if (!winnerAlerted) {
+
+        console.log('IN GET SELECTED CARDS')
+          axios.get('/selectedcards/view')
+          .then((response)=> {
+            let selected_cards = response && response.data && response.data.selected_cards
+            console.log('SELECTED CARDS LINE 70', selected_cards)
+            if (selected_cards) {
+              setSelectedCards(selected_cards)
+            }
+            
+          })
+          .catch((error)=> {
+            console.log(error)
+          })
+      }
+      }
 
     useEffect(()=>{
       if (hand) {
-        getSelectedCards()
-        setInterval(getSelectedCards, 10000)
+        if (!winnerAlerted) {
+          getSelectedCards()
+          setInterval(getSelectedCards, 10000)
+        }
+        
         getPlayers()
         getPlayersThatVoted()
         setInterval(getPlayers, 100000)
@@ -110,7 +116,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                 ? 
                     <div>
                     <h2>Selected Cards</h2>
-                    <SelectedCardsComp selectedCards={selectedCards} players={players} round= {round} playersThatVoted= {playersThatVoted} user={user}/>
+                    <SelectedCardsComp selectedCards={selectedCards} players={players} round= {round} playersThatVoted= {playersThatVoted} user={user} winnerAlerted={winnerAlerted} setWinnerAlerted={setWinnerAlerted}/>
                     <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user}/>
                     <Button onClick={leaveGame}>Leave Game</Button>
                     </div>
