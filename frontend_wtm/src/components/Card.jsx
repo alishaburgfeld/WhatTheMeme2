@@ -5,11 +5,13 @@ import axios from 'axios';
 
 
 function Card({id, phrase, votes, face_up, hand, setHand, round}) {
+  const [userSelected, setUserSelected] = useState(false)
 
   // tells database this card was selected
   function sendSelectedCard() {
     axios.put('/selectedcard', {id:id, round: round})
     .then((response)=> {
+      setUserSelected(true)
     })
     .catch((error)=> {
       console.log(error)
@@ -17,6 +19,7 @@ function Card({id, phrase, votes, face_up, hand, setHand, round}) {
   }
 
   function selectCard() {
+    
     // removes this card from your hand
     for (let card of hand) {
       if (card.id=== id) {
@@ -40,7 +43,9 @@ function Card({id, phrase, votes, face_up, hand, setHand, round}) {
               <div className="theback"></div>
             </div>
           {/* <Button className="card-btn" onClick={(id, round)=>{selectCard(id); sendSelectedCard(id, round);}}>Select</Button> */}
-          <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button>
+          {/* {!notAllSelected && !userHasVoted? <Button className="card-btn" onClick={vote}>Vote</Button> : ""} */}
+          {!userSelected ? <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button> : null}
+      
       </div>
     </Col>
   )

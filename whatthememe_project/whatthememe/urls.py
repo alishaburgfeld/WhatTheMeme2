@@ -6,6 +6,7 @@ urlpatterns = [
     path('signup', views.sign_up),
     path('login', views.log_in),
     path('logout', views.log_out),
+    path('gameuser/delete', views.delete_game_user),
     path('whoami', views.who_am_i),
     path('addfriend/', views.add_friend),
     path('removefriend/', views.remove_friend),

@@ -72,7 +72,7 @@ function NavBar({user, whoAmI, gameUser}) {
                   ? <Nav.Item ><Button onClick={()=>{leaveGame(nav)}}>Leave Game</Button></Nav.Item>
                   : ""
                 }
-                <Nav.Item><Logout whoAmI={whoAmI}/></Nav.Item>
+                <Nav.Item><Logout whoAmI={whoAmI} user={user}/></Nav.Item>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>

@@ -15,7 +15,7 @@ const leaveGame = async (nav) => {
     console.log('I AM IN LEAVE game react')
     const response = await axios.put('/leavegame' )
     console.log('LEAVEgame response', response)
-    return response
+    // nav=('/')
     
 }
 

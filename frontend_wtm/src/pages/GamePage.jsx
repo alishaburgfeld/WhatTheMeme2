@@ -47,7 +47,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     function getPlayersThatVoted() {
         console.log('IN GET PLAYERS THAT VOTED')
-        console.log('GAME HERE LINE 48', game)
+        console.log('GAME HERE LINE 50', game, 'GAME.CODE HERE',game.code)
         axios.put('/votes/view', {round: round, game_code: game})
         .then((response)=> {
             console.log('IN VOTED PLAYERS .THEN')
@@ -97,7 +97,8 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           (
         <div className='gamepage'>
             <h2> Welcome {user}</h2>
-            {players && game &&<h2>All users playing on code {JSON.stringify(game)}: {players}</h2>}
+            {/* {players && game &&<h2>All users playing on code {JSON.stringify(game)}: {players}</h2>} */}
+            {players && game &&<h2>All users playing on code {JSON.stringify(game.code)}: {players}</h2>}
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
             
             <div className='memeContainer'>

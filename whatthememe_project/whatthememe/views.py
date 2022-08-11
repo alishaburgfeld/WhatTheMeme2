@@ -120,20 +120,24 @@ def log_out(request):
     user_email= request.user.email
     user = getUser(user_email)
     game_user_objects = Game_User.objects.filter(player = user)
-    logout(request)
     try:
-        # put this in another on click function since it wont work since user is logged out before it gets here
-        game_user_objects.delete()
-        print('GAME USER SHOULD BE DELETED LINE 126', game_user_objects)
-        return JsonResponse({'success': False})
+        logout(request)
+        return JsonResponse({'success': True, 'action': 'logged out'})
     except Exception as e:
             return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
-    
-    
 
-    print('USER IS LOGGED OUT!')
-    return JsonResponse({'success': True}) 
-# need to add something for if they click it and aren't logged in
+
+@api_view(['PUT'])
+def delete_game_user(request):
+    user_email= request.data.user
+    user = getUser(user_email)
+    game_user_objects = Game_User.objects.filter(player = user)
+    try:
+        game_user_objects.delete()
+        print('GAME USER SHOULD BE DELETED LINE 126', game_user_objects)
+        return JsonResponse({'success': True, 'action': 'user deleted'})
+    except Exception as e:
+            return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
 @api_view(['GET'])
 def who_am_i(request):
@@ -552,7 +556,7 @@ def leave_game(request):
         game_user_objects.delete()
         # this will also delete all game_cards that belonged to that user
         print('GAME USERS SHOULD BE DELETED', game_user_objects)
-        return JsonResponse({'success':True})
+        return JsonResponse({'success':True, 'action': 'user deleted'})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
