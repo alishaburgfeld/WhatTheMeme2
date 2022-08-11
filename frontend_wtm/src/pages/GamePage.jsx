@@ -5,6 +5,7 @@ import {leaveGame } from '../AxiosCalls/GameAxiosCalls'
 import {Hand} from '../components/Hand'
 import MemeCard from '../components/MemeCard'
 import SelectedCardsComp from '../components/SelectedCardsComp'
+import PlayerPoints from '../components/PlayersPoints'
 
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
@@ -28,7 +29,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
         axios.get('/players')
         .then((response)=> {
           let returned_players = response && response.data && response.data.players
-          let game_user_array = response && response.data && response.data.players_that_voted
+          let game_user_array = response && response.data && response.data.game_user_array
           console.log('RETURNED PLAYERS', returned_players, 'GAME USER ARRAY', game_user_array)
           // just returnes the users emails
           if (returned_players) {
@@ -98,7 +99,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
         <div className='gamepage'>
             <h2> Welcome {user}</h2>
             {/* {players && game &&<h2>All users playing on code {JSON.stringify(game)}: {players}</h2>} */}
-            {players && game &&<h2>All users playing on code {JSON.stringify(game.code)}: {players}</h2>}
+            {players && game && <div> <h2>All users playing on code {JSON.stringify(game.code)}:</h2> <PlayerPoints players={players} /></div>}
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
             
             <div className='memeContainer'>

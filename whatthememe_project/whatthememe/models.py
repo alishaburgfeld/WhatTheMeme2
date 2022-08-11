@@ -54,7 +54,7 @@ class Game_Card(models.Model):
     round_selected = models.IntegerField(blank=True, default=0, null=True) #will edit the value if its selected by the player
     is_active = models.BooleanField(blank= True, default=True)
 
-    class Meta:
-        unique_together = (('game', 'phrase'))
+    # class Meta:
+    #     unique_together = (('game', 'phrase'))
     
     # don't think this is true anymore --- this may be causing this issue when trying to use "model to dict": 'JsonResponse' object has no attribute '_meta'

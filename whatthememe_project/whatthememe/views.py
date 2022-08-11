@@ -316,6 +316,7 @@ def create_card(game, owner):
             print('NOT ENOUGH CARDS, GENERATING MORE')
             getCards()
         game_card = Game_Card(phrase=cards[card_count], game = game, face_up = False, votes = 0, owner = owner, round_selected=0, is_active = True)
+        # need to do something to not allow duplicate phrases
         game_card.full_clean()
         game_card.save()
         print('GAME CARD = :', game_card)
@@ -525,7 +526,7 @@ def players(request):
     game_user = Game_User.objects.filter(player = user)
     game = game_user[len(game_user)-1].game    
     all_game_users= Game_User.objects.filter(game = game)
-    # print('ALL GAME USERS', all_game_users)
+    print('ALL GAME USERS', all_game_users)
     if all_game_users:
         try:
             players=[]
@@ -533,9 +534,10 @@ def players(request):
             for game_user in all_game_users:
                 user = game_user.player
                 if user.email not in players:
-                    players.append(user.email)
+                    players.append([user.email, game_user.player_points])
                 if model_to_dict(game_user) not in game_user_array:
                     game_user_array.append(model_to_dict(game_user))
+            print('GAME USER ARRAY LINE 540', game_user_array)
             return JsonResponse({'success':True, 'players': players, 'game_user_array': game_user_array})
         except Exception as e:
             return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
@@ -561,20 +563,25 @@ def leave_game(request):
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
-# 
+@api_view(['POST'])
 def points(request):
     print('IN POINTS ON DJANGO')
-    winningCard = request.data["winningCard"]
-    # user should be just the id for the game_user
-    user_id = winningCard.owner
-    print('user_id of winning card', user_id, 'TYPE', type(user_id))
+    print('REQUEST.DATA in points', request.data)
+    # print(dir(request))
+    winningCard_id = request.data["winningCard"]
+    winningCard = Game_Card.objects.get(id = winningCard_id)
+    print('WINNING CARD ID', winningCard_id)
+    print('winning card', winningCard)
+    # this is the actual model, not just the id:
+    game_user = winningCard.owner 
+    print('user of winning card', game_user, 'TYPE', type(game_user))
     try:
-        game_user = Game_User.objects.get(id = int(user_id))
-        print('game_user is', game_user)
-        game_user.points+=1
+        game_user.player_points+=1
         game_user.save()
-        print('GAME USER SHOULD NOW HAVE ANOTHER POINT', game_user.points)
-        return JsonResponse({'success':True, 'winningCardOwner': model_to_dict(game_user)})
+        print('GAME USER SHOULD NOW HAVE ANOTHER POINT', game_user.player_points)
+        user = game_user.player
+        user_email = user.email
+        return JsonResponse({'success':True, 'winningCardOwner': user.email})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 

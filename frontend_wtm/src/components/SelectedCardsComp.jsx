@@ -1,4 +1,4 @@
-// import axios from 'axios'
+import axios from 'axios'
 import {useState, useEffect} from 'react'
 import VotingCards from './VotingCards';
 import Row from 'react-bootstrap/Row';
@@ -9,9 +9,9 @@ function SelectedCardsComp({selectedCards, players, round, user}) {
     const [notAllSelected, setNotAllSelected] = useState(true)
     const [votingComplete, setVotingComplete] = useState(false)
     const [alerted,setAlerted] = useState(false)
-    // const [cardsTied,setCardsTied] = useState(null)
+    const [cardsTied,setCardsTied] = useState(null)
     const [winningCard, setWinningCard] = useState(null)
-    // const [roundWinner, setroundWinner] = useState(null)
+    const [roundWinner, setRoundWinner] = useState(null)
 
     
     //checks if all users have voted
@@ -83,10 +83,17 @@ function SelectedCardsComp({selectedCards, players, round, user}) {
     function sendWinningCard() {
     // this will send the winning card to DB so DB can give the owner a point
         if (winningCard) {
-            console.log('IN SEND WINNING CARD', winningCard)
-            axios.post('/points', {'winningCard': winningCard})
+            console.log('IN SEND WINNING CARD ID:', winningCard.id)
+            let card_id = Number(winningCard.id)
+            axios.post('/points', {'winningCard': card_id})
             .then((response)=> {
                 console.log('sendwinningcard response', response)
+                let winner = response && response.data && response.data.winningCardOwner
+                setRoundWinner(winner)
+                if (cardsTied) {
+
+                    window.alert(`There was a tie! The winning card was randomly selected between them and ${roundWinner} won the round. Flip over the next meme to start the next round.!`)
+                }
                 //grab the owner from the database and alert the users that that player has received a point... later would add CSS to just show the winning card
                 //this is probably wrong:
                 // let winner = response.data.game_user.email
