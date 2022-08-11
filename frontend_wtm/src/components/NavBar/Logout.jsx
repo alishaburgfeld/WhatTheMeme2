@@ -12,6 +12,7 @@ function Logout({whoAmI, user}) {
     const submitLogOut = function() {
         // console.log('REACT LOGOUT REQUEST')
         let nowUser= user
+        console.log('NOW USER LINE 15 ON LOGOUT', nowUser)
         setUserEmail(nowUser)
         axios.post('/logout').then((response)=> {
             console.group('LOGOUT RESPONSE', response)
@@ -23,6 +24,7 @@ function Logout({whoAmI, user}) {
     }
     const delete_game_user= function () {
         // setTimeout(code, delay)
+        console.log('IN DELETE GAME USER FUNCTION, USER EMAIL SHOULD BE TRUE', userEmail)
         if (userEmail) {
 
             axios.put('/gameuser/delete', {user:userEmail}).then((response)=>console.log(response))

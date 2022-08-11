@@ -14,6 +14,7 @@
 //     }
 //     if (totalVotes === players.length) {
 //         setVotingComplete(true)
+//          window.alert('All players have voted Here is the winning card!')
 //     }
 // }
 

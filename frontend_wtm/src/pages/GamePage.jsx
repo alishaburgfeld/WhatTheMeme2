@@ -48,7 +48,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     function getPlayersThatVoted() {
         console.log('IN GET PLAYERS THAT VOTED')
         console.log('GAME HERE LINE 50', game, 'GAME.CODE HERE',game.code)
-        axios.put('/votes/view', {round: round, game_code: game})
+        axios.put('/votes/view', {round: round, game_code: game.code})
         .then((response)=> {
             console.log('IN VOTED PLAYERS .THEN')
           let returned_players = response && response.data && response.data.players_that_voted

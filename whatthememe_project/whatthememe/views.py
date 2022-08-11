@@ -556,7 +556,7 @@ def leave_game(request):
         game_user_objects.delete()
         # this will also delete all game_cards that belonged to that user
         print('GAME USERS SHOULD BE DELETED', game_user_objects)
-        return JsonResponse({'success':True, 'action': 'user deleted'})
+        return JsonResponse({'success':True, 'action': 'left game and game_user deleted'})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 

@@ -7,6 +7,40 @@ import Container from 'react-bootstrap/Container'
 function SelectedCardsComp({selectedCards, players, round, user}) {
 
     const [notAllSelected, setNotAllSelected] = useState(true)
+    const [votingComplete, setVotingComplete] = useState(false)
+    const [alerted,setAlerted] = useState(false)
+    // const [cardsTied,setCardsTied] = useState(null)
+    // const [winningCard, setWinningCard] = useState(null)
+    // const [roundWinner, setroundWinner] = useState(null)
+
+    
+    //checks if all users have voted
+    function CountVotes() {
+        console.log('in count votes')
+        if (!notAllSelected) {
+            //only checks the votes if all cards have been selected
+            let totalVotes = 0
+            for (let card of selectedCards) {
+                totalVotes+= card.votes
+            }
+            if (totalVotes === players.length) {
+                console.log('all players have voted. total votes = total players', totalVotes)
+                setVotingComplete(true)
+                // window.alert('All players have voted Here is the winning card!')
+                if (!alerted) {
+
+                    window.alert('All players have voted!')
+                    setAlerted(true)
+                }
+            }
+        }
+    }
+
+    useEffect(()=> {
+        console.log('IN COUNT VOTES USE EFFECT')
+        // checks votes on render and whenever selectedCards is updated (which should be every 10sec interval)
+        CountVotes()
+    }, [selectedCards])
 
     
     function flipCards() {
@@ -25,7 +59,7 @@ function SelectedCardsComp({selectedCards, players, round, user}) {
             flipCards()
             setInterval(flipCards, 10000)
             if (round===1) {
-                window.alert('All players have selected a card, vote for the funniest one!')
+                window.alert('All players have selected a card, vote for the funniest meme-card pair!')
             }
         }
         // need to set interval to do this every 5 seconds
