@@ -5,10 +5,10 @@ import { useEffect } from 'react'
 
 
 
-function VotingCards({id, phrase, notAllSelected, round, players_that_voted, votes, winningCard}) {
+function VotingCards({id, phrase, notAllSelected, round, players_that_voted, votes, winningCard, userHasVoted, setUserHasVoted, isWinningCard, setIsWinningCard}) {
 
-  const [userHasVoted, setUserHasVoted] = useState(false)
-  const [isWinningCard, setIsWinningCard] = useState(false)
+  // const [userHasVoted, setUserHasVoted] = useState(false)
+  // const [isWinningCard, setIsWinningCard] = useState(false)
 
   function vote() {
     console.log('vote function activated')

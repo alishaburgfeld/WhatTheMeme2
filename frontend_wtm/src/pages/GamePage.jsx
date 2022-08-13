@@ -12,7 +12,6 @@ import PlayerPoints from '../components/PlayersPoints'
 function GamePage ({user, whoAmI, hand, setHand, game}){
 
 
-    const [drawnCard, setDrawnCard] = useState(null)
     const [round, setRound] = useState(1)
     const [selectedCards, setSelectedCards] = useState([])
     // array of arrays. for player of players--->player[0] is their email player [1] is their points
@@ -21,6 +20,21 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     const [game_users, setGame_users] = useState(null)
     //checks if the users have been alerted of the round winner
     const [winnerAlerted,setWinnerAlerted] = useState(false)
+    const [memeIsActive, setMemeIsActive] = useState(true)
+    const [userSelected, setUserSelected] = useState(false)
+    const [userHasVoted, setUserHasVoted] = useState(false)
+    const [isWinningCard, setIsWinningCard] = useState(false)
+    const [notAllSelected, setNotAllSelected] = useState(true)
+    const [votingComplete, setVotingComplete] = useState(false)
+    //checks if users have been alerted that all players have finished voting
+    const [alerted,setAlerted] = useState(false)
+    //checks if there was a tie between the winning cards
+    const [cardsTied,setCardsTied] = useState(null)
+    //checks for the winning card
+    const [winningCard, setWinningCard] = useState(null)
+    const [roundWinner, setRoundWinner] = useState(null)
+    // checks if the winning card has been set up
+    const [notSent, setNotSent] = useState(true)    
     
     useEffect(()=> {
         whoAmI()
@@ -141,6 +155,26 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     },[hand])
 
+    function resetRound() {
+      //update game round in DB then run round()
+      //draw Card
+      setSelectedCards([])
+      setPlayers([])
+      setPlayersThatVoted(null)
+      setWinnerAlerted(false)
+      setMemeIsActive(true)
+      setUserSelected(false)
+      setNotAllSelected(true)
+      setVotingComplete(false)
+      setAlerted(false)
+      setCardsTied(null)
+      setWinningCard(null)
+      setRoundWinner(null)
+      setNotSent(true)
+
+
+    }
+
     return (
       <>
         {game
@@ -153,15 +187,17 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
             
             <div className='memeContainer'>
-                <MemeCard setRound={setRound} round = {round}/>
+                <MemeCard setRound={setRound} round = {round} memeIsActive={memeIsActive} setMemeIsActive={setMemeIsActive}/>
             </div>
             <div>
                 {selectedCards.length > 0
                 ? 
                     <div>
                     <h2>Selected Cards</h2>
-                    <SelectedCardsComp selectedCards={selectedCards} players={players} round= {round} playersThatVoted= {playersThatVoted} user={user} winnerAlerted={winnerAlerted} setWinnerAlerted={setWinnerAlerted}/>
-                    <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user}/>
+                    <SelectedCardsComp selectedCards={selectedCards} players={players} round= {round} playersThatVoted= {playersThatVoted} user={user} winnerAlerted={winnerAlerted} setWinnerAlerted={setWinnerAlerted}
+                    notAllSelected={notAllSelected} setNotAllSelected={setNotAllSelected} votingComplete={votingComplete} setVotingComplete={setVotingComplete} alerted={alerted} setAlerted={setAlerted} cardsTied={cardsTied} setCardsTied={setCardsTied} winningCard={winningCard} setWinningCard={setWinningCard} 
+                    roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted} isWinningCard={isWinningCard} setIsWinningCard={setIsWinningCard}/>
+                    <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
                     <Button onClick={leaveGame}>Leave Game</Button>
                     </div>
                 :

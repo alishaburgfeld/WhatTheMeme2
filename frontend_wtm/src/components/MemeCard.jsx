@@ -2,11 +2,11 @@ import axios from 'axios'
 import {useState, useEffect } from 'react'
 
 
-function MemeCard({setRound, round}) {
+function MemeCard({setRound, round, memeIsActive, setMemeIsActive}) {
 
     const [memes, setMemes] = useState([])
     
-    const [isActive, setIsActive] = useState(true)
+    
     
 
     const getMeme = async () => {
@@ -26,7 +26,7 @@ function MemeCard({setRound, round}) {
     }
 
   function flipMemeCard() {
-    setIsActive(false)
+    setMemeIsActive(false)
     const card = document.getElementById(`meme${round}`)
     console.log('flip card activated')
   }
@@ -38,7 +38,7 @@ function MemeCard({setRound, round}) {
     return (
         <>
             <div className = 'memecard'>
-                <div className={isActive ?'thecard is-flipped' : 'thecard'} id={`${round}`} onClick={flipMemeCard}>
+                <div className={memeIsActive ?'thecard is-flipped' : 'thecard'} id={`${round}`} onClick={flipMemeCard}>
                     <div className ='face-up-meme' >{ memes && round && <img src={memes[round]} id="memeImage"/>}</div>
                     <div className ='face-down-meme'></div>
                 </div>

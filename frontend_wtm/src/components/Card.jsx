@@ -4,8 +4,8 @@ import { useState } from 'react';
 import axios from 'axios';
 
 
-function Card({id, phrase, votes, face_up, hand, setHand, round}) {
-  const [userSelected, setUserSelected] = useState(false)
+function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, setUserSelected}) {
+  
 
   // console.log('USER SELECTED LINE 10, SHOULD BE FALSE', userSelected)
   // tells database this card was selected

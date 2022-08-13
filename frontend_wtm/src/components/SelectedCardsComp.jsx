@@ -4,22 +4,24 @@ import VotingCards from './VotingCards';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
-function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, setWinnerAlerted}) {
+function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, setWinnerAlerted, notAllSelected, setNotAllSelected, votingComplete, setVotingComplete, alerted, setAlerted, cardsTied, setCardsTied, winningCard, setWinningCard, roundWinner, setRoundWinner, notSent, setNotSent, userHasVoted, setUserHasVoted, isWinningCard, setIsWinningCard}) {
 
     let firstRender = useRef(true)
 
-    const [notAllSelected, setNotAllSelected] = useState(true)
-    const [votingComplete, setVotingComplete] = useState(false)
-    //checks if users have been alerted that all players have finished voting
-    const [alerted,setAlerted] = useState(false)
-    
-    //checks if there was a tie between the winning cards
-    const [cardsTied,setCardsTied] = useState(null)
-    //checks for the winning card
-    const [winningCard, setWinningCard] = useState(null)
-    const [roundWinner, setRoundWinner] = useState(null)
-    // checks if the winning card has been set up
-    const [notSent, setNotSent] = useState(true)
+    // notAllSelected={notAllSelected} setNotAllSelected={setNotAllSelected} votingComplete={votingComplete} setVotingComplete={setVotingComplete} alerted={alerted} setAlerted={setAlerted} cardsTied={cardsTied} setCardsTied={setCardsTied} winningCard={winningCard} setWinningCard={setWinningCard} roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent}
+
+
+    // const [notAllSelected, setNotAllSelected] = useState(true)
+    // const [votingComplete, setVotingComplete] = useState(false)
+    // //checks if users have been alerted that all players have finished voting
+    // const [alerted,setAlerted] = useState(false)
+    // //checks if there was a tie between the winning cards
+    // const [cardsTied,setCardsTied] = useState(null)
+    // //checks for the winning card
+    // const [winningCard, setWinningCard] = useState(null)
+    // const [roundWinner, setRoundWinner] = useState(null)
+    // // checks if the winning card has been set up
+    // const [notSent, setNotSent] = useState(true)
 
     
     //checks if all users have voted
@@ -163,7 +165,7 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
         <Container>
             <Row>
                 {selectedCards && selectedCards.map((card) => (
-                    <VotingCards key = {card.id} {...card} notAllSelected={notAllSelected} round={round} winningCard={winningCard}/>
+                    <VotingCards key = {card.id} {...card} notAllSelected={notAllSelected} round={round} winningCard={winningCard} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted} isWinningCard={isWinningCard} setIsWinningCard={setIsWinningCard}/>
                 ))
                 }
             </Row>
