@@ -9,7 +9,7 @@ import axios from 'axios'
 //     setShow(true);
 // } 
 
-function OffCanvas ({hand, setHand, setShow, show, whoAmI}) {
+function OffCanvas ({hand, setHand, setShow, show, whoAmI, setGame}) {
     const handleClose = () => setShow(false);
     
     const nav= useNavigate()
@@ -22,10 +22,21 @@ function OffCanvas ({hand, setHand, setShow, show, whoAmI}) {
         axios.post('/joingame', {game_code: game_code})
             .then((response) => {
                 console.log('response from joingame: ', response)
-                let newhand = response && response.data && response.data.user_cards
-                setHand(newhand)
-                whoAmI()
-                nav('/game')
+                console.log('SUCCESS TYPE', typeof(response.data.success), 'success?', response.data.success)
+                if (response.data.success=='True') {
+                    // === wasn't working here
+                    let game = response && response.data && response.data.game
+                    setGame(game)
+                    let newhand = response && response.data && response.data.user_cards
+                    setHand(newhand)
+                    whoAmI()
+                    if (game) {
+                        nav('/game')
+                    }
+                }
+                else {
+                    window.alert('There is nobody playing on that game code, please try again or start a game')
+                }
             })
             .catch((error) => {
                 console.log('error: ', error)

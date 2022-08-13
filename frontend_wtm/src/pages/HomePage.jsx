@@ -5,7 +5,7 @@ import LoggedInMapper from '../components/LoggedInMapper';
 import NoUserMapper from '../components/NoUserMapper';
 import {OffCanvas} from '../components/OffCanvas';
 
-function HomePage ({whoAmI, user, hand, setHand, show, setShow, startGame, game}){
+function HomePage ({whoAmI, user, hand, setHand, show, setShow, startGame, game, setGame}){
 
     useEffect(()=> {
         whoAmI()
@@ -16,7 +16,7 @@ function HomePage ({whoAmI, user, hand, setHand, show, setShow, startGame, game}
             ?   <div>
                     {/* <h2>game: {game['code']}</h2> */}
                     <LoggedInMapper setShow={setShow} startGame={startGame} game={game}/>
-                    <OffCanvas whoAmI= {whoAmI} hand = {hand} setHand={setHand} setShow={setShow} show={show} />
+                    <OffCanvas whoAmI= {whoAmI} hand = {hand} setHand={setHand} setShow={setShow} show={show} setGame={setGame}/>
                 </div>
             :   <NoUserMapper />
             }

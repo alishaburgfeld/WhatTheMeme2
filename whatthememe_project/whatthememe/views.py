@@ -393,24 +393,28 @@ def start_game(request):
 def join_game(request):
     game_code= request.data['game_code']
     # game_code = input("What is the code for the game you'd like to join?")
-    game = Game.objects.get(code = game_code)
     user_email = request.user.email
     user = getUser(user_email)
-    try:
-        game_user = Game_User(game = game, player = user)
-        game_user.full_clean
-        game_user.save()
-        print('JOIN GAME USER IS!!!! ', game_user)
-        # this works, but just going to comment it out while debugging the rest
-        getCards()
-        user_cards = []
-        while len(user_cards) < 6:
-            card=create_card(game, game_user)
-            user_cards.append(model_to_dict(card))
-        # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
-        return JsonResponse({'success':True,'user_cards': user_cards})
-    except Exception as e:
-        return JsonResponse({'success': False, 'reason': str(e)})
+    game = Game.objects.get(code = game_code)
+    if (game):
+        try:
+            game_user = Game_User(game = game, player = user)
+            game_user.full_clean
+            game_user.save()
+            print('JOIN GAME USER IS!!!! ', game_user)
+            # this works, but just going to comment it out while debugging the rest
+            getCards()
+            user_cards = []
+            while len(user_cards) < 6:
+                card=create_card(game, game_user)
+                user_cards.append(model_to_dict(card))
+            # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
+            return JsonResponse({'success':'True','user_cards': user_cards, 'game': model_to_dict(game)})
+        except Exception as e:
+            return JsonResponse({'success': False, 'reason': str(e)})
+    else:
+        return JsonResponse({'success': False, 'reason': 'there is nobody playing on that game code, please try again or start a game'})
+    
     
 
 @api_view(['PUT'])
