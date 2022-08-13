@@ -37,7 +37,7 @@ function NoUserMapper() {
         // onClick={myFunction}
         onClick={(area) => myFunction(area.id)}
         map={mapAreas}
-        width={500}
+        width={700}
       />
     )
     
