@@ -1,4 +1,11 @@
 
+@font-face {
+  font-family: RamettoOne;
+  src: url('./assets/Images/Rammetto_One.ttf');
+}
+
+
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -48,11 +55,16 @@
   border-radius: 10px;
   transform-style: preserve-3d;
   transition: transform 1s;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   /* border: red solid 5px; */
 }
 
 .thecard.is-flipped {
   transform: rotateY(180deg);
+}
+
+.thecard:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
 
@@ -68,6 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-wrap: break-word;
 }
 
 .thefront {
@@ -94,10 +107,10 @@
 
 
 .thefront h1, .theback h1{
-  font-family: 'zilla slab', sans-serif;
-  padding: 20px;
+  font-family: RamettoOne, sans-serif;
+  padding: 16px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   text-align: center;
 }
 
