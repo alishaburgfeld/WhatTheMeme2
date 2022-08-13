@@ -14,10 +14,10 @@ function MemeCard({setRound, round}) {
         const axiosResponse = await axios.get('/getmeme' )
         .then((response)=> {
             let memesArray= response.data.memes
-            let responseRound= response.data.round
+            // let responseRound= response.data.round
             setMemes(memesArray)
             // for some reason the first response isn't valid
-            setRound(responseRound)
+            // setRound(responseRound)
         })
         .catch((error)=> {
             console.log(error)

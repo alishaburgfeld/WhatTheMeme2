@@ -39,22 +39,7 @@ function App() {
     setUser(newUser)
   }
 
-  // const getGame= function() {
-  //   axios.get('/game')
-  //   .then((response)=> {
-  //     let newGame= response && response.data && response.data.game
-  //     setGame(newGame)
-  //   })
-  // }
-
-//   useEffect(()=>{
-//     if (game) {
-//       getGame()
-//       setInterval(getGame, 100000)
-//     }
-// },[])
-
-  const startGame = function () {
+  const startGame = async function () {
     console.log('I AM IN START GAME ON REACT')
     axios.post('/startgame' )
     .then((response)=> {
@@ -66,7 +51,6 @@ function App() {
         else {
             console.log('START GAME .THEN RESPONSE', response)
             let returned_game= response && response.data && response.data.game
-            console.log('RETURNED GAME LINE 69', returned_game)
             let new_game_code = returned_game.code
             console.log('GAME CODE IS: LINE 71 APPJSX', new_game_code)
             if (new_game_code) {
@@ -88,7 +72,7 @@ function App() {
     <div className="App">
       
       <Router> 
-        <NavBar whoAmI={whoAmI} user = {user} gameUser = {gameUser}/>
+        <NavBar whoAmI={whoAmI} user = {user} gameUser = {gameUser} setHand={setHand}/>
         <Routes>
           <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user} hand={hand} setHand={setHand} setShow={setShow} show={show} startGame={startGame} game={game} />} />
           <Route path='/login' element={<LoginPage/>} />

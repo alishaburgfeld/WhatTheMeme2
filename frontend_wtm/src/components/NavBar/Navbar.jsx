@@ -14,7 +14,7 @@ import FriendRequests from './FriendRequests';
 import FriendList from './FriendList';
 
 
-function NavBar({user, whoAmI, gameUser}) {
+function NavBar({user, whoAmI, gameUser, setHand}) {
   const nav= useNavigate()
   // const [expanded, setExpanded] = useState(true)
 
@@ -72,7 +72,7 @@ function NavBar({user, whoAmI, gameUser}) {
                   ? <Nav.Item ><Button onClick={()=>{leaveGame(nav)}}>Leave Game</Button></Nav.Item>
                   : ""
                 }
-                <Nav.Item><Logout whoAmI={whoAmI} user={user}/></Nav.Item>
+                <Nav.Item><Logout whoAmI={whoAmI} user={user} setHand={setHand}/></Nav.Item>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>

@@ -45,7 +45,7 @@ function Card({id, phrase, votes, face_up, hand, setHand, round}) {
             </div>
           {/* <Button className="card-btn" onClick={(id, round)=>{selectCard(id); sendSelectedCard(id, round);}}>Select</Button> */}
           {/* {!notAllSelected && !userHasVoted? <Button className="card-btn" onClick={vote}>Vote</Button> : ""} */}
-          {!userSelected ? <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button> : null}
+          {!userSelected ? <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button> : ""}
       </div>
       <div><h6>UserSelected true or false: {userSelected}</h6></div>
     </Col>

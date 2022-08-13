@@ -585,6 +585,16 @@ def points(request):
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
+@api_view(['PUT'])
+# put request so could have body
+def round(request):
+    game_code = request.data['code']
+    try:
+        game = Game.objects.get(code = game_code)
+        game_round = game.round
+        return JsonResponse({'success':True, 'round': game_round})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
 
 # source ~/VEnvirons/WhatTheMeme/bin/activate

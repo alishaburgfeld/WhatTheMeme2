@@ -24,7 +24,41 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     
     useEffect(()=> {
         whoAmI()
+        // getRound()
+        // setTimeout(getRound(), 5000)
     }, [])
+
+    // only way I could get round to work was to put it on an interval too
+    const roundInterval = ""
+    useEffect(() => {
+      const roundTimer = setTimeout(getRound(), 5000);
+      const roundInterval = setInterval(getRound(), 20000)
+      return () => {
+        clearTimeout(roundTimer)
+        clearInterval(roundInterval)
+      }
+    }, [hand]);
+
+  const getRound= function() {
+    console.log('in get round')
+    if (hand) {
+      let code = game.code
+      console.log('CODE HERE HERE HERE', code)
+      axios.put('/round',{code:code})
+      .then((response)=> {
+        let newRound= response && response.data && response.data.round
+        console.log('ROUND RESPONSE,', newRound)
+        setRound(newRound)
+      })
+    }
+  }
+
+  // useEffect(()=>{
+  //   if (game) {
+  //     getRound()
+  //     setInterval(getGame, 100000)
+  //   }
+  // },[])
 
     function getPlayers() {
       console.log('IN GET PLAYRS')
@@ -82,18 +116,28 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       }
       }
 
+    const cardsInterval = ""
+    const playerInterval = ""
+    const votedInterval = ""
+
     useEffect(()=>{
-      if (hand) {
+      if (hand && user) {
         if (!winnerAlerted) {
           getSelectedCards()
-          setInterval(getSelectedCards, 10000)
+          const cardsInterval = setInterval(getSelectedCards, 10000)
         }
         
         getPlayers()
         getPlayersThatVoted()
-        setInterval(getPlayers, 100000)
-        setInterval(getPlayersThatVoted, 10000)
+        const playerInterval = setInterval(getPlayers, 100000)
+        const votedInterval = setInterval(getPlayersThatVoted, 10000)
       }
+    else {
+      if (playerInterval!= "") {
+        
+        clearInterval(playerInterval, votedInterval, cardsInterval)
+      }
+    }
 
     },[hand])
 
@@ -122,7 +166,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                     </div>
                 :
                     <div>    
-                        <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} />
+                        <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user}/>
                         <Button onClick={leaveGame}>Leave Game</Button>
                     </div>
                 }

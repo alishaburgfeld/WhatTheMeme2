@@ -18,6 +18,7 @@ urlpatterns = [
     path('friendrequests/decline', views.decline_friend_request),
     path('startgame', views.start_game),
     path('joingame', views.join_game),
+    path('round', views.round),
     path('leavegame', views.leave_game),
     path('getmeme', views.get_meme_card),
     path('players', views.players),
