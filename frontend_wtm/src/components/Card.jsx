@@ -12,6 +12,7 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
   function sendSelectedCard() {
     axios.put('/selectedcard', {id:id, round: round})
     .then((response)=> {
+      console.log('SEND SELECTED CARD RESPONSE', response)
       setUserSelected(true)
     })
     .catch((error)=> {
@@ -24,6 +25,7 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
     // removes this card from your hand
     for (let card of hand) {
       if (card.id=== id) {
+        console.log('I HAVE SELECTED CARD ID', card.id, id)
         let index = hand.indexOf(card)
         let handslice= hand.slice()
         handslice.splice(index,1)

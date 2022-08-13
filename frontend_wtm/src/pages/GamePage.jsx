@@ -1,7 +1,8 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
-import {leaveGame } from '../AxiosCalls/GameAxiosCalls'
+// import {leaveGame, sendResetRound } from '../AxiosCalls/GameAxiosCalls'
+import {leaveGame} from '../AxiosCalls/GameAxiosCalls'
 import {Hand} from '../components/Hand'
 import MemeCard from '../components/MemeCard'
 import SelectedCardsComp from '../components/SelectedCardsComp'
@@ -35,7 +36,8 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     const [roundWinner, setRoundWinner] = useState(null)
     // checks if the winning card has been set up
     const [notSent, setNotSent] = useState(true)    
-    
+    let firstRender = useRef(true)
+
     useEffect(()=> {
         whoAmI()
         // getRound()
@@ -155,29 +157,63 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     },[hand])
 
+    useEffect(()=> {
+      if (firstRender.current) {
+        console.log("resetround first render")
+        firstRender.current=false
+      }
+      else {
+        console.log('IN RESET ROUND USE EFFECT ELSE')
+        if (winnerAlerted) {
+          console.log('in reset round use effect 2nd render - should be based on winnerAlerted')
+          resetRound()
+          firstRender.current=true
+          // I'm not sure if I would set this to false or true at this point
+        }
+      }
+    }, [winnerAlerted])
+
+    //resets the round in the DB, gets a new card, and resets all states
     function resetRound() {
-      //update game round in DB then run round()
-      //draw Card
-      setSelectedCards([])
-      setPlayers([])
-      setPlayersThatVoted(null)
-      setWinnerAlerted(false)
-      setMemeIsActive(true)
-      setUserSelected(false)
-      setNotAllSelected(true)
-      setVotingComplete(false)
-      setAlerted(false)
-      setCardsTied(null)
-      setWinningCard(null)
-      setRoundWinner(null)
-      setNotSent(true)
-
-
+      console.log('IN RESET ROUND')
+      //this resets the round in the DB and gets a new card
+      let game_code = game.code
+        if (game) {
+          // sendReset.then(()=> console.log('SEND RESET ROUND AXIOS response', sendReset))
+          axios.post('/round/reset',{code:game_code})
+          .then((response)=> {
+            console.log('SEND RESET ROUND AXIOS response', response)
+            let drawn_card = response.data.drawn_card
+            console.log('DRAWN CARD IS HERE', drawn_card)
+            let new_hand = [...hand, drawn_card]
+            getRound(game_code)
+            setHand(new_hand)
+            setSelectedCards([])
+            setPlayers([])
+            setPlayersThatVoted(null)
+            setWinnerAlerted(false)
+            setMemeIsActive(true)
+            setUserSelected(false)
+            setNotAllSelected(true)
+            setVotingComplete(false)
+            setAlerted(false)
+            setCardsTied(null)
+            setWinningCard(null)
+            setRoundWinner(null)
+            setNotSent(true)
+            setUserHasVoted(false)
+            setIsWinningCard(false)
+            setNotAllSelected(true)
+            
+          })
+          
+        }
     }
+    
 
     return (
       <>
-        {game
+        {game && user
           ?
           (
         <div className='gamepage'>
@@ -199,6 +235,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                     roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted} isWinningCard={isWinningCard} setIsWinningCard={setIsWinningCard}/>
                     <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
                     <Button onClick={leaveGame}>Leave Game</Button>
+                    {!winnerAlerted ? <h4>Winner is NOT alerted</h4> : <h4>Winner IS alerted</h4>}
                     </div>
                 :
                     <div>    

@@ -19,8 +19,28 @@ const leaveGame = async (nav) => {
     
 }
 
+// const sendResetRound = function (code) {
+//     console.log('I AM IN SEND RESET ROUND, CODE IS', code)
+//     const response =axios.post('/round/reset',{code:code})
+//     // console.log('RESET ROUND response', response)
+//     // nav=('/')
+//     return response
+    
+// }
+
+// const sendResetRound = async (code) => {
+//     console.log('I AM IN SEND RESET ROUND, CODE IS', code)
+//     const response = await axios.post('/round/reset',{code:code})
+//     // console.log('RESET ROUND response', response)
+//     // nav=('/')
+//     return response
+    
+// }
+
+
 
 export {
     // joinGame,
-    leaveGame
+    leaveGame,
+    // sendResetRound
 }

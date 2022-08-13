@@ -17,7 +17,7 @@ function VotingCards({id, phrase, notAllSelected, round, players_that_voted, vot
     .then((response)=> {
       setUserHasVoted(true)
       //probably want to add some sort of css when voting
-      console.log(response)
+      console.log('USER JUST VOTED RESPONSE', response)
     })
     .catch((error)=> {
       console.log(error)

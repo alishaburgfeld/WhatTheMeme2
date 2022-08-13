@@ -331,25 +331,25 @@ def create_card(game, owner):
         return JsonResponse({'success': False, 'reason': str(e)})
 
 
-@api_view(['POST'])
-@login_required
-def draw_card(request):
-    print('IN DRAW CARD ON DJANGO')
-    user_email = request.user.email
-    user = getUser(user_email)
-    # game_user= Game_User.objects.get(player = user)
-    # still running into issue of multiple game users
-    game_user_objects = Game_User.objects.filter(player = user)
-    owner = game_user_objects[len(game_user_objects)-1]
-    print('DRAW CARD OWNER IS', owner)
-    game_code = request.data['game_code']
-    game = Game.objects.filter(code = game_code)
-    print('draw card game is', game)
-    try:
-        new_card = create_card(game, owner)
-        return JsonResponse({'success':True, 'new_card':new_card})
-    except Exception as e:
-        return JsonResponse({'success': False, 'reason': str(e)})
+# @api_view(['POST'])
+# @login_required
+# def draw_card(request):
+#     print('IN DRAW CARD ON DJANGO')
+#     user_email = request.user.email
+#     user = getUser(user_email)
+#     # game_user= Game_User.objects.get(player = user)
+#     # still running into issue of multiple game users
+#     game_user_objects = Game_User.objects.filter(player = user)
+#     owner = game_user_objects[len(game_user_objects)-1]
+#     print('DRAW CARD OWNER IS', owner)
+#     game_code = request.data['game_code']
+#     game = Game.objects.filter(code = game_code)
+#     print('draw card game is', game)
+#     try:
+#         new_card = create_card(game, owner)
+#         return JsonResponse({'success':True, 'new_card':new_card})
+#     except Exception as e:
+#         return JsonResponse({'success': False, 'reason': str(e)})
 
 
 
@@ -447,10 +447,10 @@ def view_selected_cards(request):
     # game_user= Game_User.objects.get(player = user)
     game_user = Game_User.objects.filter(player = user)
     game_1 = game_user[len(game_user)-1].game
-    # print('VIEW SELECTED CARDS GAME', game_1)
     round = game_1.round
+    print('VIEW SELECTED CARDS GAME', game_1, 'SELECTED CARDS ROUND', round)
     selected_cards_objects= Game_Card.objects.filter(round_selected=round, game = game_1)
-    print('SELECTED CARD OBJECTS LINE 448', selected_cards_objects)
+    print('SELECTED CARD OBJECTS LINE 453', selected_cards_objects)
     if selected_cards_objects:
         try:
             selected_cards=[]
@@ -589,10 +589,33 @@ def points(request):
 # put request so could have body
 def round(request):
     game_code = request.data['code']
+    print('IN GET ROUND code is ', game_code)
     try:
         game = Game.objects.get(code = game_code)
         game_round = game.round
         return JsonResponse({'success':True, 'round': game_round})
+    except Exception as e:
+        return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
+
+@api_view(['POST'])
+# put request so could have body
+def reset_round(request):
+    game_code = request.data['code']
+    user_email = request.user.email
+    user = getUser(user_email)
+    # game_user= Game_User.objects.get(player = user)
+    # still running into issue of multiple game users
+    game_user_objects = Game_User.objects.filter(player = user)
+    owner = game_user_objects[len(game_user_objects)-1]
+    print('IN RESET ROUND code is ', game_code)
+    try:
+        game = Game.objects.get(code = game_code)
+        game.round+=1
+        game.save()
+        print('GAME SHOULD BE ONE ROUND HIGHER', game.round)
+        new_card = create_card(game,owner)
+        drawn_card = model_to_dict(new_card)
+        return JsonResponse({'success':True, 'action': 'round reset', 'drawn_card': drawn_card})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
 
