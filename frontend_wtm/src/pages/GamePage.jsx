@@ -69,13 +69,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     }
   }
 
-  // useEffect(()=>{
-  //   if (game) {
-  //     getRound()
-  //     setInterval(getGame, 100000)
-  //   }
-  // },[])
-
     function getPlayers() {
       console.log('IN GET PLAYRS')
         axios.get('/players')
@@ -173,6 +166,8 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       }
     }, [winnerAlerted])
 
+    
+
     //resets the round in the DB, gets a new card, and resets all states
     function resetRound() {
       console.log('IN RESET ROUND')
@@ -239,7 +234,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                     </div>
                 :
                     <div>    
-                        <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user}/>
+                        <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
                         <Button onClick={leaveGame}>Leave Game</Button>
                     </div>
                 }

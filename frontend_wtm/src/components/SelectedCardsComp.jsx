@@ -141,7 +141,7 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
     function flipCards() {
         //flip cards once every player has selected one
         console.log('NOW IN FLIP CARDS')
-        // console.log(selectedCards.length, 'players length', players.length)
+        console.log(selectedCards.length, 'players length', players.length)
         if (selectedCards.length === players.length) {
             setNotAllSelected(false)
         }

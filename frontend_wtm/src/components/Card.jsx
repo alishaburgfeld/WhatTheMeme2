@@ -39,7 +39,6 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
   return (
     <Col>
       <div class="maincontainer">
-      {/* <div class="cardcontainer"> */}
           {/* <div className={isActive ?'thecard is-flipped' : 'thecard'} id = {`${id}`} onClick={(id)=>{selectCard(id)}}> */}
           <div className='thecard mb-2' id = {`${id}`} >
               <div className="thefront" ><h1>{phrase}</h1></div>
@@ -49,7 +48,7 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
           {/* {!notAllSelected && !userHasVoted? <Button className="card-btn" onClick={vote}>Vote</Button> : ""} */}
           {!userSelected ? <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button> : ""}
       </div>
-      <div><h6>UserSelected true or false: {userSelected}</h6></div>
+      {!userSelected ? <h4>user has not selected</h4> : <h4>user HAS selected</h4>}
     </Col>
   )
 }
