@@ -217,19 +217,19 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           ?
           (
         <div className='gamepage'>
-            <h2> Welcome {user}</h2>
+            <h2 className='welcome m-3'> Welcome {user}</h2>
             {/* {players && game &&<h2>All users playing on code {JSON.stringify(game)}: {players}</h2>} */}
-            {players && game && <div> <h2>All users playing on code {JSON.stringify(game.code)}:</h2> <PlayerPoints players={players} /></div>}
+            {players && game && <div> <h3>All users playing on code {JSON.stringify(game.code)}:</h3> <PlayerPoints players={players} /></div>}
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
             
-            <div className='memeContainer'>
+            <div className='memeContainer mt-5 d-flex justify-content-center align-text-center'>
                 <MemeCard setRound={setRound} round = {round} memeIsActive={memeIsActive} setMemeIsActive={setMemeIsActive}/>
             </div>
             <div>
                 {selectedCards.length > 0
                 ? 
                     <div>
-                    <h2>Selected Cards</h2>
+                    <h2 className='selected-title'>Selected Cards</h2>
                     <SelectedCardsComp selectedCards={selectedCards} players={players} round= {round} playersThatVoted= {playersThatVoted} user={user} winnerAlerted={winnerAlerted} setWinnerAlerted={setWinnerAlerted}
                     notAllSelected={notAllSelected} setNotAllSelected={setNotAllSelected} votingComplete={votingComplete} setVotingComplete={setVotingComplete} alerted={alerted} setAlerted={setAlerted} cardsTied={cardsTied} setCardsTied={setCardsTied} winningCard={winningCard} setWinningCard={setWinningCard} 
                     roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted} isWinningCard={isWinningCard} setIsWinningCard={setIsWinningCard}/>

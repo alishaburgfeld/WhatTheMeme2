@@ -45,15 +45,15 @@ function OffCanvas ({hand, setHand, setShow, show, whoAmI, setGame}) {
 
 
     return (
-        <Offcanvas show={show} onHide={handleClose}>
+        <Offcanvas show={show} onHide={handleClose} className='join-game-off-canvas'>
             <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Game Code</Offcanvas.Title>
+                <Offcanvas.Title className='off-canvas-title'>Game Code</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <Form>
-                    <Form.Group className="mb-3" controlId="formCode">
+                    <Form.Group className="mb-3 fs-sm" controlId="formCode">
                         <Form.Label>Enter Game Code to Join</Form.Label>
-                    <Form.Control type="text" placeholder="Enter Game Code" />
+                    <Form.Control type="text" placeholder="Enter Game Code" className = 'mb-4'/>
                     </Form.Group>
                     <Button variant="primary" type="submit" onClick={joinGame}>
                     Join Game!

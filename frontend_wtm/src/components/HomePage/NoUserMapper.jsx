@@ -16,17 +16,17 @@ function NoUserMapper() {
         areas: [
         //   { id: 1, shape: "rect", coords: [1, 186, 188, 280]},
         //login:
-          { id: 1, shape: "rect", coords: [1, 186, 90, 240]},
+          { id: 1, shape: "rect", coords: [1, 255, 120, 345]},
           //sign-up:
-          { id: 2, shape: "rect", coords: [345, 186, 435, 240]},
+          { id: 2, shape: "rect", coords: [485, 255, 605, 345]},
         ]
       });
     
     function myFunction(area) {
-      if (area === 1) {
+      if (area=== 1) {
         nav("/login")
       }
-      else {
+      else if (area===2){
         nav("/signup")
       }
     }

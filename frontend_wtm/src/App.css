@@ -4,7 +4,50 @@
   src: url('./assets/Images/Rammetto_One.ttf');
 }
 
+.off-canvas-title {
+  font-family: RamettoOne;
+}
+.off-nav-header {
+  background-color: #fff960;
+}
 
+.dropdown-menu {
+  background-color: transparent;
+}
+
+.friend-off-canvas, .join-game-off-canvas {
+  /* background: rgb(244,255,91); */
+  /* background: linear-gradient(157deg, rgba(244,255,91,0.9850491221879377) 31%, rgba(254,198,71,0.9626401586025035) 60%, rgba(58,180,236,1) 96%); */
+
+  background: rgb(255,249,96);
+  background: linear-gradient(157deg, rgba(255,249,96,1) 20%, rgba(254,198,71,0.9626401586025035) 53%, rgba(58,180,236,1) 96%);
+
+}
+
+.selected-title,.hand-title, .welcome {
+  font-family: RamettoOne;
+}
+
+.friend-title, .friendrequest-title, .off-canvas-title {
+  font-size: 1.8rem;
+
+}
+
+.fs-lg {
+  font-size: 2.5rem;
+}
+
+.fs-sm {
+  font-size: 1.2rem;
+}
+
+.fs-md {
+  font-size: 1.8rem;
+}
+
+a, .dropdown-item {
+  color: #fa6d20;
+}
 
 #root {
   max-width: 1280px;
@@ -105,12 +148,18 @@
   transform: rotateY(180deg);
 }
 
-
+.btn {
+  /* color: #fa6d20; */
+  border-color: #fa6d20;
+  background-color: #ffc141;
+  letter-spacing: .05rem;
+}
 .thefront h1, .theback h1{
-  font-family: RamettoOne, sans-serif;
+  /* font-family: RamettoOne, sans-serif; */
+  /* font-family: 'Days One', sans-serif; */
   padding: 16px;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   text-align: center;
 }
 

@@ -41,7 +41,7 @@ function VotingCards({id, phrase, notAllSelected, round, players_that_voted, vot
     return (
         <>
         <div className={isWinningCard ? "maincontainer winningCard": "maincontainer"}>
-          <div className={notAllSelected ?'thecard is-flipped votingcards' : 'thecard votingcards'} id = {`voting${id}`}>
+          <div className={notAllSelected ?'thecard is-flipped votingcards mb-3' : 'thecard votingcards mb-2'} id = {`voting${id}`}>
               <div className="thefront" ><h1>{phrase}</h1></div>
               <div className="theback"></div>
             </div>

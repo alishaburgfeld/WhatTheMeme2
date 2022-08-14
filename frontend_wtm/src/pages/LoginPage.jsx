@@ -37,25 +37,25 @@ function LoginPage ({setUser, whoAmI}){
 
     return (
         <div>
-            <h2>Login Here!</h2>
+            <h2 className='fs-lg mb-3'>Login Here!</h2>
             <Form onSubmit={submitLogIn}>
                 <Form.Group className="mb-3" controlId="formEmail" >
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" />
-                    <Form.Text className="text-muted">
+                    <Form.Label className='fs-md'>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="Enter email" className='fs-sm'/>
+                    <Form.Text className="text-muted fs-sm">
                     We'll never share your email with anyone else.
                     </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" value="password"/>
+                    <Form.Label className='fs-md'>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" value="password" className='fs-sm'/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
             </Form>
-            <p><Link to='/signup'>No account? Sign up here</Link></p>
+            <p className='mt-3'><Link to='/signup' className='fs-sm'>No account? Sign up here</Link></p>
             <Button onClick={submitLogOut}>Log Out!</Button>
             
         </div>

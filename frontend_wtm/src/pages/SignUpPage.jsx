@@ -20,25 +20,25 @@ function SignUpPage (){
 
     return(
         <div>
-            <h2>Sign up!</h2>
+            <h2 className='fs-lg mb-3'>Sign up!</h2>
             <Form onSubmit={submitSignUp}>
                 <Form.Group className="mb-3" controlId="formEmail" >
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" />
-                    <Form.Text className="text-muted">
+                    <Form.Label className='fs-md'>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="Enter email" className='fs-sm'/>
+                    <Form.Text className="text-muted fs-sm">
                     We'll never share your email with anyone else.
                     </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" value="password"/>
+                    <Form.Label className='fs-md'>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" value="password" className='fs-sm'/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
             </Form>
-            <p><Link to='/login'>Log in Here!</Link></p>
+            <p className='fs-sm mt-4'><Link to='/login'>Log in Here!</Link></p>
         </div>
     )
 }

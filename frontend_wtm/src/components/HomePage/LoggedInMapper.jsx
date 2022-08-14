@@ -18,9 +18,9 @@ function LoggedInMapper({setShow, startGame, game}) {
         areas: [
         //   { id: 1, shape: "rect", coords: [1, 186, 188, 280]},
         //join:
-          { id: 3, shape: "rect", coords: [0, 185, 91, 241]},
+          { id: 3, shape: "rect", coords: [1, 255, 120, 345]},
           //start:
-          { id: 4, shape: "rect", coords: [345, 186, 435, 240]},
+          { id: 4, shape: "rect", coords: [485, 255, 605, 345]},
         ]
       });
     

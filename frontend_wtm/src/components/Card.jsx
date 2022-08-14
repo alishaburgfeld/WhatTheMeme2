@@ -41,7 +41,7 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
       <div class="maincontainer">
       {/* <div class="cardcontainer"> */}
           {/* <div className={isActive ?'thecard is-flipped' : 'thecard'} id = {`${id}`} onClick={(id)=>{selectCard(id)}}> */}
-          <div className='thecard' id = {`${id}`} >
+          <div className='thecard mb-2' id = {`${id}`} >
               <div className="thefront" ><h1>{phrase}</h1></div>
               <div className="theback"></div>
             </div>

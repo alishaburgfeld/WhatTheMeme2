@@ -1,3 +1,7 @@
+/* font-family: 'Boogaloo', cursive;
+font-family: 'Days One', sans-serif;
+font-family: 'Luckiest Guy', cursive; */
+
 :root {
   /* font-family: RamettoOne, sans-serif !important; */
   /* this is only affecting the card text */
@@ -32,10 +36,11 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  /* index css was above bootstrap css */
-  /* BOOTSTRAP variable is not letting me change background... I'd rather do !important than change that variable --->node_modules-bootstrap-dist-css-bootstrap.css you can see all the variables and values there */
-  /* background-color: #FDFDB491 !important; */
-  background-color: #FDFDB491;
+  /* background-color: #FDFDB491; */
+  font-family: 'Days One', sans-serif;
+  color: #fa6d20;
+  background: rgb(245,238,58);
+  background: radial-gradient(circle, rgba(245,238,58,0.895413267846201) 0%, rgba(235,181,58,0.9626401586025035) 65%, rgba(58,180,236,1) 96%);
 }
 
 
@@ -44,11 +49,12 @@ h1 {
   line-height: 1.1;
 }
 
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 1.2rem;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;

@@ -38,33 +38,34 @@ function NavBar({user, whoAmI, gameUser, setHand}) {
       <div>
       {[false].map((expand) => (
         
-        <Navbar key={expand} bg="light" expand={expand} className="mb-3 navbar" fixed="top">
-          <Container fluid>
+        <Navbar key={expand} bg="light" expand={expand} className="mb-3 navbar friend-off-canvas" fixed="top">
+          <Container fluid className='friend-off-canvas'>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
             <Navbar.Offcanvas
               id={`offcanvasNavbar-expand-${expand}`}
               aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
               placement="end"
+              className='friend-off-canvas'
             >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
+              <Offcanvas.Header className='off-nav-header' closeButton>
+                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`} className='off-canvas-title'>
                   What the Me^^e?!
                 </Offcanvas.Title>
               </Offcanvas.Header>
-              <Offcanvas.Body>
+              <Offcanvas.Body className= 'friend-off-canvas'>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <NavDropdown
                     title="Friends"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
                     // aria-haspopup="true"
-                     
+                    className='friend-title mb-5' 
                   >
                     <FriendList user = {user} stopClick={stopClick}/>
                   </NavDropdown>
                   <NavDropdown
                     title="Friend Requests"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
-                    // aria-haspopup="true"
+                    className='friendrequest-title mb-5'
                   > 
                     <FriendRequests user = {user} stopClick = {stopClick}/>
                   </NavDropdown>
