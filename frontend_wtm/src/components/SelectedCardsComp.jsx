@@ -73,8 +73,9 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
             else {
                 // will alert the user if there was a tie and that a winning card is randomly selected
                 setCardsTied(true)
-                let randomIndex = Math.random()*highestCards.length()
+                let randomIndex = Math.floor(Math.random()*highestCards.length)
                 highestVotedCard= highestCards[randomIndex]
+                console.log('index', randomIndex, 'highest cards array', highestCards, 'highestvotedcard', highestVotedCard)
             }
             setWinningCard(highestVotedCard)
         }
