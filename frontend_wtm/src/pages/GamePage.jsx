@@ -36,6 +36,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     // checks if the winning card has been set up
     const [notSent, setNotSent] = useState(true)    
     const [gameWinner, setGameWinner] = useState(null)
+    const [resettingRound, setResettingRound] = useState(false)
 
     let firstRender = useRef(true)
 
@@ -46,14 +47,9 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     }, [])
 
     // only way I could get round to work was to put it on an interval too
-    const roundInterval = ""
+
     useEffect(() => {
-      const roundTimer = setTimeout(getRound, 5000);
-      const roundInterval = setInterval(getRound, 10000)
-      return () => {
-        clearTimeout(roundTimer)
-        clearInterval(roundInterval)
-      }
+      getRound()
     }, []);
 
   const getRound= function() {
@@ -64,8 +60,15 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       axios.put('/round',{code:code})
       .then((response)=> {
         let newRound= response && response.data && response.data.round
-        console.log('ROUND RESPONSE,', newRound)
-        setRound(newRound)
+        if (newRound===round) {
+          setTimeout(getRound, 3000)
+        }
+        else {
+          console.log('ROUND RESPONSE,', newRound)
+          setRound(newRound)
+          setResettingRound(false)
+          // setSelectedCards([])
+        }
       })
     }
   }
@@ -108,16 +111,19 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     }
 
     function getSelectedCards() {
-      if (!winnerAlerted) {
+      if (!winnerAlerted && !resettingRound) {
 
         console.log('IN GET SELECTED CARDS')
           axios.get('/selectedcards/view')
           .then((response)=> {
-            let selected_cards = response && response.data && response.data.selected_cards
-            console.log('SELECTED CARDS LINE 118', selected_cards)
-            if (selected_cards) {
-              console.log(' HELLOHELLOHELLO ! inside selected cards set statement line 120')
-              setSelectedCards(selected_cards)
+            let new_selected_cards = response && response.data && response.data.selected_cards
+            console.log('SELECTED CARDS LINE 118', new_selected_cards)
+            if (new_selected_cards == selectedCards) {
+              setTimeout(getSelectedCards, 5000)
+            }
+            else {
+
+              setSelectedCards(new_selected_cards)
             }
             
           })
@@ -133,7 +139,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     useEffect(()=>{
       if (hand && user) {
-        if (!winnerAlerted) {
+        if (!winnerAlerted && !resettingRound) {
           getSelectedCards()
           const cardsInterval = setInterval(getSelectedCards, 10000)
         }
@@ -187,29 +193,31 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     //resets the round in the DB, gets a new card, and resets all states
     function resetRound() {
+      setResettingRound(true)
       console.log('IN RESET ROUND')
       //this resets the round in the DB and gets a new card
       let game_code = game.code
         if (game) {
           // sendReset.then(()=> console.log('SEND RESET ROUND AXIOS response', sendReset))
           let owner_id = winningCard.owner
-          console.log('OWNER ID LINE 187', owner_id, 'type', typeof(owner_id))
+          console.log('OWNER ID LINE 202', owner_id, 'type', typeof(owner_id))
           axios.post('/round/reset',{code:game_code, owner_id: owner_id})
           .then((response)=> {
             console.log('SEND RESET ROUND AXIOS response', response)
             // let drawn_card = response.data.drawn_card
             // console.log('DRAWN CARD IS HERE', drawn_card)
             // let new_hand = [...hand, drawn_card]
+            // getselected, get round, setnotallselected, setwinneralerted, drawcard, setplayers that voted... seemed to be the magical order
+            setSelectedCards([])
             getRound()
+            setNotAllSelected(true)
+            setWinnerAlerted(false)
             drawCard()
             // setHand(new_hand)
-            setSelectedCards([])
             // setPlayers([])
             setPlayersThatVoted(null)
-            setWinnerAlerted(false)
             setMemeIsActive(true)
             setUserSelected(false)
-            setNotAllSelected(true)
             setVotingComplete(false)
             setAlerted(false)
             setCardsTied(null)
@@ -217,11 +225,11 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             setRoundWinner(null)
             setNotSent(true)
             setUserHasVoted(false)
-            setNotAllSelected(true)
             
           })
           
         }
+
     }
 
     function checkGameWinner () {
@@ -261,7 +269,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                 <MemeCard setRound={setRound} round = {round} memeIsActive={memeIsActive} setMemeIsActive={setMemeIsActive}/>
             </div>
             <div>
-                {selectedCards.length > 0
+                {selectedCards
                 ? 
                     <div>
                     <h2 className='selected-title'>Selected Cards</h2>
@@ -270,7 +278,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                     roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted}/>
                     <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
                     <Button onClick={leaveGame}>Leave Game</Button>
-                    {!winnerAlerted ? <h4>Winner is NOT alerted</h4> : <h4>Winner IS alerted</h4>}
+                    {/* {!winnerAlerted ? <h4>Winner is NOT alerted</h4> : <h4>Winner IS alerted</h4>} */}
                     </div>
                 :
                     <div>    

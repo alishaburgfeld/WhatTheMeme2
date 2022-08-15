@@ -130,7 +130,7 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
         console.log(selectedCards.length, 'players length', players.length)
         console.log(selectedCards, 'selectedCards line 145')
 
-        if (selectedCards.length === players.length) {
+        if (selectedCards.length>0 && (selectedCards.length === players.length)) {
             // all cards have now been selected
             setNotAllSelected(false) 
             if (round===1) {
