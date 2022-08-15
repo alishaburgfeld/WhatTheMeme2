@@ -24,7 +24,6 @@ function VotingCards({id, phrase, notAllSelected, round, players_that_voted, vot
   function checkIfWinningCard() {
     if (winningCard) {
       if (winningCard.id === id) {
-        // setIsWinningCard(true)
         return (
           <h4>Winning Card!</h4>
         )

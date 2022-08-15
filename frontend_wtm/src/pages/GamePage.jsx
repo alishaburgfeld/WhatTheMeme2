@@ -235,7 +235,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     function checkGameWinner () {
       console.log('in check game winner function players array is', players)
       let winner = ""
-      for (let player in players) {
+      for (let player of players) {
         if (player[1] === 6) {
           winner = player[0]
         }
