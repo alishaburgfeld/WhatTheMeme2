@@ -24,7 +24,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     const [memeIsActive, setMemeIsActive] = useState(true)
     const [userSelected, setUserSelected] = useState(false)
     const [userHasVoted, setUserHasVoted] = useState(false)
-    const [isWinningCard, setIsWinningCard] = useState(false)
     const [notAllSelected, setNotAllSelected] = useState(true)
     const [votingComplete, setVotingComplete] = useState(false)
     //checks if users have been alerted that all players have finished voting
@@ -36,6 +35,8 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     const [roundWinner, setRoundWinner] = useState(null)
     // checks if the winning card has been set up
     const [notSent, setNotSent] = useState(true)    
+    const [gameWinner, setGameWinner] = useState(null)
+
     let firstRender = useRef(true)
 
     useEffect(()=> {
@@ -47,13 +48,13 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     // only way I could get round to work was to put it on an interval too
     const roundInterval = ""
     useEffect(() => {
-      const roundTimer = setTimeout(getRound(), 5000);
-      const roundInterval = setInterval(getRound(), 20000)
+      const roundTimer = setTimeout(getRound, 5000);
+      const roundInterval = setInterval(getRound, 10000)
       return () => {
         clearTimeout(roundTimer)
         clearInterval(roundInterval)
       }
-    }, [hand]);
+    }, []);
 
   const getRound= function() {
     console.log('in get round')
@@ -113,8 +114,9 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           axios.get('/selectedcards/view')
           .then((response)=> {
             let selected_cards = response && response.data && response.data.selected_cards
-            console.log('SELECTED CARDS LINE 70', selected_cards)
+            console.log('SELECTED CARDS LINE 118', selected_cards)
             if (selected_cards) {
+              console.log(' HELLOHELLOHELLO ! inside selected cards set statement line 120')
               setSelectedCards(selected_cards)
             }
             
@@ -138,7 +140,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
         
         getPlayers()
         getPlayersThatVoted()
-        const playerInterval = setInterval(getPlayers, 100000)
+        const playerInterval = setInterval(getPlayers, 10000)
         const votedInterval = setInterval(getPlayersThatVoted, 10000)
       }
     else {
@@ -158,15 +160,30 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       else {
         console.log('IN RESET ROUND USE EFFECT ELSE')
         if (winnerAlerted) {
-          console.log('in reset round use effect 2nd render - should be based on winnerAlerted')
+          console.log('in reset round and check winner use effect 2nd render - should be based on winnerAlerted')
           resetRound()
           firstRender.current=true
           // I'm not sure if I would set this to false or true at this point
+          if (round >=6) {
+            console.log('in check game winner use effect under if round >= 6', 'round is', round)
+            if (winnerAlerted) {
+              checkGameWinner()
+            }
+          }
         }
       }
     }, [winnerAlerted])
 
-    
+  function drawCard() {
+    let game_code = game.code
+    axios.put('/drawcard',{game_code:game_code})
+    .then((response)=> {
+      let drawn_card = response.data.drawn_card
+      console.log('DRAWN CARD IS HERE', drawn_card)
+      let new_hand = [...hand, drawn_card]
+      setHand(new_hand)
+    })
+  }  
 
     //resets the round in the DB, gets a new card, and resets all states
     function resetRound() {
@@ -175,16 +192,19 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       let game_code = game.code
         if (game) {
           // sendReset.then(()=> console.log('SEND RESET ROUND AXIOS response', sendReset))
-          axios.post('/round/reset',{code:game_code})
+          let owner_id = winningCard.owner
+          console.log('OWNER ID LINE 187', owner_id, 'type', typeof(owner_id))
+          axios.post('/round/reset',{code:game_code, owner_id: owner_id})
           .then((response)=> {
             console.log('SEND RESET ROUND AXIOS response', response)
-            let drawn_card = response.data.drawn_card
-            console.log('DRAWN CARD IS HERE', drawn_card)
-            let new_hand = [...hand, drawn_card]
-            getRound(game_code)
-            setHand(new_hand)
+            // let drawn_card = response.data.drawn_card
+            // console.log('DRAWN CARD IS HERE', drawn_card)
+            // let new_hand = [...hand, drawn_card]
+            getRound()
+            drawCard()
+            // setHand(new_hand)
             setSelectedCards([])
-            setPlayers([])
+            // setPlayers([])
             setPlayersThatVoted(null)
             setWinnerAlerted(false)
             setMemeIsActive(true)
@@ -197,13 +217,33 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             setRoundWinner(null)
             setNotSent(true)
             setUserHasVoted(false)
-            setIsWinningCard(false)
             setNotAllSelected(true)
             
           })
           
         }
     }
+
+    function checkGameWinner () {
+      console.log('in check game winner function players array is', players)
+      let winner = ""
+      for (let player in players) {
+        if (player[1] === 6) {
+          winner = player[0]
+        }
+      }
+      console.log('winner is', winner)
+      setGameWinner(winner)
+    }
+
+    // useEffect(()=> {
+    //   console.log('in check game winner use effect', 'round is', round)
+    //   if (round >=6) {
+    //     if (winnerAlerted) {
+    //       checkGameWinner()
+    //     }
+    //   }
+    // },[winnerAlerted])
     
 
     return (
@@ -216,7 +256,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             {/* {players && game &&<h2>All users playing on code {JSON.stringify(game)}: {players}</h2>} */}
             {players && game && <div> <h3>All users playing on code {JSON.stringify(game.code)}:</h3> <PlayerPoints players={players} /></div>}
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
-            
+            {gameWinner? <h1> {gameWinner} Won With 6 Points! Congratulations! Go back to the lobby to start a new game!</h1> : ""}
             <div className='memeContainer mt-5 d-flex justify-content-center align-text-center'>
                 <MemeCard setRound={setRound} round = {round} memeIsActive={memeIsActive} setMemeIsActive={setMemeIsActive}/>
             </div>
@@ -227,7 +267,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                     <h2 className='selected-title'>Selected Cards</h2>
                     <SelectedCardsComp selectedCards={selectedCards} players={players} round= {round} playersThatVoted= {playersThatVoted} user={user} winnerAlerted={winnerAlerted} setWinnerAlerted={setWinnerAlerted}
                     notAllSelected={notAllSelected} setNotAllSelected={setNotAllSelected} votingComplete={votingComplete} setVotingComplete={setVotingComplete} alerted={alerted} setAlerted={setAlerted} cardsTied={cardsTied} setCardsTied={setCardsTied} winningCard={winningCard} setWinningCard={setWinningCard} 
-                    roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted} isWinningCard={isWinningCard} setIsWinningCard={setIsWinningCard}/>
+                    roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted}/>
                     <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
                     <Button onClick={leaveGame}>Leave Game</Button>
                     {!winnerAlerted ? <h4>Winner is NOT alerted</h4> : <h4>Winner IS alerted</h4>}

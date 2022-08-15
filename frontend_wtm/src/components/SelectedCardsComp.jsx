@@ -4,26 +4,11 @@ import VotingCards from './VotingCards';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
-function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, setWinnerAlerted, notAllSelected, setNotAllSelected, votingComplete, setVotingComplete, alerted, setAlerted, cardsTied, setCardsTied, winningCard, setWinningCard, roundWinner, setRoundWinner, notSent, setNotSent, userHasVoted, setUserHasVoted, isWinningCard, setIsWinningCard}) {
+function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, setWinnerAlerted, notAllSelected, setNotAllSelected, votingComplete, setVotingComplete, alerted, setAlerted, cardsTied, setCardsTied, winningCard, setWinningCard, roundWinner, setRoundWinner, notSent, setNotSent, userHasVoted, setUserHasVoted}) {
 
     let firstRender = useRef(true)
+    console.log(selectedCards, 'line 10')
 
-    // notAllSelected={notAllSelected} setNotAllSelected={setNotAllSelected} votingComplete={votingComplete} setVotingComplete={setVotingComplete} alerted={alerted} setAlerted={setAlerted} cardsTied={cardsTied} setCardsTied={setCardsTied} winningCard={winningCard} setWinningCard={setWinningCard} roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent}
-
-
-    // const [notAllSelected, setNotAllSelected] = useState(true)
-    // const [votingComplete, setVotingComplete] = useState(false)
-    // //checks if users have been alerted that all players have finished voting
-    // const [alerted,setAlerted] = useState(false)
-    // //checks if there was a tie between the winning cards
-    // const [cardsTied,setCardsTied] = useState(null)
-    // //checks for the winning card
-    // const [winningCard, setWinningCard] = useState(null)
-    // const [roundWinner, setRoundWinner] = useState(null)
-    // // checks if the winning card has been set up
-    // const [notSent, setNotSent] = useState(true)
-
-    
     //checks if all users have voted
     function CountVotes() {
         console.log('in count votes')
@@ -61,6 +46,7 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
         }
         if (!notSent) {
             alertWinner()
+            console.log('IN LINE 49 !notsent alert winner')
         }
     }, [selectedCards])
     // its giving the players a point every time it calls send winning card.
@@ -142,8 +128,15 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
         //flip cards once every player has selected one
         console.log('NOW IN FLIP CARDS')
         console.log(selectedCards.length, 'players length', players.length)
+        console.log(selectedCards, 'selectedCards line 145')
+
         if (selectedCards.length === players.length) {
-            setNotAllSelected(false)
+            // all cards have now been selected
+            setNotAllSelected(false) 
+            if (round===1) {
+                window.alert('All players have selected a card, vote for the funniest meme-card pair!')
+            }
+
         }
         // const card = document.getElementByClassName('votingcards')
     }
@@ -152,20 +145,18 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
         if (user && notAllSelected) {
             console.log('IN SELECTED CARDS USE EFFECT')
             flipCards()
-            setInterval(flipCards, 10000)
-            if (round===1) {
-                window.alert('All players have selected a card, vote for the funniest meme-card pair!')
-            }
+            // running setInterval wasn't working b/c flipCards function for some reason wasn't getting the updated selectedCards values. so changed it to run when selectedcards value changed
+            // setInterval(flipCards, 10000)
         }
         // need to set interval to do this every 5 seconds
-    },[])
+    },[selectedCards])
 
 
     return (
         <Container>
-            <Row>
+            <Row className= 'd-flex justify-content-center'>
                 {selectedCards && selectedCards.map((card) => (
-                    <VotingCards key = {card.id} {...card} notAllSelected={notAllSelected} round={round} winningCard={winningCard} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted} isWinningCard={isWinningCard} setIsWinningCard={setIsWinningCard}/>
+                    <VotingCards key = {card.id} {...card} notAllSelected={notAllSelected} round={round} winningCard={winningCard} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted}/>
                 ))
                 }
             </Row>

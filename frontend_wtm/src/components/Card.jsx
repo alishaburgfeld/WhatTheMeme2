@@ -6,10 +6,10 @@ import axios from 'axios';
 
 function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, setUserSelected}) {
   
-
-  // console.log('USER SELECTED LINE 10, SHOULD BE FALSE', userSelected)
+  // console.log('ROUND IN CARD FUNCTION', round)
   // tells database this card was selected
   function sendSelectedCard() {
+    console.log('ROUND IN SEND SELECTED CARD', round)
     axios.put('/selectedcard', {id:id, round: round})
     .then((response)=> {
       console.log('SEND SELECTED CARD RESPONSE', response)
@@ -48,7 +48,6 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
           {/* {!notAllSelected && !userHasVoted? <Button className="card-btn" onClick={vote}>Vote</Button> : ""} */}
           {!userSelected ? <Button className="card-btn" onClick={()=>{selectCard(); sendSelectedCard();}}>Select</Button> : ""}
       </div>
-      {!userSelected ? <h4>user has not selected</h4> : <h4>user HAS selected</h4>}
     </Col>
   )
 }
