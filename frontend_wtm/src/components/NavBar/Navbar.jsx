@@ -49,7 +49,7 @@ function NavBar({user, whoAmI, gameUser, setHand, game}) {
             >
               <Offcanvas.Header className='off-nav-header' closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`} className='off-canvas-title'>
-                  What the Me^^e?!
+                  What the Meme?!
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body className= 'friend-off-canvas'>

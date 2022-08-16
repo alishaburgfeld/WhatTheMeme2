@@ -38,23 +38,30 @@ function FriendList ({user, game, stopClick}) {
 
     const sendEmail = (event, email) => {
         event.preventDefault();
-        // public key:
-        emailjs.init('-RSYFCfcYI3BnHPn_');
-        const friend_email = email
-        const code = game.code
-        const user_email = user
-        console.log('IN SENDEMAIL-- FRIEND EMAIL:', friend_email, 'code:', code, 'user_email', user_email)
-        emailjs.send('service_dxrbdej', 'WhatTheMemeEmail_form', {
-            user_email: user_email,
-            friend_email: friend_email,
-            code: code
-        })
-        .then((response) => {
-            console.log('send email response', response);
-        })
-        .catch((error) => {
-            console.log('ERROR:', error);
-        })
+        if(!game) {
+            window.alert('Start or join a game before sending the code')
+        }
+        else {
+
+            // public key:
+            emailjs.init('-RSYFCfcYI3BnHPn_');
+            const friend_email = email
+            const code = game.code
+            const user_email = user
+            console.log('IN SENDEMAIL-- FRIEND EMAIL:', friend_email, 'code:', code, 'user_email', user_email)
+            emailjs.send('service_dxrbdej', 'WhatTheMemeEmail_form', {
+                user_email: user_email,
+                friend_email: friend_email,
+                code: code
+            })
+            .then((response) => {
+                console.log('send email response', response);
+                window.alert('Email sent!')
+            })
+            .catch((error) => {
+                console.log('ERROR:', error);
+            })
+        }
     }
 
     return (
