@@ -27,7 +27,9 @@ function FriendList ({user, game, stopClick}) {
 
     const removeFriend = async (user_email, friend_email) => {
         const response = await axios.put('/removefriend/', {friend_email: friend_email})
+        window.location.reload(false);
         return response
+        
     }
 
     const createFriendRequest = async (event) => {

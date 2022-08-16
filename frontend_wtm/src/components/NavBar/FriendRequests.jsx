@@ -15,11 +15,13 @@ function FriendRequests({user, stopClick}) {
     }
     const acceptFriendRequest = async (user_email, friend_email) => {
         const response = await axios.put('/addfriend/', {friend_email: friend_email})
+        window.location.reload(false);
         return response
     }
     
     const declineFriendRequest = async (user_email, friend_email) => {
         const response = await axios.put('/friendrequests/decline', {friend_email: friend_email})
+        window.location.reload(false);
         return response
     }
 
