@@ -11,12 +11,12 @@ import axios from 'axios'
 //     return response
 // }
 
-const leaveGame = async (nav) => {
+const leaveGame = function () {
     console.log('I AM IN LEAVE game react')
-    const response = await axios.put('/leavegame' )
-    console.log('LEAVEgame response', response)
+    const response = axios.put('/leavegame' )
+    return response
+    // console.log('LEAVEgame response', response)
     // nav=('/')
-    
 }
 
 // const sendResetRound = function (code) {

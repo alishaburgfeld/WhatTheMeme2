@@ -56,7 +56,7 @@ function LoginPage ({setUser, whoAmI}){
                 </Button>
             </Form>
             <p className='mt-3'><Link to='/signup' className='fs-sm'>No account? Sign up here</Link></p>
-            <Button onClick={submitLogOut}>Log Out!</Button>
+            {/* <Button onClick={submitLogOut}>Log Out!</Button> */}
             
         </div>
     )

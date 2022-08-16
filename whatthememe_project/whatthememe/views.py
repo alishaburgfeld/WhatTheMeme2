@@ -107,7 +107,7 @@ def log_in(request):
                 print(f"{email} IS LOGGED IN!!!!!!!!!")
                 return JsonResponse({'success': True}) 
             except Exception as e:
-                return JsonResponse({'success': False, 'reason': 'failed to login'})
+                return JsonResponse({'success': False, 'reason': f'failed to login, {str(e)}'})
         else:
             return JsonResponse({'success': False, 'reason': 'account disabled'})
             # Return a 'disabled account' error message

@@ -1,12 +1,12 @@
 import {useState, useEffect, useRef} from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
-// import {leaveGame, sendResetRound } from '../AxiosCalls/GameAxiosCalls'
 import {leaveGame} from '../AxiosCalls/GameAxiosCalls'
 import {Hand} from '../components/Hand'
 import MemeCard from '../components/MemeCard'
 import SelectedCardsComp from '../components/SelectedCardsComp'
 import PlayerPoints from '../components/PlayersPoints'
+import { useNavigate } from "react-router-dom";
 
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
@@ -39,6 +39,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     const [resettingRound, setResettingRound] = useState(false)
 
     let firstRender = useRef(true)
+    const nav = useNavigate()
 
     useEffect(()=> {
         whoAmI()
@@ -119,7 +120,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             let new_selected_cards = response && response.data && response.data.selected_cards
             console.log('SELECTED CARDS LINE 118', new_selected_cards)
             if (new_selected_cards == selectedCards) {
-              setTimeout(getSelectedCards, 5000)
+              setTimeout(getSelectedCards, 6000)
             }
             else {
 
@@ -283,7 +284,16 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                 :
                     <div>    
                         <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
-                        <Button onClick={leaveGame}>Leave Game</Button>
+                        <Button onClick={()=>leaveGame().then((response)=> {
+                          console.log('LEAVEgame response', response)
+                          nav('/')
+                        })}>Leave Game</Button>
+                        {/* console.log('LEAVEgame response', response) */}
+                        {/* onClick={(area) => MapperFunction(area).then((response)=> {
+                            if(area.id===4) {
+                              nav('/game')
+                            }
+                          }) */}
                     </div>
                 }
             </div>   
