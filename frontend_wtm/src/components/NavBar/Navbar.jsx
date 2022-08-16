@@ -70,7 +70,10 @@ function NavBar({user, whoAmI, gameUser, setHand}) {
                     <FriendRequests user = {user} stopClick = {stopClick}/>
                   </NavDropdown>
                   {gameUser
-                  ? <Nav.Item ><Button onClick={()=>{leaveGame(nav)}}>Leave Game</Button></Nav.Item>
+                  ? <Nav.Item ><Button className = 'mb-5' onClick={()=>leaveGame().then((response)=> {
+                    console.log('LEAVEgame response', response)
+                    nav('/')
+                  })}>Leave Game</Button></Nav.Item>
                   : ""
                 }
                 <Nav.Item><Logout whoAmI={whoAmI} user={user} setHand={setHand}/></Nav.Item>

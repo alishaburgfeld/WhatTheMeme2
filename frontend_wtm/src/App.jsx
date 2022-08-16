@@ -52,10 +52,12 @@ function App() {
             console.log('START GAME .THEN RESPONSE', response)
             let returned_game= response && response.data && response.data.game
             let new_game_code = returned_game.code
+            let new_game_user = response && response.data && response.data.game_user
             console.log('GAME CODE IS: LINE 71 APPJSX', new_game_code)
             if (new_game_code) {
                 window.alert(`Your game code is ${new_game_code}, send this to your friends for them to join your game`)
                 setGame(returned_game)
+                setGameUser(new_game_user)
             }
             let newhand = response && response.data && response.data.user_cards
             setHand(newhand)

@@ -358,12 +358,9 @@ def draw_card(request):
 @login_required
 def start_game(request):
     print('YOU ARE IN THE POST REQUEST ON DJANGO FOR START GAME')
-    # print('request', request)
     user_email = request.user.email
     user = getUser(user_email)
-    print('star game user is', user)
     code = str(random.randint(10001,999999))
-    print('START GAME CODE IS', code)
     try:
         game = Game(code = code)
         game.full_clean
@@ -381,7 +378,7 @@ def start_game(request):
             card=create_card(game, game_user)
             user_cards.append(model_to_dict(card))
         # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
-        return JsonResponse({'success':True, 'game': model_to_dict(game), 'user_cards': user_cards})
+        return JsonResponse({'success':True, 'game': model_to_dict(game), 'user_cards': user_cards, 'game_user':model_to_dict(game_user)})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': str(e)})
     
