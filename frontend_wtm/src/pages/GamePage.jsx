@@ -57,7 +57,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     console.log('in get round')
     if (hand) {
       let code = game.code
-      console.log('CODE HERE HERE HERE', code)
       axios.put('/round',{code:code})
       .then((response)=> {
         let newRound= response && response.data && response.data.round
@@ -121,6 +120,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             console.log('SELECTED CARDS LINE 118', new_selected_cards)
             if (new_selected_cards == selectedCards) {
               setTimeout(getSelectedCards, 6000)
+              // console.log('INSIDE IF STATEMENT LINE 124 FOR SELECTED CARDS, new:', new_selected_cards, 'OLD', selectedCards)
             }
             else {
 
@@ -205,9 +205,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           axios.post('/round/reset',{code:game_code, owner_id: owner_id})
           .then((response)=> {
             console.log('SEND RESET ROUND AXIOS response', response)
-            // let drawn_card = response.data.drawn_card
-            // console.log('DRAWN CARD IS HERE', drawn_card)
-            // let new_hand = [...hand, drawn_card]
             // getselected, get round, setnotallselected, setwinneralerted, drawcard, setplayers that voted... seemed to be the magical order
             setSelectedCards([])
             getRound()

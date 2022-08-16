@@ -425,13 +425,6 @@ def selected_card(request):
     round = request.data['round']
     card_id= request.data['id']
     print('SELECTED CARD_ID', card_id, 'TYPE', type(card_id), 'CARD ROUND', round)
-    # user_email = request.user.email
-    # user = getUser(user_email)
-    # game_user= Game_User.objects.get(player = user)
-    # still running into issue of multiple game users
-    # game_user = Game_User.objects.filter(player = user)
-    # game_user_1 = game_user[len(game_user)-1]
-    # print('GAME USER = ', game_user_1)
     card = Game_Card.objects.get(id=card_id)
     print('CARD SELECTED', card)
     try:
