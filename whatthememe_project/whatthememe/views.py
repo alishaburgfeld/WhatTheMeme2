@@ -75,14 +75,15 @@ def sign_up(request):
     user_email=request.data['email']
     print('user email is', user_email)
     try:
-        # print('inside the try')
-        # user = User.objects.get(email = user_email)
-        # print('USER HERE IS', user)
-        # if user:
-        #     print('inside sign up if')
-        #     return JsonResponse({'success': "False", 'reason': 'This email already exists, please log-in'})
-        # else:
-            # print('inside sign up else')
+        print('inside the try')
+        all_users = User.objects.all()
+        all_user_emails=[]
+        for user in all_users:
+            all_user_emails.append(user.email)
+        if user_email in all_user_emails:
+            return JsonResponse({'success': "False", 'reason': 'This email already exists, please log-in'})
+        else:
+            print('inside sign up else')
             newUser = User.objects.create_user(username=request.data['email'], password=request.data['password'], email=request.data['email'])
             newUser.full_clean
             newUser.save()
