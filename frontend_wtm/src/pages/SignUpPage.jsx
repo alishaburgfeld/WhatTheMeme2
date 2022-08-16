@@ -14,7 +14,12 @@ function SignUpPage (){
         'email': event.target[0].value,
         'password': event.target[1].value
         }).then((response) => {
-            nav("/login")
+            if (response.data.success==='False') {
+                window.alert(response.data.reason)
+            }
+            else {    
+                nav("/login");
+            }
         })
     }
 

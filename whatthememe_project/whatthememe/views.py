@@ -72,17 +72,21 @@ def get_meme_card(request):
 
 @api_view(['POST'])
 def sign_up(request):
+    email=request.data['email']
     try:
-        newUser = User.objects.create_user(username=request.data['email'], password=request.data['password'], email=request.data['email'])
-        newUser.full_clean
-        newUser.save()
-        list= FriendList(user = newUser)
-        list.full_clean
-        list.save()
-        return JsonResponse({'success': True})
+        user = User.objects.get(email = email)
+        if user:
+            return JsonResponse({'success': "False", 'reason': 'This email already exists, please log-in'})
+        else:
+            newUser = User.objects.create_user(username=request.data['email'], password=request.data['password'], email=email)
+            newUser.full_clean
+            newUser.save()
+            list= FriendList(user = newUser)
+            list.full_clean
+            list.save()
+            return JsonResponse({'success': "True"})
     except Exception as e:
-        print(str(e))
-        return JsonResponse({'success': False, 'reason': str(e)})
+        return JsonResponse({'success': "False", 'reason': str(e)})
     # return JsonResponse({'Success': False, 'reason':'sign-up failed'})
 
 @api_view(['POST'])
@@ -105,14 +109,14 @@ def log_in(request):
                 # this starts a login session for this user
                 login(request._request, user)
                 print(f"{email} IS LOGGED IN!!!!!!!!!")
-                return JsonResponse({'success': True}) 
+                return JsonResponse({'success': "True"}) 
             except Exception as e:
-                return JsonResponse({'success': False, 'reason': f'failed to login, {str(e)}'})
+                return JsonResponse({'success': "False", 'reason': f'failed to login, {str(e)}'})
         else:
-            return JsonResponse({'success': False, 'reason': 'account disabled'})
+            return JsonResponse({'success': "False", 'reason': 'This account has been disabled, please sign-up again'})
             # Return a 'disabled account' error message
     else:
-        return JsonResponse({'success': False, 'reason': 'account doesn\'t exist'})    
+        return JsonResponse({'success': "False", 'reason': "This account doesn't exist, please sign-up"})    
         # Return an 'invalid login' error message.
 
 @api_view(['POST'])

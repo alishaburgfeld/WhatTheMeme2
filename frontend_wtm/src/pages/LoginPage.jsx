@@ -13,26 +13,29 @@ function LoginPage ({setUser, whoAmI}){
     'email': event.target[0].value,
     'password': event.target[1].value
     }).then((response) => {
-        console.log('YOU ARE IN THE REACT .THEN RESPONSE FROM LOGIN')
+        console.log('YOU ARE IN THE REACT .THEN RESPONSE FROM LOGIN', response)
+        if (response.data.success==='False') {
+            window.alert(response.data.reason)
+        }
+        else {
+            
+            nav("/");
+        }
         // window.location.href= '/#/game'
-        nav("/");
-
-        // reload so that we can get the CSRF token
-        //need to add a catch or an "if not successful"
         })
     }
 
-    const submitLogOut = function(event) {
-        event.preventDefault()
-        axios.post('/logout').then((response)=> {
-            console.log('LOGOUT RESPONSE', response)
-          whoAmI()
-          nav("/");
-          // whoAmI will set the user to undefined after logout
-          //need to set up some sort of "you are logged out message, eventually will redirect to login"
-          //also need to handle error
-        })
-    }
+    // const submitLogOut = function(event) {
+    //     event.preventDefault()
+    //     axios.post('/logout').then((response)=> {
+    //         console.log('LOGOUT RESPONSE', response)
+    //       whoAmI()
+    //       nav("/");
+    //       // whoAmI will set the user to undefined after logout
+    //       //need to set up some sort of "you are logged out message, eventually will redirect to login"
+    //       //also need to handle error
+    //     })
+    // }
 
 
     return (
