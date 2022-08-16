@@ -72,18 +72,24 @@ def get_meme_card(request):
 
 @api_view(['POST'])
 def sign_up(request):
-    email=request.data['email']
+    user_email=request.data['email']
+    print('user email is', user_email)
     try:
-        user = User.objects.get(email = email)
-        if user:
-            return JsonResponse({'success': "False", 'reason': 'This email already exists, please log-in'})
-        else:
-            newUser = User.objects.create_user(username=request.data['email'], password=request.data['password'], email=email)
+        # print('inside the try')
+        # user = User.objects.get(email = user_email)
+        # print('USER HERE IS', user)
+        # if user:
+        #     print('inside sign up if')
+        #     return JsonResponse({'success': "False", 'reason': 'This email already exists, please log-in'})
+        # else:
+            # print('inside sign up else')
+            newUser = User.objects.create_user(username=request.data['email'], password=request.data['password'], email=request.data['email'])
             newUser.full_clean
             newUser.save()
             list= FriendList(user = newUser)
             list.full_clean
             list.save()
+            print('new user is', newUser)
             return JsonResponse({'success': "True"})
     except Exception as e:
         return JsonResponse({'success': "False", 'reason': str(e)})
