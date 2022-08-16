@@ -14,7 +14,7 @@ import FriendRequests from './FriendRequests';
 import FriendList from './FriendList';
 
 
-function NavBar({user, whoAmI, gameUser, setHand}) {
+function NavBar({user, whoAmI, gameUser, setHand, game}) {
   const nav= useNavigate()
   // const [expanded, setExpanded] = useState(true)
 
@@ -60,7 +60,7 @@ function NavBar({user, whoAmI, gameUser, setHand}) {
                     // aria-haspopup="true"
                     className='friend-title mb-5' 
                   >
-                    <FriendList user = {user} stopClick={stopClick}/>
+                    <FriendList user = {user} game={game} stopClick={stopClick}/>
                   </NavDropdown>
                   <NavDropdown
                     title="Friend Requests"

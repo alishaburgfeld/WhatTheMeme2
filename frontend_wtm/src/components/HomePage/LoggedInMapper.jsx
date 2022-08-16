@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 function LoggedInMapper({setShow, startGame, game}) {
     // DON'T DELETE THESE COMMENTS -- THIS SHOWS HOW TO IMPORT THE MAP REACTOR WITH OLDER DEPENDENCY
+    // npm install react-image-mapper --legacy-peer-deps
     // https://stackoverflow.com/questions/66239691/what-does-npm-install-legacy-peer-deps-do-exactly-when-is-it-recommended-wh
     // https://www.npmjs.com/package/react-image-mapper
 

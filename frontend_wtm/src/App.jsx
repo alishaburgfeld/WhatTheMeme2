@@ -74,7 +74,7 @@ function App() {
     <div className="App">
       
       <Router> 
-        <NavBar whoAmI={whoAmI} user = {user} gameUser = {gameUser} setHand={setHand}/>
+        <NavBar whoAmI={whoAmI} user = {user} gameUser = {gameUser} setHand={setHand} game={game}/>
         <Routes>
           <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user} hand={hand} setHand={setHand} setShow={setShow} show={show} startGame={startGame} game={game} setGame={setGame}/>} />
           <Route path='/login' element={<LoginPage/>} />

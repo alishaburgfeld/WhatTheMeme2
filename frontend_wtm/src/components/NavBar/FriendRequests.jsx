@@ -38,7 +38,7 @@ function FriendRequests({user, stopClick}) {
         ? 
             <div>
             {friendRequests.map((friendRequest) => (
-                <NavDropdown.Item>{friendRequest}<Button onClick={()=>{acceptFriendRequest(user,friendRequest)}} >Accept</Button><Button onClick={()=>{declineFriendRequest(user,friendRequest)}} >Decline </Button></NavDropdown.Item>
+                <NavDropdown.Item>{friendRequest}<br /><Button className='small-button' onClick={()=>{acceptFriendRequest(user,friendRequest)}} >Accept</Button><Button className='small-button' onClick={()=>{declineFriendRequest(user,friendRequest)}} >Decline </Button></NavDropdown.Item>
                 ))
             }
             </div>

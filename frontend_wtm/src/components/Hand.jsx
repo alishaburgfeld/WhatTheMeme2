@@ -11,7 +11,7 @@ function Hand({whoAmI, round, hand, setHand, userSelected, setUserSelected}) {
     return (
         <Container>
             <Row>
-                <h3 className='hand-title mb-3'>Your hand</h3>
+                <h3 className='hand-title mb-3 mt-4'>Your hand</h3>
                 {hand && hand.map((card) => (
                     <Card key = {card.id} {...card} setHand={setHand} hand={hand} round={round} userSelected={userSelected} setUserSelected= {setUserSelected}/>
                 ))
