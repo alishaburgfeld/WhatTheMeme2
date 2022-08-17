@@ -24,6 +24,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     const [memeIsActive, setMemeIsActive] = useState(true)
     const [userSelected, setUserSelected] = useState(false)
     const [userHasVoted, setUserHasVoted] = useState(false)
+    //says that not all users have selected a card:
     const [notAllSelected, setNotAllSelected] = useState(true)
     const [votingComplete, setVotingComplete] = useState(false)
     //checks if users have been alerted that all players have finished voting
@@ -43,18 +44,11 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     useEffect(()=> {
         whoAmI()
-        // getRound()
-        // setTimeout(getRound(), 5000)
+        getRound()
     }, [])
 
-    // only way I could get round to work was to put it on an interval too
-
-    useEffect(() => {
-      getRound()
-    }, []);
-
+    //checks the DB for what round the game is on
   const getRound= function() {
-    console.log('in get round')
     if (hand) {
       let code = game.code
       axios.put('/round',{code:code})
@@ -73,6 +67,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     }
   }
 
+    //gets a list of all the players in the game and all the game users
     function getPlayers() {
       console.log('IN GET PLAYRS')
         axios.get('/players')
@@ -95,6 +90,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
         })
     }
 
+      //gets all the emails for the players that have voted -- could refactor this since I have some of this info already
     function getPlayersThatVoted() {
         console.log('IN GET PLAYERS THAT VOTED')
         axios.put('/votes/view', {round: round, game_code: game.code})
@@ -110,23 +106,21 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
         })
     }
 
+    //gets a list of all the cards that have been selected that round
     function getSelectedCards() {
       if (!winnerAlerted && !resettingRound) {
-
-        console.log('IN GET SELECTED CARDS')
+        console.log('IN GET SELECTED CARDS FUNCTION')
           axios.get('/selectedcards/view')
           .then((response)=> {
             let new_selected_cards = response && response.data && response.data.selected_cards
-            console.log('SELECTED CARDS LINE 118', new_selected_cards)
-            if (new_selected_cards == selectedCards) {
-              setTimeout(getSelectedCards, 6000)
-              // console.log('INSIDE IF STATEMENT LINE 124 FOR SELECTED CARDS, new:', new_selected_cards, 'OLD', selectedCards)
-            }
-            else {
-
+            console.log('SELECTED CARDS LINE 115', new_selected_cards)
+            // if (new_selected_cards == selectedCards) {
+            //   setTimeout(getSelectedCards, 6000)
+            //   // console.log('INSIDE IF STATEMENT LINE 124 FOR SELECTED CARDS, new:', new_selected_cards, 'OLD', selectedCards)
+            // }
+            // else {
               setSelectedCards(new_selected_cards)
-            }
-            
+            // }
           })
           .catch((error)=> {
             console.log(error)
@@ -142,13 +136,13 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       if (hand && user) {
         if (!winnerAlerted && !resettingRound) {
           getSelectedCards()
-          const cardsInterval = setInterval(getSelectedCards, 10000)
+          const cardsInterval = setInterval(getSelectedCards, 12000)
         }
         
         getPlayers()
         getPlayersThatVoted()
-        const playerInterval = setInterval(getPlayers, 10000)
-        const votedInterval = setInterval(getPlayersThatVoted, 10000)
+        const playerInterval = setInterval(getPlayers, 12000)
+        const votedInterval = setInterval(getPlayersThatVoted, 12000)
       }
     else {
       if (playerInterval!= "") {
@@ -165,22 +159,19 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
         firstRender.current=false
       }
       else {
-        console.log('IN RESET ROUND USE EFFECT ELSE')
         if (winnerAlerted) {
-          console.log('in reset round and check winner use effect 2nd render - should be based on winnerAlerted')
+          console.log('in reset round and check game winner use effect 2nd render - should be based on winnerAlerted, round is', round)
           resetRound()
           firstRender.current=true
-          // I'm not sure if I would set this to false or true at this point
           if (round >=6) {
             console.log('in check game winner use effect under if round >= 6', 'round is', round)
-            if (winnerAlerted) {
               checkGameWinner()
-            }
           }
         }
       }
     }, [winnerAlerted])
 
+  //after round is reset gets another card for the player
   function drawCard() {
     let game_code = game.code
     axios.put('/drawcard',{game_code:game_code})
@@ -199,20 +190,17 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       //this resets the round in the DB and gets a new card
       let game_code = game.code
         if (game) {
-          // sendReset.then(()=> console.log('SEND RESET ROUND AXIOS response', sendReset))
           let owner_id = winningCard.owner
-          console.log('OWNER ID LINE 202', owner_id, 'type', typeof(owner_id))
           axios.post('/round/reset',{code:game_code, owner_id: owner_id})
           .then((response)=> {
             console.log('SEND RESET ROUND AXIOS response', response)
-            // getselected, get round, setnotallselected, setwinneralerted, drawcard, setplayers that voted... seemed to be the magical order
+            // this order seems to have the best results: getselected, get round, setnotallselected, setwinneralerted, drawcard, setplayers that voted... seemed to be the magical order
             setSelectedCards([])
             getRound()
             setNotAllSelected(true)
+            setNotSent(true)
             setWinnerAlerted(false)
             drawCard()
-            // setHand(new_hand)
-            // setPlayers([])
             setPlayersThatVoted(null)
             setMemeIsActive(true)
             setUserSelected(false)
@@ -221,7 +209,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             setCardsTied(null)
             setWinningCard(null)
             setRoundWinner(null)
-            setNotSent(true)
             setUserHasVoted(false)
             
           })
@@ -230,11 +217,13 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     }
 
+      //checks if somebody has won the game with 6 points
     function checkGameWinner () {
       console.log('in check game winner function players array is', players)
       let winner = ""
       for (let player of players) {
         if (player[1] === 6) {
+          console.log('player[1] is', player[1])
           winner = player[0]
         }
       }
@@ -242,15 +231,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       setGameWinner(winner)
     }
 
-    // useEffect(()=> {
-    //   console.log('in check game winner use effect', 'round is', round)
-    //   if (round >=6) {
-    //     if (winnerAlerted) {
-    //       checkGameWinner()
-    //     }
-    //   }
-    // },[winnerAlerted])
-    
 
     return (
       <>
@@ -259,7 +239,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           (
         <div className='gamepage'>
             <h2 className='welcome m-3'> Welcome {user}</h2>
-            {/* {players && game &&<h2>All users playing on code {JSON.stringify(game)}: {players}</h2>} */}
             {players && game && <div> <h3>All users playing on code {JSON.stringify(game.code)}:</h3> <PlayerPoints players={players} /></div>}
             {/* I had to set it up like this because app.jsx was rendering these components before my use effect was called so memes wasn't showing up as having been set yet */}
             {gameWinner? <h1> {gameWinner} Won With 6 Points! Congratulations! Go back to the lobby to start a new game!</h1> : ""}
@@ -285,12 +264,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                           console.log('LEAVEgame response', response)
                           nav('/')
                         })}>Leave Game</Button>
-                        {/* console.log('LEAVEgame response', response) */}
-                        {/* onClick={(area) => MapperFunction(area).then((response)=> {
-                            if(area.id===4) {
-                              nav('/game')
-                            }
-                          }) */}
                     </div>
                 }
             </div>   

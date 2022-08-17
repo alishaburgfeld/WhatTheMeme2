@@ -1,5 +1,5 @@
 function PlayerPoints({players}) {
-    
+    //displays the players email and their points
     return (
         <>
         {players && players.map((user) => (
