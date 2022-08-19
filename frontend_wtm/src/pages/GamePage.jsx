@@ -173,9 +173,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           // I'm not sure if I would set this to false or true at this point
           if (round >=6) {
             console.log('in check game winner use effect under if round >= 6', 'round is', round)
-            if (winnerAlerted) {
               checkGameWinner()
-            }
           }
         }
       }
@@ -211,8 +209,6 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             setNotAllSelected(true)
             setWinnerAlerted(false)
             drawCard()
-            // setHand(new_hand)
-            // setPlayers([])
             setPlayersThatVoted(null)
             setMemeIsActive(true)
             setUserSelected(false)
