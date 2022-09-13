@@ -18,7 +18,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     // array of arrays. for player of players--->player[0] is their email player [1] is their points
     const [players, setPlayers] = useState([])
     const [playersThatVoted, setPlayersThatVoted] = useState(null)
-    const [game_users, setGame_users] = useState(null)
+    // const [game_users, setGame_users] = useState(null)
     //checks if the users have been alerted of the round winner
     const [winnerAlerted,setWinnerAlerted] = useState(false)
     const [memeIsActive, setMemeIsActive] = useState(true)
@@ -49,32 +49,33 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
 
     // only way I could get round to work was to put it on an interval too
 
-    useEffect(() => {
-      getRound()
-    }, []);
+    // might not need get round on load since I'm already setting state of 1
+    // useEffect(() => {
+    //   getRound()
+    // }, []);
 
   const getRound= function() {
     console.log('in get round')
     if (hand) {
       let code = game.code
-      axios.put('/round',{code:code})
-      .then((response)=> {
-        let newRound= response && response.data && response.data.round
-        if (newRound===round) {
-          setTimeout(getRound, 3000)
-        }
-        else {
-          console.log('ROUND RESPONSE,', newRound)
-          setRound(newRound)
-          setResettingRound(false)
-          // setSelectedCards([])
-        }
-      })
+      return axios.put('/round',{code:code})
+        .then((response)=> {
+          let newRound= response && response.data && response.data.round
+          if (newRound===round) {
+            setTimeout(getRound, 3000)
+          }
+          else {
+            console.log('ROUND RESPONSE,', newRound)
+            setRound(newRound)
+            // setResettingRound(false)
+            // setSelectedCards([])
+          }
+        })
     }
   }
 
     function getPlayers() {
-      console.log('IN GET PLAYRS')
+      console.log('IN GET PLAYERS')
         axios.get('/players')
         .then((response)=> {
           let returned_players = response && response.data && response.data.players
@@ -85,9 +86,9 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             setPlayers(returned_players)
           } 
           // sets game users so I can access their properties
-          if (game_user_array) {
-            setGame_users(game_user_array)
-          } 
+          // if (game_user_array) {
+          //   setGame_users(game_user_array)
+          // } 
 
         })
         .catch((error)=> {
@@ -118,14 +119,13 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           .then((response)=> {
             let new_selected_cards = response && response.data && response.data.selected_cards
             console.log('SELECTED CARDS LINE 118', new_selected_cards)
-            if (new_selected_cards == selectedCards) {
-              setTimeout(getSelectedCards, 6000)
-              // console.log('INSIDE IF STATEMENT LINE 124 FOR SELECTED CARDS, new:', new_selected_cards, 'OLD', selectedCards)
-            }
-            else {
-
+            // if (new_selected_cards == selectedCards) {
+            //   setTimeout(getSelectedCards, 6000)
+            //   // console.log('INSIDE IF STATEMENT LINE 124 FOR SELECTED CARDS, new:', new_selected_cards, 'OLD', selectedCards)
+            // }
+            // else {
               setSelectedCards(new_selected_cards)
-            }
+            // }
             
           })
           .catch((error)=> {
@@ -142,13 +142,13 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       if (hand && user) {
         if (!winnerAlerted && !resettingRound) {
           getSelectedCards()
-          const cardsInterval = setInterval(getSelectedCards, 10000)
+          const cardsInterval = setInterval(getSelectedCards, 8000)
         }
         
         getPlayers()
         getPlayersThatVoted()
-        const playerInterval = setInterval(getPlayers, 10000)
-        const votedInterval = setInterval(getPlayersThatVoted, 10000)
+        const playerInterval = setInterval(getPlayers, 8000)
+        const votedInterval = setInterval(getPlayersThatVoted, 8000)
       }
     else {
       if (playerInterval!= "") {
@@ -219,7 +219,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
             setRoundWinner(null)
             setNotSent(true)
             setUserHasVoted(false)
-            
+            setResettingRound(false)
           })
           
         }
@@ -287,6 +287,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                               nav('/game')
                             }
                           }) */}
+                          {/* <h7> Card phrases are from Cards against Humanity */}
                     </div>
                 }
             </div>   

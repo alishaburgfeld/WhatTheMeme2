@@ -23,7 +23,6 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
                 setVotingComplete(true)
                 // window.alert('All players have voted Here is the winning card!')
                 if (!alerted) {
-
                     window.alert('All players have voted!')
                     setAlerted(true)
                 }
