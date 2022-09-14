@@ -68,27 +68,27 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
   }
 
     //gets a list of all the players in the game and all the game users
-    function getPlayers() {
-      console.log('IN GET PLAYRS')
-        axios.get('/players')
-        .then((response)=> {
-          let returned_players = response && response.data && response.data.players
-          let game_user_array = response && response.data && response.data.game_user_array
-          console.log('RETURNED PLAYERS', returned_players, 'GAME USER ARRAY', game_user_array)
-          // just returnes the users emails
-          if (returned_players) {
-            setPlayers(returned_players)
-          } 
-          // sets game users so I can access their properties
-          if (game_user_array) {
-            setGame_users(game_user_array)
-          } 
+    // function getPlayers() {
+    //   console.log('IN GET PLAYRS')
+    //     axios.get('/players')
+    //     .then((response)=> {
+    //       let returned_players = response && response.data && response.data.players
+    //       let game_user_array = response && response.data && response.data.game_user_array
+    //       console.log('RETURNED PLAYERS', returned_players, 'GAME USER ARRAY', game_user_array)
+    //       // just returnes the users emails
+    //       if (returned_players) {
+    //         setPlayers(returned_players)
+    //       } 
+    //       // sets game users so I can access their properties
+    //       if (game_user_array) {
+    //         setGame_users(game_user_array)
+    //       } 
 
-        })
-        .catch((error)=> {
-          console.log(error)
-        })
-    }
+    //     })
+    //     .catch((error)=> {
+    //       console.log(error)
+    //     })
+    // }
 
       //gets all the emails for the players that have voted -- could refactor this since I have some of this info already
     function getPlayersThatVoted() {
@@ -107,26 +107,28 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     }
 
     //gets a list of all the cards that have been selected that round
-    function getSelectedCards() {
-      if (!winnerAlerted && !resettingRound) {
-        console.log('IN GET SELECTED CARDS FUNCTION')
-          axios.get('/selectedcards/view')
-          .then((response)=> {
-            let new_selected_cards = response && response.data && response.data.selected_cards
-            console.log('SELECTED CARDS LINE 115', new_selected_cards)
-            // if (new_selected_cards == selectedCards) {
-            //   setTimeout(getSelectedCards, 6000)
-            //   // console.log('INSIDE IF STATEMENT LINE 124 FOR SELECTED CARDS, new:', new_selected_cards, 'OLD', selectedCards)
-            // }
-            // else {
-              setSelectedCards(new_selected_cards)
-            // }
-          })
-          .catch((error)=> {
-            console.log(error)
-          })
-      }
-      }
+    // function getSelectedCards() {
+    //   if (!winnerAlerted && !resettingRound) {
+    //     console.log('IN GET SELECTED CARDS FUNCTION')
+    //       axios.get('/selectedcards/view')
+    //       .then((response)=> {
+    //         let new_selected_cards = response && response.data && response.data.selected_cards
+    //         console.log('SELECTED CARDS LINE 115', new_selected_cards)
+    //         // if (new_selected_cards == selectedCards) {
+    //         //   setTimeout(getSelectedCards, 6000)
+    //         //   // console.log('INSIDE IF STATEMENT LINE 124 FOR SELECTED CARDS, new:', new_selected_cards, 'OLD', selectedCards)
+    //         // }
+    //         // else {
+    //           setSelectedCards(new_selected_cards)
+    //         // }
+    //       })
+    //       .catch((error)=> {
+    //         console.log(error)
+    //       })
+    //   }
+    // }
+
+    
 
     const cardsInterval = ""
     const playerInterval = ""
@@ -135,14 +137,14 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     useEffect(()=>{
       if (hand && user) {
         if (!winnerAlerted && !resettingRound) {
-          getSelectedCards()
-          const cardsInterval = setInterval(getSelectedCards, 12000)
+          getGameInfo()
+          const cardsInterval = setInterval(getGameInfo, 10000)
         }
         
-        getPlayers()
+        // getPlayers()
         getPlayersThatVoted()
-        const playerInterval = setInterval(getPlayers, 12000)
-        const votedInterval = setInterval(getPlayersThatVoted, 12000)
+        // const playerInterval = setInterval(getPlayers, 10000)
+        const votedInterval = setInterval(getPlayersThatVoted, 10000)
       }
     else {
       if (playerInterval!= "") {
@@ -229,6 +231,30 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       }
       console.log('winner is', winner)
       setGameWinner(winner)
+    }
+
+    function getGameInfo() {
+      console.log('IN GET GAME INFO')
+        axios.get('/gameinfo')
+        .then((response)=> {
+          let new_selected_cards = response && response.data && response.data.selected_cards
+          console.log('SELECTED CARDS LINE 137', new_selected_cards)
+          setSelectedCards(new_selected_cards)
+          let returned_players = response && response.data && response.data.players
+          let game_user_array = response && response.data && response.data.game_user_array
+          console.log('RETURNED PLAYERS', returned_players, 'GAME USER ARRAY', game_user_array)
+          // just returnes the users emails
+          if (returned_players) {
+            setPlayers(returned_players)
+          } 
+          // sets game users so I can access their properties
+          if (game_user_array) {
+            setGame_users(game_user_array)
+          } 
+        })
+        .catch((error)=> {
+          console.log('error in game info function', error)
+        })
     }
 
 
