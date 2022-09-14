@@ -11,6 +11,11 @@ from django.contrib.auth.decorators import login_required
 import requests
 import random
 import json
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
 
 cards = []
 memes = []
@@ -30,7 +35,7 @@ def getCards():
     global cards
     url = "https://cards-against-humanity.p.rapidapi.com/white/25"
     headers = {
-        "X-RapidAPI-Key": "89b2f4fcc3mshb1c4db4c3ef15afp151f39jsn4718f6fb42de",
+        "X-RapidAPI-Key": os.environ['X-RapidAPI-Key'],
         "X-RapidAPI-Host": "cards-against-humanity.p.rapidapi.com"
     }
     response = requests.request("GET", url, headers=headers)
