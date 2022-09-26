@@ -1,7 +1,10 @@
 * whatthememe/__pycache__/
 whatthememe_project/whatthememe_project/.env
 * whatthememe_project/whatthememe/__pycache__
+* whatthememe_project/whatthememe/whatthememe_project/__pycache__
 * whatthememe_project/static/
+
+.env
 
 # Django stuff:
 *.log
