@@ -2,22 +2,16 @@ import axios from 'axios'
 import {useState, useEffect } from 'react'
 
 
-function MemeCard({setRound, round, memeIsActive, setMemeIsActive}) {
+function MemeCard({round, memeIsActive, setMemeIsActive}) {
 
     const [memes, setMemes] = useState([])
     
-    
-    
-
+    //Gets a list of memes for the meme card
     const getMeme = async () => {
-        console.log('I AM IN GET MEME react')
         const axiosResponse = await axios.get('/getmeme' )
         .then((response)=> {
             let memesArray= response.data.memes
-            // let responseRound= response.data.round
             setMemes(memesArray)
-            // for some reason the first response isn't valid
-            // setRound(responseRound)
         })
         .catch((error)=> {
             console.log(error)
@@ -25,10 +19,10 @@ function MemeCard({setRound, round, memeIsActive, setMemeIsActive}) {
         
     }
 
+    //flips the meme over
   function flipMemeCard() {
     setMemeIsActive(false)
     const card = document.getElementById(`meme${round}`)
-    console.log('flip card activated')
   }
 
   useEffect(()=> {

@@ -1,12 +1,10 @@
-import axios from 'axios'
-import {useState, useEffect, useRef} from 'react'
 import Card from './Card'
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 
 
 
-function Hand({whoAmI, round, hand, setHand, userSelected, setUserSelected}) {
+function Hand({round, hand, setHand, userSelected, setUserSelected}) {
 
     return (
         <Container>

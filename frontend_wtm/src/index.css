@@ -1,10 +1,5 @@
-/* font-family: 'Boogaloo', cursive;
-font-family: 'Days One', sans-serif;
-font-family: 'Luckiest Guy', cursive; */
 
 :root {
-  /* font-family: RamettoOne, sans-serif !important; */
-  /* this is only affecting the card text */
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;

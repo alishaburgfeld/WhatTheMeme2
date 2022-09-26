@@ -4,9 +4,8 @@ import { useState } from 'react';
 import axios from 'axios';
 
 
-function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, setUserSelected}) {
+function Card({id, phrase, hand, setHand, round, userSelected, setUserSelected}) {
   
-  // console.log('ROUND IN CARD FUNCTION', round)
   // tells database this card was selected
   function sendSelectedCard() {
     console.log('ROUND IN SEND SELECTED CARD', round)
@@ -20,12 +19,11 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
     })
   }
 
+
+  // removes this card from your hand
   function selectCard() {
-    
-    // removes this card from your hand
     for (let card of hand) {
       if (card.id=== id) {
-        console.log('I HAVE SELECTED CARD ID', card.id, id)
         let index = hand.indexOf(card)
         let handslice= hand.slice()
         handslice.splice(index,1)
@@ -33,7 +31,6 @@ function Card({id, phrase, votes, face_up, hand, setHand, round, userSelected, s
       }
     }
   }
-  //after flip and votes and winner then another card is drawn
   
 
   return (
