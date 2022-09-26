@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
-function GamePage ({user, whoAmI, hand, setHand, game}){
+function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
 
 
     const [round, setRound] = useState(1)
@@ -91,19 +91,31 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
     // }
 
       //gets all the emails for the players that have voted -- could refactor this since I have some of this info already
+    // function getPlayersThatVoted() {
+    //     console.log('IN GET PLAYERS THAT VOTED')
+    //     axios.put('/votes/view', {round: round, game_code: game.code})
+    //     .then((response)=> {
+    //       let returned_players = response && response.data && response.data.players_that_voted
+    //       if (returned_players) {
+    //         // console.log('VOTED PLAYERS', returned_players)
+    //         setPlayersThatVoted(returned_players)
+    //       } 
+    //     })
+    //     .catch((error)=> {
+    //       console.log(error)
+    //     })
+    // }
+
     function getPlayersThatVoted() {
-        console.log('IN GET PLAYERS THAT VOTED')
-        axios.put('/votes/view', {round: round, game_code: game.code})
-        .then((response)=> {
-          let returned_players = response && response.data && response.data.players_that_voted
-          if (returned_players) {
-            // console.log('VOTED PLAYERS', returned_players)
-            setPlayersThatVoted(returned_players)
-          } 
-        })
-        .catch((error)=> {
-          console.log(error)
-        })
+      console.log('IN GET PLAYERS THAT VOTED')
+      let round = game.round
+      let voted = []
+      for (let user in game_users) {
+        if (user.completed_vote_on_round == round) {
+          voted.append(user.email)
+        }
+      }
+      setPlayersThatVoted(voted)
     }
 
     //gets a list of all the cards that have been selected that round
@@ -237,10 +249,12 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
       console.log('IN GET GAME INFO')
         axios.get('/gameinfo')
         .then((response)=> {
+          console.log('GET GAME INFO RESPONSE LINE 252', response)
           let new_selected_cards = response && response.data && response.data.selected_cards
           console.log('SELECTED CARDS LINE 137', new_selected_cards)
           setSelectedCards(new_selected_cards)
           let returned_players = response && response.data && response.data.players
+          let newGame = response && response.data && response.data.game
           let game_user_array = response && response.data && response.data.game_user_array
           console.log('RETURNED PLAYERS', returned_players, 'GAME USER ARRAY', game_user_array)
           // just returnes the users emails
@@ -251,6 +265,7 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
           if (game_user_array) {
             setGame_users(game_user_array)
           } 
+          setGame(newGame)
         })
         .catch((error)=> {
           console.log('error in game info function', error)
@@ -286,10 +301,10 @@ function GamePage ({user, whoAmI, hand, setHand, game}){
                 :
                     <div>    
                         <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
-                        <Button onClick={()=>leaveGame().then((response)=> {
+                        {/* <Button onClick={()=>leaveGame().then((response)=> {
                           console.log('LEAVEgame response', response)
                           nav('/')
-                        })}>Leave Game</Button>
+                        })}>Leave Game</Button> */}
                     </div>
                 }
             </div>   

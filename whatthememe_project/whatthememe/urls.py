@@ -26,7 +26,7 @@ urlpatterns = [
     path('vote', views.vote),
     path('points', views.points),
     path('drawcard', views.draw_card),
-    path('votes/view', views.view_votes),
+    # path('votes/view', views.view_votes),
     path('selectedcard', views.selected_card),
     # path('selectedcards/view', views.view_selected_cards),
     path('gameinfo', views.game_info),

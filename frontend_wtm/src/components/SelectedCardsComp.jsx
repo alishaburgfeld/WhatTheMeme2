@@ -135,7 +135,7 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
     
     useEffect(()=>{
         if (user && notAllSelected) {
-            console.log('IN SELECTED CARDS/FLIP CARDS USE EFFECT-->flip cards checks if all cards have been selected')
+            console.log('IN SELECTED CARDS/FLIP CARDS USE EFFECT line 138-->flip cards checks if all cards have been selected')
             flipCards()
         }
     },[selectedCards])
@@ -148,7 +148,7 @@ function SelectedCardsComp({selectedCards, players, round, user, winnerAlerted, 
                     <VotingCards key = {card.id} {...card} notAllSelected={notAllSelected} round={round} winningCard={winningCard} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted}/>
                 ))
                 }
-                {notSent? <h2>Winning card hasn't been sent</h2> : <h2>Winning card has been sent</h2>}
+                {/* {notSent? <h2>Winning card hasn't been sent</h2> : <h2>Winning card has been sent</h2>} */}
             </Row>
         </Container>
     )
