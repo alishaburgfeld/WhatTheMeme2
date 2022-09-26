@@ -673,7 +673,7 @@ def game_info(request):
     # else: 
     #     return JsonResponse({'success':False, 'reason': 'no selected cards'})
 
-# I just added 'get players' and 'get game users' into this function, I need to change around my function about figuring out who has voted
+# I just added 'get players' and 'get game users' into this function, I need to change around my function about figuring out who has voted. Also the user who JOINED the game didnt have "leave game" option in navbar.
 
 
 
