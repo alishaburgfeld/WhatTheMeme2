@@ -75,6 +75,7 @@ def get_meme_card(request):
         return JsonResponse({'success': False, 'reason': 'no memes available'})
 
 
+
 @api_view(['POST'])
 def sign_up(request):
     user_email=request.data['email']

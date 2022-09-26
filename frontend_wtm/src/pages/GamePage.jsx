@@ -47,7 +47,6 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
         getRound()
     }, [])
 
-
     //checks the DB for what round the game is on
   const getRound= function() {
     if (hand) {
@@ -84,6 +83,7 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
     //       if (game_user_array) {
     //         setGame_users(game_user_array)
     //       } 
+
     //     })
     //     .catch((error)=> {
     //       console.log(error)
@@ -140,6 +140,8 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
     //   }
     // 
 
+
+    
     const cardsInterval = ""
     const playerInterval = ""
     const votedInterval = ""
