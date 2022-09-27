@@ -63,7 +63,6 @@ def get_meme_card(request):
     # running into issue of returning more than one.
     game_user = Game_User.objects.filter(player = user)
     print('LINE 60 GAME USER', game_user)
-    # user_64= Game_User.objects.get(player = user)
     game_1 = game_user[len(game_user)-1].game
     round = game_1.round
     getMemes()
@@ -74,6 +73,7 @@ def get_meme_card(request):
             return JsonResponse({'success': False, 'reason': str(e)})
     else:
         return JsonResponse({'success': False, 'reason': 'no memes available'})
+
 
 
 @api_view(['POST'])
@@ -100,7 +100,6 @@ def sign_up(request):
             return JsonResponse({'success': "True"})
     except Exception as e:
         return JsonResponse({'success': "False", 'reason': str(e)})
-    # return JsonResponse({'Success': False, 'reason':'sign-up failed'})
 
 @api_view(['POST'])
 def log_in(request):
@@ -127,10 +126,9 @@ def log_in(request):
                 return JsonResponse({'success': "False", 'reason': f'failed to login, {str(e)}'})
         else:
             return JsonResponse({'success': "False", 'reason': 'This account has been disabled, please sign-up again'})
-            # Return a 'disabled account' error message
     else:
         return JsonResponse({'success': "False", 'reason': "This account doesn't exist, please sign-up"})    
-        # Return an 'invalid login' error message.
+
 
 @api_view(['POST'])
 def log_out(request):
@@ -171,7 +169,6 @@ def who_am_i(request):
         return JsonResponse({'user':None})
 
 #once friends request is approved I will add them to each other's lists
-#need to decide what I want to do if declined... also probably need a pending "friend request" area
 @api_view(['PUT'])
 @login_required
 def add_friend(request): #accepts a friend request
@@ -305,13 +302,9 @@ def decline_friend_request(request):
     print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR DECLINE FRIEND REQUESTS')
     user_email = request.user.email
     user = getUser(user_email)
-    # print('user', user, 'email:', user_email)
     friend_email = request.data['friend_email']
-    # print('friend_email', friend_email)
     friend = getUser(friend_email)
-    
     friend_request = FriendRequest.objects.get(sender = friend, receiver = user, is_active = True)
-    print('decline friend request:', friend_request)
     if friend_request:
         friend_request.is_active = False
         friend_request.save()
@@ -365,9 +358,6 @@ def draw_card(request):
     except Exception as e:
         return JsonResponse({'success': False, 'reason': str(e)})
 
-
-
-
 @api_view(['POST'])
 @login_required
 def start_game(request):
@@ -390,6 +380,7 @@ def start_game(request):
         game_user = Game_User(game = game, player = user)
         game_user.full_clean
         game_user.save()
+        # print('IN START GAME -- GAME CODE IS', game_code)
         getCards()
         user_cards = []
         while len(user_cards) < 6:
@@ -407,7 +398,6 @@ def start_game(request):
 @login_required
 def join_game(request):
     game_code= request.data['game_code']
-    # game_code = input("What is the code for the game you'd like to join?")
     user_email = request.user.email
     user = getUser(user_email)
     game = Game.objects.get(code = game_code)
@@ -417,13 +407,11 @@ def join_game(request):
             game_user.full_clean
             game_user.save()
             print('JOIN GAME USER IS!!!! ', game_user)
-            # this works, but just going to comment it out while debugging the rest
             getCards()
             user_cards = []
             while len(user_cards) < 6:
                 card=create_card(game, game_user)
                 user_cards.append(model_to_dict(card))
-            # print('USER CARDS ARE', user_cards, 'len user cards', len(user_cards))
             return JsonResponse({'success':'True','user_cards': user_cards, 'game': model_to_dict(game)})
         except Exception as e:
             return JsonResponse({'success': False, 'reason': str(e)})
@@ -438,13 +426,13 @@ def selected_card(request):
     print('YOU ARE IN THE PUT REQUEST ON DJANGO FOR SELECTED CARD')
     round = request.data['round']
     card_id= request.data['id']
-    print('SELECTED CARD_ID', card_id, 'TYPE', type(card_id), 'CARD ROUND', round)
+    # print('SELECTED CARD_ID', card_id, 'TYPE', type(card_id), 'CARD ROUND', round)
     card = Game_Card.objects.get(id=card_id)
     print('CARD SELECTED', card)
     try:
         card.round_selected = round
         card.save()
-        print('round selected', card.round_selected)
+        # print('round selected', card.round_selected)
         return JsonResponse({'success':True, 'action': 'card round selected updated'})
     except Exception as e:
         return JsonResponse({'success': False, 'reason': f'something went wrong {str(e)}'})
@@ -477,7 +465,6 @@ def selected_card(request):
 @api_view(['POST'])
 @login_required
 def vote(request):
-    print('YOU ARE IN THE VOTE')
     card_id= request.data['id']
     round= request.data['round']
     print('VOTED FOR CARD_ID', card_id, 'round', round)
@@ -488,7 +475,7 @@ def vote(request):
     game_user = Game_User.objects.filter(player = user)
     game_user_1 = game_user[len(game_user)-1]
     card = Game_Card.objects.get(id=card_id)
-    print('CARD VOTED FOR', card)
+    # print('CARD VOTED FOR', card)
     try:
         card.votes+=1
         card.save()
