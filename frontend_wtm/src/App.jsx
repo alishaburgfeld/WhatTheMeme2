@@ -22,6 +22,7 @@ function App() {
   const [hand, setHand] = useState(null)
   const [show, setShow] = useState(false);
   const [game, setGame] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   // const nav = useNavigate()
 
@@ -40,6 +41,7 @@ function App() {
 
   const startGame = async function () {
     console.log('I AM IN START GAME ON REACT')
+    setLoading(true)
     axios.post('/startgame' )
     .then((response)=> {
       if (firstRender.current) {
@@ -52,6 +54,7 @@ function App() {
             let returned_game= response && response.data && response.data.game
             let new_game_code = returned_game.code
             let new_game_user = response && response.data && response.data.game_user
+            setLoading(false)
             console.log('GAME CODE IS: LINE 71 APPJSX', new_game_code)
             if (new_game_code) {
                 window.alert(`Your game code is ${new_game_code}, send this to your friends for them to join your game`)
@@ -78,7 +81,7 @@ function App() {
           <Route path='/' element={<HomePage whoAmI={whoAmI} user = {user} hand={hand} setHand={setHand} setShow={setShow} show={show} startGame={startGame} game={game} setGame={setGame}/>} />
           <Route path='/login' element={<LoginPage/>} />
           <Route path='/signup' element = {<SignUpPage />} />
-          <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI} hand={hand} setHand={setHand} game={game} setGame = {setGame}/>} />
+          <Route path='/game' element = {<GamePage user={user} whoAmI={whoAmI} hand={hand} setHand={setHand} game={game} setGame = {setGame} loading={loading}/>} />
           {/* <Route path='/draft' element = {<Draft/>} /> */}
         </Routes>
       </Router> 

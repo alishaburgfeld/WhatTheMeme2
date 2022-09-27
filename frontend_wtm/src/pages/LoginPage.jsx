@@ -52,7 +52,7 @@ function LoginPage ({setUser, whoAmI}){
 
                 <Form.Group className="mb-3" controlId="formPassword">
                     <Form.Label className='fs-md'>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" value="password" className='fs-sm'/>
+                    <Form.Control type="password" placeholder="Password" className='fs-sm'/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit
