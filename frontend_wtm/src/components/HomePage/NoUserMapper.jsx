@@ -2,8 +2,8 @@ import React, { useState} from "react";
 import ImageMapper from "react-image-mapper";
 import { useNavigate } from "react-router-dom";
 // import noUserImage from '.../assets/Images/home_login_signup.png'
-import noUserImage from '/Users/alishahome/Documents/Software_Engineering/Code_Platoon/Assessments/Personal_Project/frontend_wtm/src/assets/Images/home_login_signup.png'
-
+// import noUserImage from '/Users/alishahome/Documents/Software_Engineering/Code_Platoon/Assessments/Personal_Project/frontend_wtm/src/assets/Images/home_login_signup.png'
+import noUserImage from '.../assets/Images/home_login_signup.png'
 
 
 function NoUserMapper() {

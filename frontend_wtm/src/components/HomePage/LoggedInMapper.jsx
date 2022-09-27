@@ -1,6 +1,7 @@
 import React, { useState} from "react";
 import ImageMapper from "react-image-mapper";
-import homeImage from '/Users/alishahome/Documents/Software_Engineering/Code_Platoon/Assessments/Personal_Project/frontend_wtm/src/assets/Images/all_300.png'
+// import homeImage from '/Users/alishahome/Documents/Software_Engineering/Code_Platoon/Assessments/Personal_Project/frontend_wtm/src/assets/Images/all_300.png'
+import homeImage from '.../assets/Images/all_300.png'
 // import {joinGame } from '../AxiosCalls/GameAxiosCalls';
 import { useNavigate } from "react-router-dom";
 
