@@ -33,7 +33,7 @@ def getUser(user_email):
 #api call
 def getCards():
     global cards
-    url = "https://cards-against-humanity.p.rapidapi.com/white/25"
+    url = "https://cards-against-humanity.p.rapidapi.com/white/15"
     headers = {
         "X-RapidAPI-Key": os.environ['X-RapidAPI-Key'],
         "X-RapidAPI-Host": "cards-against-humanity.p.rapidapi.com"
@@ -339,9 +339,6 @@ def create_card(game, owner):
         print('GAME CARD = :', game_card)
         game.card_count+=1
         game.save()
-        # print('GAME CARD COUNT IS NOW', game.card_count)
-        # cardCount+=1
-        # print('CARD COUNT', cardCount)
         return game_card 
     except Exception as e:
         print(str(e))
@@ -377,7 +374,14 @@ def start_game(request):
     print('YOU ARE IN THE POST REQUEST ON DJANGO FOR START GAME')
     user_email = request.user.email
     user = getUser(user_email)
+    all_games = Game.objects.all()
+    all_codes = []
+    for game in all_games:
+        all_codes.append(game.code)
     code = str(random.randint(10001,999999))
+    while code in all_codes:
+        # ensures game code doesn't already exist
+        code = str(random.randint(10001,999999))
     try:
         game = Game(code = code)
         game.full_clean
@@ -386,9 +390,6 @@ def start_game(request):
         game_user = Game_User(game = game, player = user)
         game_user.full_clean
         game_user.save()
-        print('GAME USER IS!!!! ', game_user)
-        # this works, but just going to comment it out while debugging the rest
-        print('IN START GAME -- GAME CODE IS', game_code)
         getCards()
         user_cards = []
         while len(user_cards) < 6:

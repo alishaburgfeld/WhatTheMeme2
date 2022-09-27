@@ -31,6 +31,7 @@ function LoggedInMapper({setShow, startGame, game}) {
       if (area.id===3) {
         console.log('IN AREA 1 IF STATEMENT')
         // set the coords 1 point off from the "not logged in mapper" so that it wouldn't open the offcanvas when I clicked it when not logged in
+        // displays the join game off-canvas
         setShow(true)
       }
       else if (area.id ===4){
