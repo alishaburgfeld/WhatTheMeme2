@@ -1,6 +1,7 @@
 import React, { useState} from "react";
 import ImageMapper from "react-image-mapper";
-import homeImage from '/Users/alishahome/Documents/Software_Engineering/Code_Platoon/Assessments/Personal_Project/frontend_wtm/src/assets/Images/all_300.png'
+// import homeImage from '/Users/alishahome/Documents/Software_Engineering/Code_Platoon/Assessments/Personal_Project/frontend_wtm/src/assets/Images/all_300.png'
+import homeImage from '../../assets/Images/all_300.png'
 // import {joinGame } from '../AxiosCalls/GameAxiosCalls';
 import { useNavigate } from "react-router-dom";
 
@@ -30,6 +31,7 @@ function LoggedInMapper({setShow, startGame, game}) {
       if (area.id===3) {
         console.log('IN AREA 1 IF STATEMENT')
         // set the coords 1 point off from the "not logged in mapper" so that it wouldn't open the offcanvas when I clicked it when not logged in
+        // displays the join game off-canvas
         setShow(true)
       }
       else if (area.id ===4){

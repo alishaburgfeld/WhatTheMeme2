@@ -7,10 +7,11 @@ import MemeCard from '../components/MemeCard'
 import SelectedCardsComp from '../components/SelectedCardsComp'
 import PlayerPoints from '../components/PlayersPoints'
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
 
 // https://stackoverflow.com/questions/51199077/request-header-field-x-csrf-token-is-not-allowed-by-access-control-allow-headers
-function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
+function GamePage ({user, whoAmI, hand, setHand, game, setGame, loading}){
 
 
     const [round, setRound] = useState(1)
@@ -275,7 +276,7 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
 
     return (
       <>
-        {game && user
+        {loading===false
           ?
           (
         <div className='gamepage'>
@@ -287,7 +288,7 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
                 <MemeCard setRound={setRound} round = {round} memeIsActive={memeIsActive} setMemeIsActive={setMemeIsActive}/>
             </div>
             <div>
-                {selectedCards
+                {selectedCards.length>0
                 ? 
                     <div>
                     <h2 className='selected-title'>Selected Cards</h2>
@@ -295,7 +296,7 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
                     notAllSelected={notAllSelected} setNotAllSelected={setNotAllSelected} votingComplete={votingComplete} setVotingComplete={setVotingComplete} alerted={alerted} setAlerted={setAlerted} cardsTied={cardsTied} setCardsTied={setCardsTied} winningCard={winningCard} setWinningCard={setWinningCard} 
                     roundWinner={roundWinner} setRoundWinner={setRoundWinner} notSent={notSent} setNotSent={setNotSent} userHasVoted={userHasVoted} setUserHasVoted={setUserHasVoted}/>
                     <Hand whoAmI={whoAmI} round={round} hand={hand} setHand={setHand} user={user} userSelected={userSelected} setUserSelected={setUserSelected}/>
-                    <Button onClick={leaveGame}>Leave Game</Button>
+                    {/* <Button onClick={leaveGame}>Leave Game</Button> */}
                     {/* {!winnerAlerted ? <h4>Winner is NOT alerted</h4> : <h4>Winner IS alerted</h4>} */}
                     </div>
                 :
@@ -310,7 +311,7 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame}){
             </div>   
         </div>
           )
-          : null
+          : <LoadingSpinner />
           }
       </>
     )

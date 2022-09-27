@@ -33,7 +33,7 @@ def getUser(user_email):
 #api call
 def getCards():
     global cards
-    url = "https://cards-against-humanity.p.rapidapi.com/white/25"
+    url = "https://cards-against-humanity.p.rapidapi.com/white/15"
     headers = {
         "X-RapidAPI-Key": os.environ['X-RapidAPI-Key'],
         "X-RapidAPI-Host": "cards-against-humanity.p.rapidapi.com"
@@ -364,7 +364,14 @@ def start_game(request):
     print('YOU ARE IN THE POST REQUEST ON DJANGO FOR START GAME')
     user_email = request.user.email
     user = getUser(user_email)
+    all_games = Game.objects.all()
+    all_codes = []
+    for game in all_games:
+        all_codes.append(game.code)
     code = str(random.randint(10001,999999))
+    while code in all_codes:
+        # ensures game code doesn't already exist
+        code = str(random.randint(10001,999999))
     try:
         game = Game(code = code)
         game.full_clean
