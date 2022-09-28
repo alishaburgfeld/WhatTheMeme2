@@ -19,7 +19,7 @@ function GamePage ({user, whoAmI, hand, setHand, game, setGame, loading}){
     // array of arrays. for player of players--->player[0] is their email player [1] is their points
     const [players, setPlayers] = useState([])
     const [playersThatVoted, setPlayersThatVoted] = useState(null)
-    // const [game_users, setGame_users] = useState(null)
+    const [game_users, setGame_users] = useState(null)
     //checks if the users have been alerted of the round winner
     const [winnerAlerted,setWinnerAlerted] = useState(false)
     const [memeIsActive, setMemeIsActive] = useState(true)

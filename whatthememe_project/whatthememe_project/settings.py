@@ -34,7 +34,7 @@ DEBUG = False
 # when debug is false I won't be able to view it on my local comp anymore -- https://stackoverflow.com/questions/5836674/why-does-debug-false-setting-make-my-django-static-files-access-fail
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://whatthememe.net']
+CSRF_TRUSTED_ORIGINS = ['https://whatthememe.net', 'http://whatthememe.net']
 
 # Application definition
 
